@@ -104,16 +104,19 @@ function sendChat() {
       messages: [
         {role: 'system', content: 'You are BSt Baba, an expert CBSE Class 11 and 12 Business Studies teacher created by Aakassh Soral (AKS). Answer only Business Studies questions. Be concise, accurate, and exam-focused. Use examples from NCERT. Format answers with bullet points where helpful. If the question is not about Business Studies, politely decline and redirect to the subject.'},
         {role: 'user', content: msg}
-      ],
-      max_tokens: 500
+      ]
     })
   })
   .then(r => r.json())
   .then(data => {
     const typing = document.getElementById('typingIndicator');
     if (typing) typing.remove();
-    const reply = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
-    messages.innerHTML += `<div class="chat-msg bot">${reply.replace(/\n/g, '<br>')}</div>`;
+    if (data.error) {
+      messages.innerHTML += `<div class="chat-msg bot">Error: ${data.error.message || 'API error'}. Please check your API key in the Teacher Panel.</div>`;
+    } else {
+      const reply = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
+      messages.innerHTML += `<div class="chat-msg bot">${reply.replace(/\n/g, '<br>')}</div>`;
+    }
     messages.scrollTop = messages.scrollHeight;
   })
   .catch(() => {
@@ -491,12 +494,15 @@ function generateQuestions() {
       messages: [
         {role: 'system', content: 'You are an expert CBSE Class 12 Business Studies question paper setter. Generate questions exactly matching the CBSE board exam pattern for 2026-27. Include marks allocation. Be accurate with NCERT content.'},
         {role: 'user', content: prompt}
-      ],
-      max_tokens: 2000
+      ]
     })
   })
   .then(r => r.json())
   .then(data => {
+    if (data.error) {
+      output.innerHTML = `<div style="padding:16px;background:rgba(248,113,113,0.1);border-radius:8px;color:#f87171">Error: ${data.error.message || 'API error'}. Check your API key or try a different model.</div>`;
+      return;
+    }
     const reply = data.choices?.[0]?.message?.content || 'Could not generate questions.';
     output.innerHTML = `<div style="padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;font-size:0.83rem;line-height:1.7;max-height:500px;overflow-y:auto">${reply.replace(/\n/g, '<br>')}</div>
     <button class="modal-btn" style="max-width:200px;margin-top:12px" onclick="copyQuestions()">📋 Copy to Clipboard</button>`;
@@ -536,11 +542,26 @@ function broadcastEmail() {
   window.open(`mailto:${emails}?subject=${encodeURIComponent('BSt Baba - AKSpected Update')}&body=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// ─── KEY LISTENER (B = Teacher Panel) ───
+// ─── KEY LISTENER (B = Teacher Panel) + Hidden button for mobile/iPad ───
 document.addEventListener('keydown', (e) => {
   if (e.key === 'b' || e.key === 'B') {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
     openTeacherPanel();
+  }
+});
+
+// Hidden teacher panel trigger — tap footer brand 5 times
+let footerTapCount = 0;
+let footerTapTimer = null;
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('footer-brand')) {
+    footerTapCount++;
+    clearTimeout(footerTapTimer);
+    footerTapTimer = setTimeout(() => { footerTapCount = 0; }, 2000);
+    if (footerTapCount >= 5) {
+      footerTapCount = 0;
+      openTeacherPanel();
+    }
   }
 });
 
