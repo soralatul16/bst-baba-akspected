@@ -81,23 +81,28 @@ function sendChat() {
   input.value = '';
   messages.scrollTop = messages.scrollHeight;
 
-  // Placeholder response — replace with Grok API call
-  setTimeout(() => {
-    messages.innerHTML += `<div class="chat-msg bot">Thanks for your question! The AI is being connected. Your teacher Aakassh Soral (AKS) will configure the Grok API soon. In the meantime, check the chapter notes for your answer! 📖</div>`;
-    messages.scrollTop = messages.scrollHeight;
-  }, 800);
+  const apiKey = localStorage.getItem('bstbaba_grok_key');
+  if (!apiKey) {
+    setTimeout(() => {
+      messages.innerHTML += `<div class="chat-msg bot">The AI assistant is not configured yet. Ask your teacher (AKS) to set up the API key through the Teacher Panel. In the meantime, check the chapter notes for your answer! 📖</div>`;
+      messages.scrollTop = messages.scrollHeight;
+    }, 400);
+    return;
+  }
 
-  /* === GROK API INTEGRATION (uncomment and add API key) ===
+  messages.innerHTML += `<div class="chat-msg bot" id="typingIndicator" style="opacity:0.6">Thinking...</div>`;
+  messages.scrollTop = messages.scrollHeight;
+
   fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer YOUR_GROK_API_KEY_HERE'
+      'Authorization': 'Bearer ' + apiKey
     },
     body: JSON.stringify({
-      model: 'grok-3',
+      model: 'grok-3-mini',
       messages: [
-        {role: 'system', content: 'You are BSt Baba, an expert CBSE Class 11 and 12 Business Studies teacher. Answer only Business Studies questions. Be concise, accurate, and exam-focused. Use examples from NCERT. If the question is not about Business Studies, politely decline.'},
+        {role: 'system', content: 'You are BSt Baba, an expert CBSE Class 11 and 12 Business Studies teacher created by Aakassh Soral (AKS). Answer only Business Studies questions. Be concise, accurate, and exam-focused. Use examples from NCERT. Format answers with bullet points where helpful. If the question is not about Business Studies, politely decline and redirect to the subject.'},
         {role: 'user', content: msg}
       ],
       max_tokens: 500
@@ -105,15 +110,18 @@ function sendChat() {
   })
   .then(r => r.json())
   .then(data => {
-    const reply = data.choices[0].message.content;
-    messages.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
+    const typing = document.getElementById('typingIndicator');
+    if (typing) typing.remove();
+    const reply = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
+    messages.innerHTML += `<div class="chat-msg bot">${reply.replace(/\n/g, '<br>')}</div>`;
     messages.scrollTop = messages.scrollHeight;
   })
   .catch(() => {
-    messages.innerHTML += `<div class="chat-msg bot">Sorry, I couldn't process that. Please try again later.</div>`;
+    const typing = document.getElementById('typingIndicator');
+    if (typing) typing.remove();
+    messages.innerHTML += `<div class="chat-msg bot">Sorry, something went wrong. Please try again later.</div>`;
     messages.scrollTop = messages.scrollHeight;
   });
-  */
 }
 
 // ─── FEEDBACK ───
@@ -322,6 +330,18 @@ function injectTeacherPanel() {
           </div>
         </div>
 
+        <!-- API Key Config -->
+        <div class="tp-section">
+          <h3>🔑 AI Configuration</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Enter your Grok API key here. It's stored only in your browser — never in the code or on GitHub.</p>
+          <div style="display:flex;gap:8px">
+            <input class="modal-input" type="password" id="grokKeyInput" placeholder="Paste your xai-... key here" style="margin:0;flex:1" value="${localStorage.getItem('bstbaba_grok_key') || ''}">
+            <button class="modal-btn" style="max-width:120px;margin:0" onclick="saveGrokKey()">Save Key</button>
+          </div>
+          <div id="grokKeyStatus" style="font-size:0.78rem;margin-top:6px;display:none"></div>
+          ${localStorage.getItem('bstbaba_grok_key') ? '<p style="font-size:0.75rem;color:var(--accent);margin-top:6px">✓ API key is saved and active</p>' : ''}
+        </div>
+
         <!-- Student List -->
         <div class="tp-section">
           <h3>👥 Registered Students</h3>
@@ -427,13 +447,72 @@ function closeTeacherPanel() {
   document.getElementById('teacherPanel').classList.add('hidden');
 }
 
+// Save Grok API Key
+function saveGrokKey() {
+  const key = document.getElementById('grokKeyInput').value.trim();
+  const status = document.getElementById('grokKeyStatus');
+  if (!key || !key.startsWith('xai-')) {
+    status.textContent = '✕ Invalid key. It should start with xai-';
+    status.style.color = '#f87171';
+    status.style.display = 'block';
+    return;
+  }
+  localStorage.setItem('bstbaba_grok_key', key);
+  status.textContent = '✓ API key saved! Chatbot and Question Generator are now active.';
+  status.style.color = 'var(--accent)';
+  status.style.display = 'block';
+}
+
 // Question generator placeholder
 function generateQuestions() {
+  const apiKey = localStorage.getItem('bstbaba_grok_key');
   const type = document.getElementById('qgenType').value;
   const ch = document.getElementById('qgenChapter').value;
   const count = document.getElementById('qgenCount').value;
   const output = document.getElementById('qgenOutput');
-  output.innerHTML = '<div style="padding:16px;background:var(--accent-light);border-radius:8px">⏳ <strong>AI is being connected.</strong><br><br>To activate this feature, add your Grok API key in <code>js/components.js</code> in the <code>generateQuestions()</code> function.<br><br>Configuration: Type: <strong>' + type + '</strong> | Chapter: <strong>' + (ch === 'all' ? 'All' : 'Ch ' + ch) + '</strong> | Questions: <strong>' + count + '</strong></div>';
+
+  if (!apiKey) {
+    output.innerHTML = '<div style="padding:16px;background:var(--accent-gold-light);border-radius:8px">⚠️ <strong>API key not set.</strong> Go to the "AI Configuration" section above and paste your Grok API key first.</div>';
+    return;
+  }
+
+  const typeLabels = {full:'a full 80-mark CBSE board paper',chapter:'chapter-wise questions',topic:'topic-wise questions',mcq:'MCQ questions only',case:'case study questions only',assertion:'assertion-reason questions only'};
+  const chLabel = ch === 'all' ? 'all chapters' : 'Chapter ' + ch;
+
+  output.innerHTML = '<div style="padding:16px;background:var(--accent-light);border-radius:8px">⏳ Generating questions... This may take a few seconds.</div>';
+
+  const prompt = `Generate ${count} ${typeLabels[type] || 'questions'} for CBSE Class 12 Business Studies, ${chLabel}. Follow the exact CBSE board exam pattern. Include marks for each question. For case studies, create realistic business scenarios. For MCQs, include 4 options and mark the correct answer. Format clearly with question numbers.`;
+
+  fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
+    body: JSON.stringify({
+      model: 'grok-3-mini',
+      messages: [
+        {role: 'system', content: 'You are an expert CBSE Class 12 Business Studies question paper setter. Generate questions exactly matching the CBSE board exam pattern for 2026-27. Include marks allocation. Be accurate with NCERT content.'},
+        {role: 'user', content: prompt}
+      ],
+      max_tokens: 2000
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    const reply = data.choices?.[0]?.message?.content || 'Could not generate questions.';
+    output.innerHTML = `<div style="padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;font-size:0.83rem;line-height:1.7;max-height:500px;overflow-y:auto">${reply.replace(/\n/g, '<br>')}</div>
+    <button class="modal-btn" style="max-width:200px;margin-top:12px" onclick="copyQuestions()">📋 Copy to Clipboard</button>`;
+  })
+  .catch(() => {
+    output.innerHTML = '<div style="padding:16px;background:rgba(248,113,113,0.1);border-radius:8px;color:#f87171">Failed to generate. Check your API key and try again.</div>';
+  });
+}
+
+// Copy generated questions
+function copyQuestions() {
+  const output = document.getElementById('qgenOutput');
+  const text = output.querySelector('div').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Questions copied to clipboard!');
+  });
 }
 
 // Broadcast
