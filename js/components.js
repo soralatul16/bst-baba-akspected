@@ -1,28 +1,90 @@
 /* ═══════════════════════════════════════════
    BSt Baba - AKSpected | Components
    Login Gate, Chatbot, Feedback, Teacher Panel
+   Firebase Auth + Firestore Integration
    ═══════════════════════════════════════════ */
 
-// ─── AUTH (localStorage now, Firebase later) ───
-function isLoggedIn() { return !!localStorage.getItem('bstbaba_user'); }
-function getUser() { return JSON.parse(localStorage.getItem('bstbaba_user') || 'null'); }
-function getStudents() { return JSON.parse(localStorage.getItem('bstbaba_students') || '[]'); }
+// ─── AUTH (Firebase + localStorage cache) ───
+let currentUser = null;
+let currentUserData = null;
 
-function registerUser(data) {
-  localStorage.setItem('bstbaba_user', JSON.stringify(data));
-  const students = getStudents();
-  if (!students.find(s => s.email === data.email)) {
-    students.push({...data, registered: new Date().toISOString(), quizzes: 0, score: 0});
-    localStorage.setItem('bstbaba_students', JSON.stringify(students));
+function isLoggedIn() {
+  return !!currentUser || !!localStorage.getItem('bstbaba_user');
+}
+function getUser() {
+  return currentUserData || JSON.parse(localStorage.getItem('bstbaba_user') || 'null');
+}
+
+// Listen for auth state changes
+auth.onAuthStateChanged(async (user) => {
+  currentUser = user;
+  if (user) {
+    try {
+      const doc = await db.collection('bstbaba_users').doc(user.uid).get();
+      if (doc.exists) {
+        currentUserData = doc.data();
+        localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
+      }
+    } catch(e) {}
+    injectUserBar();
+  } else {
+    currentUser = null;
+    currentUserData = null;
+  }
+});
+
+async function registerUser(name, email, password, phone, cls, city, country) {
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+    await cred.user.sendEmailVerification();
+    const userData = {
+      uid: cred.user.uid,
+      name, email, phone,
+      class: cls, city, country,
+      registered: new Date().toISOString(),
+      quizzes: 0, score: 0, verified: false
+    };
+    await db.collection('bstbaba_users').doc(cred.user.uid).set(userData);
+    localStorage.setItem('bstbaba_user', JSON.stringify(userData));
+    return {success: true, message: 'Registration successful! Check your email to verify your account.'};
+  } catch(e) {
+    return {success: false, message: e.message};
   }
 }
-function loginUser(email) {
-  const students = getStudents();
-  const found = students.find(s => s.email === email);
-  if (found) { localStorage.setItem('bstbaba_user', JSON.stringify(found)); return true; }
-  return false;
+
+async function loginUser(email, password) {
+  try {
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+    const doc = await db.collection('bstbaba_users').doc(cred.user.uid).get();
+    if (doc.exists) {
+      currentUserData = doc.data();
+      localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
+    }
+    if (cred.user.emailVerified) {
+      await db.collection('bstbaba_users').doc(cred.user.uid).update({verified: true});
+    }
+    return {success: true};
+  } catch(e) {
+    return {success: false, message: e.message};
+  }
 }
-function logoutUser() { localStorage.removeItem('bstbaba_user'); location.reload(); }
+
+function logoutUser() {
+  auth.signOut();
+  localStorage.removeItem('bstbaba_user');
+  currentUser = null;
+  currentUserData = null;
+  location.reload();
+}
+
+async function getStudents() {
+  try {
+    const snapshot = await db.collection('bstbaba_users').orderBy('registered', 'desc').get();
+    return snapshot.docs.map(doc => doc.data());
+  } catch(e) {
+    return JSON.parse(localStorage.getItem('bstbaba_students') || '[]');
+  }
+}
 
 // ─── INJECT FLOATING BUTTONS ───
 function injectFloatingButtons() {
@@ -159,14 +221,24 @@ function submitFeedback() {
   if (!message) return;
   const status = document.getElementById('fbStatus');
 
-  // Using mailto as fallback — replace with Formspree/Web3Forms or Firebase
-  const subject = encodeURIComponent(`BSt Baba Feedback from ${name || 'Anonymous'}`);
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-  window.open(`mailto:aakasshsoral@gmail.com?subject=${subject}&body=${body}`, '_blank');
-
-  status.textContent = 'Opening email client... Thank you for your feedback!';
-  status.style.display = 'block';
-  setTimeout(() => { status.style.display = 'none'; }, 4000);
+  db.collection('bstbaba_feedback').add({
+    name: name || 'Anonymous',
+    email: email || '',
+    message,
+    timestamp: new Date().toISOString(),
+    read: false
+  }).then(() => {
+    status.textContent = 'Feedback sent successfully! Thank you.';
+    status.style.display = 'block';
+    document.getElementById('fbMessage').value = '';
+    setTimeout(() => { status.style.display = 'none'; }, 4000);
+  }).catch(() => {
+    const subject = encodeURIComponent('BSt Baba Feedback from ' + (name || 'Anonymous'));
+    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
+    window.open('mailto:aakasshsoral@gmail.com?subject=' + subject + '&body=' + body, '_blank');
+    status.textContent = 'Opening email client as fallback...';
+    status.style.display = 'block';
+  });
 }
 
 // ─── LOGIN/REGISTER MODAL ───
@@ -181,6 +253,7 @@ function injectAuthModal() {
           <div class="modal-error" id="regError"></div>
           <input class="modal-input" type="text" id="regName" placeholder="Full Name *" required>
           <input class="modal-input" type="email" id="regEmail" placeholder="Email Address *" required>
+          <input class="modal-input" type="password" id="regPassword" placeholder="Create Password (min 6 chars) *" required>
           <input class="modal-input" type="tel" id="regPhone" placeholder="Phone Number *" required>
           <div class="modal-row">
             <select class="modal-input" id="regClass">
@@ -192,16 +265,24 @@ function injectAuthModal() {
             <input class="modal-input" type="text" id="regCity" placeholder="City *">
           </div>
           <input class="modal-input" type="text" id="regCountry" placeholder="Country" value="India">
-          <button class="modal-btn" onclick="handleRegister()">Register & Access Content →</button>
+          <button class="modal-btn" id="regBtn" onclick="handleRegister()">Register & Access Content →</button>
           <div class="modal-switch">Already registered? <a onclick="showLogin()">Login here</a></div>
         </div>
         <div id="authLogin" style="display:none">
           <h2>Welcome Back</h2>
-          <p class="modal-sub">Login with your registered email.</p>
+          <p class="modal-sub">Login with your registered email and password.</p>
           <div class="modal-error" id="loginError"></div>
           <input class="modal-input" type="email" id="loginEmail" placeholder="Email Address *">
-          <button class="modal-btn" onclick="handleLogin()">Login →</button>
+          <input class="modal-input" type="password" id="loginPassword" placeholder="Password *">
+          <button class="modal-btn" id="loginBtn" onclick="handleLogin()">Login →</button>
           <div class="modal-switch">New here? <a onclick="showRegister()">Register now</a></div>
+          <div class="modal-switch" style="margin-top:6px"><a onclick="handleForgotPassword()">Forgot password?</a></div>
+        </div>
+        <div id="authVerify" style="display:none;text-align:center;padding:20px 0">
+          <div style="font-size:2.5rem;margin-bottom:12px">📧</div>
+          <h2>Verify Your Email</h2>
+          <p class="modal-sub">We've sent a verification link to your email. Click the link to verify, then come back and login.</p>
+          <button class="modal-btn" onclick="showLogin()">Go to Login →</button>
         </div>
       </div>
     </div>`;
@@ -224,41 +305,83 @@ function showLogin() {
   document.getElementById('authLogin').style.display = 'block';
 }
 
-function handleRegister() {
+async function handleRegister() {
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
   const phone = document.getElementById('regPhone').value.trim();
   const cls = document.getElementById('regClass').value;
   const city = document.getElementById('regCity').value.trim();
   const country = document.getElementById('regCountry').value.trim();
   const err = document.getElementById('regError');
+  const btn = document.getElementById('regBtn');
 
-  if (!name || !email || !phone || !cls || !city) {
+  if (!name || !email || !password || !phone || !cls || !city) {
     err.textContent = 'Please fill all required fields.';
-    err.style.display = 'block';
-    return;
+    err.style.display = 'block'; return;
   }
-  if (!email.includes('@') || !email.includes('.')) {
-    err.textContent = 'Please enter a valid email address.';
-    err.style.display = 'block';
-    return;
+  if (password.length < 6) {
+    err.textContent = 'Password must be at least 6 characters.';
+    err.style.display = 'block'; return;
   }
 
-  registerUser({name, email, phone, class: cls, city, country});
-  closeAuthModal();
-  if (typeof unlockContent === 'function') unlockContent();
-  location.reload();
+  btn.textContent = 'Creating account...';
+  btn.disabled = true;
+  err.style.display = 'none';
+
+  const result = await registerUser(name, email, password, phone, cls, city, country);
+  if (result.success) {
+    document.getElementById('authRegister').style.display = 'none';
+    document.getElementById('authVerify').style.display = 'block';
+  } else {
+    err.textContent = result.message;
+    err.style.display = 'block';
+    btn.textContent = 'Register & Access Content →';
+    btn.disabled = false;
+  }
 }
 
-function handleLogin() {
+async function handleLogin() {
   const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
   const err = document.getElementById('loginError');
-  if (!email) { err.textContent = 'Please enter your email.'; err.style.display = 'block'; return; }
-  if (loginUser(email)) {
+  const btn = document.getElementById('loginBtn');
+
+  if (!email || !password) {
+    err.textContent = 'Please enter email and password.';
+    err.style.display = 'block'; return;
+  }
+
+  btn.textContent = 'Logging in...';
+  btn.disabled = true;
+  err.style.display = 'none';
+
+  const result = await loginUser(email, password);
+  if (result.success) {
     closeAuthModal();
     location.reload();
   } else {
-    err.textContent = 'Email not found. Please register first.';
+    err.textContent = result.message;
+    err.style.display = 'block';
+    btn.textContent = 'Login →';
+    btn.disabled = false;
+  }
+}
+
+async function handleForgotPassword() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const err = document.getElementById('loginError');
+  if (!email) {
+    err.textContent = 'Enter your email above, then click Forgot Password.';
+    err.style.display = 'block'; return;
+  }
+  try {
+    await auth.sendPasswordResetEmail(email);
+    err.textContent = 'Password reset email sent! Check your inbox.';
+    err.style.color = 'var(--accent)';
+    err.style.display = 'block';
+  } catch(e) {
+    err.textContent = e.message;
     err.style.display = 'block';
   }
 }
@@ -306,7 +429,6 @@ function injectUserBar() {
 
 // ─── TEACHER PANEL ───
 function injectTeacherPanel() {
-  const students = getStudents();
   const html = `
     <div class="teacher-panel hidden" id="teacherPanel">
       <div class="tp-header">
@@ -320,15 +442,15 @@ function injectTeacherPanel() {
         <!-- Stats -->
         <div class="tp-grid">
           <div class="tp-stat-card">
-            <div class="tp-stat-num" id="tpStudentCount">${students.length}</div>
+            <div class="tp-stat-num" id="tpStudentCount">-</div>
             <div class="tp-stat-label">Registered Students</div>
           </div>
           <div class="tp-stat-card">
-            <div class="tp-stat-num" style="color:var(--accent-gold)">0</div>
-            <div class="tp-stat-label">Quizzes Attempted</div>
+            <div class="tp-stat-num" id="tpVerifiedCount" style="color:var(--accent-gold)">-</div>
+            <div class="tp-stat-label">Email Verified</div>
           </div>
           <div class="tp-stat-card">
-            <div class="tp-stat-num">0</div>
+            <div class="tp-stat-num" id="tpFeedbackCount">-</div>
             <div class="tp-stat-label">Feedback Messages</div>
           </div>
         </div>
@@ -349,33 +471,27 @@ function injectTeacherPanel() {
         <div class="tp-section">
           <h3>👥 Registered Students</h3>
           <div style="overflow-x:auto">
-            <table class="tp-table" id="tpStudentTable">
+            <table class="tp-table">
               <thead>
-                <tr><th>Name</th><th>Email</th><th>Phone</th><th>Class</th><th>City</th><th>Registered</th><th>Actions</th></tr>
+                <tr><th>Name</th><th>Email</th><th>Phone</th><th>Class</th><th>City</th><th>Verified</th><th>Registered</th><th>Actions</th></tr>
               </thead>
               <tbody id="tpStudentBody">
-                ${students.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:20px">No students registered yet. Students will appear here after they sign up.</td></tr>' :
-                students.map(s => `<tr>
-                  <td><strong>${escapeHtml(s.name)}</strong></td>
-                  <td>${escapeHtml(s.email)}</td>
-                  <td>${escapeHtml(s.phone)}</td>
-                  <td>${s.class || '-'}</td>
-                  <td>${escapeHtml(s.city || '-')}</td>
-                  <td>${s.registered ? new Date(s.registered).toLocaleDateString() : '-'}</td>
-                  <td>
-                    <button class="tp-action-btn wa" onclick="window.open('https://wa.me/${s.phone.replace(/[^0-9]/g,'')}','_blank')">WhatsApp</button>
-                    <button class="tp-action-btn email" onclick="window.open('mailto:${s.email}','_blank')">Email</button>
-                  </td>
-                </tr>`).join('')}
+                <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:20px">Loading students from Firebase...</td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
+        <!-- Feedback Messages -->
+        <div class="tp-section">
+          <h3>💬 Feedback Messages</h3>
+          <div id="tpFeedbackList" style="font-size:0.83rem;color:var(--text-muted)">Loading feedback...</div>
+        </div>
+
         <!-- Question Generator -->
         <div class="tp-section">
           <h3>⚡ AI Question Generator <span style="font-size:0.68rem;color:var(--accent-gold);font-weight:700;background:rgba(251,191,36,0.1);padding:2px 8px;border-radius:4px">AKSpected</span></h3>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Generate custom question papers using AI. Select options and generate.</p>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Generate custom question papers using AI.</p>
           <div class="tp-qgen-options">
             <select id="qgenType">
               <option value="full">Full Paper (80 marks)</option>
@@ -409,7 +525,7 @@ function injectTeacherPanel() {
         <!-- Broadcast -->
         <div class="tp-section">
           <h3>📢 Broadcast Message</h3>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Send a message to all registered students via WhatsApp or Email.</p>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Send a message to all registered students.</p>
           <textarea class="tp-broadcast" id="broadcastMsg" placeholder="Type your message here..."></textarea>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="modal-btn" style="max-width:200px;background:#25D366" onclick="broadcastWhatsApp()">💬 WhatsApp All</button>
@@ -417,13 +533,12 @@ function injectTeacherPanel() {
           </div>
         </div>
 
-        <!-- Analytics Placeholder -->
+        <!-- Analytics -->
         <div class="tp-section">
           <h3>📊 Student Analytics</h3>
-          <p style="font-size:0.82rem;color:var(--text-muted)">Detailed analytics will be available once Firebase is connected. This will show: individual quiz scores, chapter-wise performance, time spent, progress tracking, and consolidated class analytics.</p>
-          <div style="margin-top:14px;padding:20px;background:var(--bg);border-radius:8px;text-align:center">
-            <span style="font-size:2rem">📈</span>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin-top:8px">Connect Firebase to unlock analytics</p>
+          <div id="tpAnalytics" style="font-size:0.82rem;color:var(--text-muted)">
+            <p>Basic stats are shown above. For detailed analytics (quiz scores, chapter-wise performance, time tracking), integrate Firebase Analytics in the console:</p>
+            <p style="margin-top:8px"><a href="https://console.firebase.google.com" target="_blank" style="color:var(--accent)">Open Firebase Console →</a></p>
           </div>
         </div>
       </div>
@@ -431,17 +546,79 @@ function injectTeacherPanel() {
   document.body.insertAdjacentHTML('beforeend', html);
 }
 
+// Load students into teacher panel from Firestore
+async function loadTeacherData() {
+  try {
+    const students = await getStudents();
+    const tbody = document.getElementById('tpStudentBody');
+    const countEl = document.getElementById('tpStudentCount');
+    const verifiedEl = document.getElementById('tpVerifiedCount');
+
+    if (countEl) countEl.textContent = students.length;
+    const verified = students.filter(s => s.verified).length;
+    if (verifiedEl) verifiedEl.textContent = verified;
+
+    if (tbody) {
+      if (students.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:20px">No students registered yet.</td></tr>';
+      } else {
+        tbody.innerHTML = students.map(s => `<tr>
+          <td><strong>${escapeHtml(s.name || '')}</strong></td>
+          <td>${escapeHtml(s.email || '')}</td>
+          <td>${escapeHtml(s.phone || '')}</td>
+          <td>${s.class || '-'}</td>
+          <td>${escapeHtml(s.city || '-')}</td>
+          <td>${s.verified ? '<span style="color:var(--accent)">✓ Yes</span>' : '<span style="color:var(--accent-gold)">Pending</span>'}</td>
+          <td>${s.registered ? new Date(s.registered).toLocaleDateString() : '-'}</td>
+          <td>
+            <button class="tp-action-btn wa" onclick="window.open('https://wa.me/${(s.phone||'').replace(/[^0-9]/g,'')}','_blank')">WA</button>
+            <button class="tp-action-btn email" onclick="window.open('mailto:${s.email}','_blank')">Mail</button>
+          </td>
+        </tr>`).join('');
+      }
+    }
+
+    // Load feedback
+    const fbSnap = await db.collection('bstbaba_feedback').orderBy('timestamp', 'desc').limit(20).get();
+    const fbList = document.getElementById('tpFeedbackList');
+    const fbCountEl = document.getElementById('tpFeedbackCount');
+    if (fbCountEl) fbCountEl.textContent = fbSnap.size;
+
+    if (fbList) {
+      if (fbSnap.empty) {
+        fbList.innerHTML = '<p>No feedback yet.</p>';
+      } else {
+        fbList.innerHTML = fbSnap.docs.map(doc => {
+          const f = doc.data();
+          return `<div style="padding:12px;background:var(--bg);border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <strong>${escapeHtml(f.name || 'Anonymous')}</strong>
+              <span style="font-size:0.7rem;color:var(--text-muted)">${f.timestamp ? new Date(f.timestamp).toLocaleDateString() : ''}</span>
+            </div>
+            <p style="margin-bottom:4px">${escapeHtml(f.message)}</p>
+            <span style="font-size:0.72rem;color:var(--text-muted)">${escapeHtml(f.email || '')}</span>
+          </div>`;
+        }).join('');
+      }
+    }
+  } catch(e) {
+    console.error('Error loading teacher data:', e);
+  }
+}
+
 // Teacher panel password gate
 let teacherPanelUnlocked = false;
 function openTeacherPanel() {
   if (teacherPanelUnlocked) {
     document.getElementById('teacherPanel').classList.remove('hidden');
+    loadTeacherData();
     return;
   }
   const pwd = prompt('Enter Teacher Panel Password:');
   if (pwd === 'aks1234') {
     teacherPanelUnlocked = true;
     document.getElementById('teacherPanel').classList.remove('hidden');
+    loadTeacherData();
   } else if (pwd !== null) {
     alert('Incorrect password.');
   }
@@ -522,24 +699,24 @@ function copyQuestions() {
 }
 
 // Broadcast
-function broadcastWhatsApp() {
+async function broadcastWhatsApp() {
   const msg = document.getElementById('broadcastMsg').value.trim();
   if (!msg) { alert('Please type a message first.'); return; }
-  const students = getStudents();
+  const students = await getStudents();
   if (students.length === 0) { alert('No students registered yet.'); return; }
   const encoded = encodeURIComponent(msg);
   students.forEach(s => {
-    const phone = s.phone.replace(/[^0-9]/g, '');
-    if (phone) window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank');
+    const phone = (s.phone || '').replace(/[^0-9]/g, '');
+    if (phone) window.open('https://wa.me/' + phone + '?text=' + encoded, '_blank');
   });
 }
-function broadcastEmail() {
+async function broadcastEmail() {
   const msg = document.getElementById('broadcastMsg').value.trim();
   if (!msg) { alert('Please type a message first.'); return; }
-  const students = getStudents();
+  const students = await getStudents();
   const emails = students.map(s => s.email).filter(Boolean).join(',');
   if (!emails) { alert('No student emails found.'); return; }
-  window.open(`mailto:${emails}?subject=${encodeURIComponent('BSt Baba - AKSpected Update')}&body=${encodeURIComponent(msg)}`, '_blank');
+  window.open('mailto:' + emails + '?subject=' + encodeURIComponent('BSt Baba - AKSpected Update') + '&body=' + encodeURIComponent(msg), '_blank');
 }
 
 // ─── KEY LISTENER (B = Teacher Panel) + Hidden button for mobile/iPad ───
