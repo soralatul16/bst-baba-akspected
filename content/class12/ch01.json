@@ -1,0 +1,161 @@
+{
+  "chapter": 1,
+  "class": 12,
+  "title": "Nature and Significance of Management",
+  "marks": 6,
+  "slug": "ch01",
+  "summary": [
+    "Management is the process of <strong>Planning, Organising, Staffing, Directing, and Controlling</strong> to achieve organisational goals effectively and efficiently.",
+    "<strong>Effectiveness</strong> = completing the task on time (doing the right things). <strong>Efficiency</strong> = completing the task at minimum cost (doing things right).",
+    "Management has 7 characteristics: Goal-oriented, All-pervasive, Multi-dimensional, Continuous process, Group activity, Dynamic, Intangible force.",
+    "Management has 3 types of objectives: <strong>Organisational</strong> (Survival, Profit, Growth), <strong>Social</strong> (Public welfare), <strong>Personal</strong> (Employee growth).",
+    "Management is an <strong>Art</strong> (personalised application), an <strong>Inexact Science</strong> (systematic but deals with human behaviour), and <strong>not a full-fledged Profession</strong> (no mandatory degree or license required).",
+    "Three levels: <strong>Top Level</strong> (policies, strategy), <strong>Middle Level</strong> (departmental plans, coordination), <strong>Lower Level</strong> (daily tasks, supervision).",
+    "<strong>Coordination</strong> is the essence of management — it integrates group efforts, ensures unity of action, and is needed at all levels."
+  ],
+  "teacher_tip": {
+    "title": "AKSpected Shortcut",
+    "text": "If the question mentions <strong>'getting things done through others'</strong> → Management. <strong>'On time'</strong> → Effectiveness. <strong>'Minimum cost'</strong> → Efficiency. <strong>'Cannot be seen but felt'</strong> → Intangible force. <strong>'Synchronising activities'</strong> → Coordination."
+  },
+  "notes": {
+    "sections": [
+      {
+        "title": "Meaning of Management",
+        "content": "Management is the art of getting things done with and through others, through Planning, Organising, Staffing, Directing, and Controlling for achieving organisational goals effectively and efficiently.",
+        "definition": {
+          "term": "Management",
+          "text": "The process of designing and maintaining an environment in which individuals, working together in groups, efficiently accomplish selected aims. — Harold Koontz"
+        }
+      },
+      {
+        "title": "Effectiveness vs Efficiency",
+        "content": "A manager always aims for both effectiveness and efficiency. A manager may be effective but not efficient (achieves target but at high cost), or efficient but not effective (low cost but missed the goal)."
+      },
+      {
+        "title": "Characteristics of Management",
+        "points": [
+          "<strong>1. Goal-Oriented Process:</strong> Management unites individual efforts towards achieving clearly stated organisational goals.",
+          "<strong>2. All-Pervasive:</strong> Management activities are common to all organisations — economic, social, or political. A petrol pump needs to be managed as much as a hospital.",
+          "<strong>3. Multi-Dimensional:</strong> Management involves three dimensions simultaneously — management of Work, People, and Operations.",
+          "<strong>4. Continuous Process:</strong> Planning, Organising, Staffing, Directing, and Controlling are performed simultaneously by all managers, all the time.",
+          "<strong>5. Group Activity:</strong> An organisation is a collection of diverse individuals working towards common goals through teamwork and coordination.",
+          "<strong>6. Dynamic Function:</strong> Management must adapt to changing environment — social, economic, and political factors. Example: McDonald's changed its menu for the Indian market.",
+          "<strong>7. Intangible Force:</strong> Cannot be seen but its presence is felt — targets are met, employees are happy, orderliness instead of chaos."
+        ]
+      },
+      {
+        "title": "Objectives of Management",
+        "points": [
+          "<strong>Organisational Objectives:</strong> Survival (earn enough revenue), Profit (cover costs and risks), Growth (increase sales, employees, products, capital).",
+          "<strong>Social Objectives:</strong> Good quality products, pollution control, employment generation, opening schools and healthcare. Example: e-Choupal by ITC.",
+          "<strong>Personal Objectives:</strong> Good salaries and perks, good working conditions, training and development opportunities for employees."
+        ]
+      },
+      {
+        "title": "Importance of Management",
+        "points": [
+          "<strong>1. Achieves group goals:</strong> Gives common direction to individual efforts.",
+          "<strong>2. Increases efficiency:</strong> Reduces costs and increases productivity through better planning and controlling.",
+          "<strong>3. Creates a dynamic organisation:</strong> Helps people adapt to changes and maintain competitive edge.",
+          "<strong>4. Achieves personal objectives:</strong> Motivates individuals to achieve personal goals while contributing to organisational objectives.",
+          "<strong>5. Develops society:</strong> Provides quality products, creates employment, adopts new technology for greater good."
+        ]
+      },
+      {
+        "title": "Management as Art, Science, and Profession",
+        "points": [
+          "<strong>As Art:</strong> Based on theoretical knowledge, personalised application, and practice with creativity. Each manager applies principles in their own unique way.",
+          "<strong>As Science:</strong> Has a systematised body of knowledge, principles based on experimentation, and universal validity. But it's an <em>inexact science</em> because it deals with human behaviour.",
+          "<strong>As Profession:</strong> Has a well-defined body of knowledge (MBA courses exist) and AIMA exists. But NO mandatory degree required, NO compulsory registration, NO statutory code of conduct. Therefore, management is <strong>NOT a full-fledged profession</strong>."
+        ]
+      },
+      {
+        "title": "Levels of Management",
+        "points": [
+          "<strong>Top Level:</strong> Chairman, CEO, COO. Lay down policies and objectives, formulate strategies, responsible for welfare and survival. They interact with the external environment.",
+          "<strong>Middle Level:</strong> Departmental heads, Plant Superintendents. Carry out plans as per top-level policies, organise divisional activities, motivate junior managers, link top and lower levels.",
+          "<strong>Lower Level (Supervisory):</strong> Foremen, Supervisors. Allocate tasks to workers, ensure quality and quantity of output, communicate worker grievances upward, maintain discipline and minimise wastage."
+        ]
+      },
+      {
+        "title": "Coordination — Essence of Management",
+        "content": "Coordination synchronises various organisational activities to achieve common goals with minimum conflict. It is NOT a separate function — it is the force that binds all five functions together.",
+        "definition": {
+          "term": "Coordination",
+          "text": "The process of integrating efforts of different individuals to secure unity of action in the pursuit of common goals."
+        }
+      },
+      {
+        "title": "Features of Coordination",
+        "points": [
+          "<strong>1. Integrates group efforts:</strong> Brings diverse activities into purposeful group activity.",
+          "<strong>2. Ensures unity of action:</strong> Directs different departments towards common goals.",
+          "<strong>3. Continuous process:</strong> Required at all levels, in all departments, at all times.",
+          "<strong>4. All-pervasive:</strong> Needed in every type of organisation.",
+          "<strong>5. Responsibility of all managers:</strong> Equally important at top, middle, and lower levels.",
+          "<strong>6. Deliberate function:</strong> Never established by itself — requires conscious effort. Cooperation is voluntary; coordination is planned."
+        ]
+      }
+    ]
+  },
+  "tables": [
+    {
+      "title": "Effectiveness vs Efficiency",
+      "tip": "Very common 1-mark or 3-mark question. Know both definitions and the difference clearly.",
+      "headers": ["Basis", "Effectiveness", "Efficiency"],
+      "rows": [
+        ["Meaning", "Completing the job on time", "Completing the job at minimum cost"],
+        ["Objective", "Achieve end result on time", "Cost-benefit analysis"],
+        ["Focus", "Doing the right things", "Doing things right"],
+        ["Main Consideration", "Time", "Cost"]
+      ]
+    },
+    {
+      "title": "Management as Art vs Science vs Profession",
+      "tip": "Know why management is NOT a full-fledged profession — this is a common 4-6 mark question.",
+      "headers": ["Basis", "Art", "Science", "Profession"],
+      "rows": [
+        ["Knowledge", "Theoretical knowledge exists", "Systematised body of knowledge", "Well-defined body of knowledge (MBA)"],
+        ["Application", "Personalised — varies by individual", "Principles tested by experimentation", "No mandatory degree required"],
+        ["Practice", "Based on creativity and practice", "Universal validity (but inexact)", "AIMA exists but no compulsory membership"],
+        ["Verdict", "Yes, management is an art", "Yes, but inexact/social science", "NOT a full-fledged profession"]
+      ]
+    }
+  ],
+  "questions": [
+    {"type": "MCQ", "marks": 1, "text": "Management is described as a process of achieving goals through:", "answer": "<strong>(c) Group efforts.</strong> Management involves coordinating individual efforts towards common organisational goals."},
+    {"type": "MCQ", "marks": 1, "text": "Which characteristic of management is highlighted when targets are met, employees are happy, and there is orderliness instead of chaos?", "answer": "<strong>Management is an intangible force.</strong> It cannot be seen directly but its presence is felt through results."},
+    {"type": "MCQ", "marks": 1, "text": "The process by which a manager synchronises the activities of different departments is known as:", "answer": "<strong>Coordination.</strong> It integrates diverse efforts to achieve common goals with minimum conflict."},
+    {"type": "Short Answer", "marks": 3, "text": "Explain the concept of 'Effectiveness' and 'Efficiency' with an example.", "answer": "<strong>Effectiveness</strong> means completing the task on time — doing the right things. <strong>Efficiency</strong> means completing the task at minimum cost — doing things right.<br><br>Example: A production manager has a target of 10,000 shirts per month at ₹150/shirt. If he produces 10,000 shirts at ₹160/shirt, he is <strong>effective</strong> (target met) but <strong>not efficient</strong> (cost exceeded)."},
+    {"type": "Short Answer", "marks": 3, "text": "State any three characteristics of management.", "answer": "(i) <strong>Goal-Oriented:</strong> Management unites individual efforts towards achieving organisational goals.<br>(ii) <strong>All-Pervasive:</strong> Management is needed in all types of organisations — business, social, or political.<br>(iii) <strong>Continuous Process:</strong> Planning, organising, staffing, directing, and controlling are performed simultaneously and continuously."},
+    {"type": "Short Answer", "marks": 3, "text": "Why is coordination called the 'essence of management'?", "answer": "Coordination is not a separate function but the <strong>force that binds all five functions</strong> of management — Planning, Organising, Staffing, Directing, and Controlling. Without coordination, these functions would operate in isolation, leading to confusion and inefficiency. It ensures unity of action at all levels."},
+    {"type": "Distinguish Between", "marks": 4, "text": "Distinguish between Effectiveness and Efficiency.", "answer": "(1) Effectiveness means completing the job on time; Efficiency means completing it at minimum cost.<br>(2) Effectiveness focuses on doing the right things; Efficiency focuses on doing things right.<br>(3) Effectiveness is concerned with time; Efficiency is concerned with cost.<br>(4) A manager may be effective but not efficient, and vice versa."},
+    {"type": "Long Answer", "marks": 6, "text": "Explain the importance of management.", "answer": "(i) <strong>Achieves group goals:</strong> Gives common direction to individual effort in achieving overall organisational objectives.<br>(ii) <strong>Increases efficiency:</strong> Reduces costs and increases productivity through better planning and controlling.<br>(iii) <strong>Creates dynamic organisation:</strong> Helps people adapt to environmental changes and maintain competitive edge.<br>(iv) <strong>Achieves personal objectives:</strong> Motivates individuals to achieve personal goals while contributing to organisational objectives.<br>(v) <strong>Develops society:</strong> Provides quality products, creates employment, and adopts new technology for greater good."},
+    {"type": "Case Study", "marks": 5, "text": "Esha works as the cost and risk management head. Due to her excellent managerial competence, the company reduces costs and increases productivity. She holds regular meetings to ensure people adapt to regulatory changes. She motivates her team so that individuals achieve personal goals while contributing to the organisation.<br><br>Identify the importance of management highlighted above.", "answer": "<strong>1. Increases efficiency:</strong> 'Reduces costs and increases productivity' — Management leads to optimum utilisation of resources.<br><br><strong>2. Creates dynamic organisation:</strong> 'Holds regular meetings to ensure people adapt to regulatory changes' — Management helps the organisation maintain its competitive edge.<br><br><strong>3. Achieves personal objectives:</strong> 'Motivates her team so that individuals achieve personal goals' — Management helps employees grow while contributing to the organisation."}
+  ],
+  "pyqs": [
+    {"year": 2025, "marks": 1, "text": "Which of the following is NOT a function of management? (a) Planning (b) Cooperating (c) Controlling (d) Staffing", "answer": "<strong>(b) Cooperating.</strong> The five functions of management are Planning, Organising, Staffing, Directing, and Controlling."},
+    {"year": 2024, "marks": 3, "text": "State any three features of coordination.", "answer": "(i) <strong>Integrates group efforts</strong> — brings diverse activities into purposeful group activity.<br>(ii) <strong>Ensures unity of action</strong> — directs different departments towards common goals.<br>(iii) <strong>Continuous process</strong> — required at all levels and all times."},
+    {"year": 2024, "marks": 4, "text": "Explain the three dimensions of management.", "answer": "(i) <strong>Management of Work:</strong> Translates work into goals, assigns means — problems to solve, decisions to make, plans to establish.<br>(ii) <strong>Management of People:</strong> Makes people work towards organisational goals by dealing with individuals and groups, making strengths effective and weaknesses irrelevant.<br>(iii) <strong>Management of Operations:</strong> The flow of inputs and technology for transforming inputs into desired outputs — scheduling and setting up timetables."}
+  ],
+  "related_chapters": [
+    {"num": 2, "title": "Principles of Management", "reason": "Principles guide the functions discussed here"},
+    {"num": 4, "title": "Planning", "reason": "First function of management"},
+    {"num": 5, "title": "Organising", "reason": "Second function of management"},
+    {"num": 8, "title": "Controlling", "reason": "Last function — closes the management cycle"}
+  ],
+  "mnemonics": [
+    {
+      "title": "5 Functions of Management — POSDC",
+      "text": "<strong>P</strong>lanning → <strong>O</strong>rganising → <strong>S</strong>taffing → <strong>D</strong>irecting → <strong>C</strong>ontrolling"
+    },
+    {
+      "title": "3 Objectives — OSP",
+      "text": "<strong>O</strong>rganisational (Survival, Profit, Growth)<br><strong>S</strong>ocial (Public Welfare)<br><strong>P</strong>ersonal (Employee Growth)"
+    },
+    {
+      "title": "7 Characteristics — GAM-C-GDI",
+      "text": "<strong>G</strong>oal-oriented · <strong>A</strong>ll-pervasive · <strong>M</strong>ulti-dimensional · <strong>C</strong>ontinuous · <strong>G</strong>roup activity · <strong>D</strong>ynamic · <strong>I</strong>ntangible"
+    }
+  ]
+}
