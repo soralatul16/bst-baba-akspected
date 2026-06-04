@@ -8,39 +8,51 @@
 let currentUser = null;
 let currentUserData = null;
 
+// ─── AUTH STATE (Firebase is the source of truth, localStorage fallback) ───
 function isLoggedIn() {
-  return !!currentUser || !!localStorage.getItem('bstbaba_user');
+  if (typeof auth !== 'undefined' && auth.currentUser) return true;
+  return !!localStorage.getItem('bstbaba_firebase_uid');
 }
 function getUser() {
   return currentUserData || JSON.parse(localStorage.getItem('bstbaba_user') || 'null');
 }
 
 // Listen for auth state changes
-auth.onAuthStateChanged(async (user) => {
-  currentUser = user;
-  if (user) {
-    try {
-      const doc = await db.collection('bstbaba_users').doc(user.uid).get();
-      if (doc.exists) {
-        currentUserData = doc.data();
-        localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
-      }
-    } catch(e) {}
-    // Remove content locks if they exist
-    document.querySelectorAll('.content-locked').forEach(el => {
-      el.classList.remove('content-locked');
-      el.style.maxHeight = '';
-      el.style.overflow = '';
-    });
-    document.querySelectorAll('.lock-prompt').forEach(el => el.remove());
-    injectUserBar();
-  } else {
-    currentUser = null;
-    currentUserData = null;
-  }
-});
+let authReady = false;
+if (typeof auth !== 'undefined') {
+  auth.onAuthStateChanged(async (user) => {
+    currentUser = user;
+    authReady = true;
+    if (user) {
+      localStorage.setItem('bstbaba_firebase_uid', user.uid);
+      try {
+        const doc = await db.collection('bstbaba_users').doc(user.uid).get();
+        if (doc.exists) {
+          currentUserData = doc.data();
+          localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
+        }
+      } catch(e) {}
+      document.querySelectorAll('.content-locked').forEach(el => {
+        el.classList.remove('content-locked');
+        el.style.maxHeight = '';
+        el.style.overflow = '';
+      });
+      document.querySelectorAll('.lock-prompt').forEach(el => el.remove());
+      injectUserBar();
+    } else {
+      currentUser = null;
+      currentUserData = null;
+      localStorage.removeItem('bstbaba_user');
+      localStorage.removeItem('bstbaba_firebase_uid');
+      gateContent();
+    }
+  });
+}
 
 async function registerUser(name, email, password, phone, cls, city, country) {
+  if (typeof auth === 'undefined') {
+    return {success: false, message: 'Firebase not loaded. Please try on the live site.'};
+  }
   try {
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     await cred.user.sendEmailVerification();
@@ -60,6 +72,9 @@ async function registerUser(name, email, password, phone, cls, city, country) {
 }
 
 async function loginUser(email, password) {
+  if (typeof auth === 'undefined') {
+    return {success: false, message: 'Firebase not loaded. Please try on the live site.'};
+  }
   try {
     const cred = await auth.signInWithEmailAndPassword(email, password);
     const doc = await db.collection('bstbaba_users').doc(cred.user.uid).get();
@@ -407,7 +422,9 @@ async function handleForgotPassword() {
 
 // ─── CONTENT GATING ───
 function gateContent() {
-  if (isLoggedIn()) return;
+  if (document.querySelector('.lock-prompt')) return;
+  if (typeof auth !== 'undefined' && auth.currentUser) return;
+  if (localStorage.getItem('bstbaba_firebase_uid')) return;
 
   // Gate everything after hero/first section on ALL pages
   const allSections = document.querySelectorAll('.section, .chapter-body');
@@ -799,6 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectFeedback();
   injectAuthModal();
   injectTeacherPanel();
-  injectUserBar();
-  if (!isLoggedIn()) gateContent();
+  // Content gating is handled by auth.onAuthStateChanged above
+  // Gate immediately, Firebase will unlock if user is authenticated
+  gateContent();
 });
