@@ -26,6 +26,13 @@ auth.onAuthStateChanged(async (user) => {
         localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
       }
     } catch(e) {}
+    // Remove content locks if they exist
+    document.querySelectorAll('.content-locked').forEach(el => {
+      el.classList.remove('content-locked');
+      el.style.maxHeight = '';
+      el.style.overflow = '';
+    });
+    document.querySelectorAll('.lock-prompt').forEach(el => el.remove());
     injectUserBar();
   } else {
     currentUser = null;
@@ -86,6 +93,20 @@ async function getStudents() {
   }
 }
 
+// ─── API KEY (Firestore-backed, cached in localStorage) ───
+async function getGrokKey() {
+  const cached = localStorage.getItem('bstbaba_grok_key');
+  if (cached) return cached;
+  try {
+    const doc = await db.collection('bstbaba_config').doc('grok').get();
+    if (doc.exists && doc.data().apiKey) {
+      localStorage.setItem('bstbaba_grok_key', doc.data().apiKey);
+      return doc.data().apiKey;
+    }
+  } catch(e) {}
+  return null;
+}
+
 // ─── INJECT FLOATING BUTTONS ───
 function injectFloatingButtons() {
   const html = `
@@ -134,7 +155,7 @@ function toggleChatbot() {
   }
 }
 
-function sendChat() {
+async function sendChat() {
   const input = document.getElementById('chatInput');
   const msg = input.value.trim();
   if (!msg) return;
@@ -143,12 +164,10 @@ function sendChat() {
   input.value = '';
   messages.scrollTop = messages.scrollHeight;
 
-  const apiKey = localStorage.getItem('bstbaba_grok_key');
+  const apiKey = await getGrokKey();
   if (!apiKey) {
-    setTimeout(() => {
-      messages.innerHTML += `<div class="chat-msg bot">The AI assistant is not configured yet. Ask your teacher (AKS) to set up the API key through the Teacher Panel. In the meantime, check the chapter notes for your answer! 📖</div>`;
+    messages.innerHTML += `<div class="chat-msg bot">The AI assistant is not configured yet. Your teacher (AKS) needs to set up the API key. In the meantime, check the chapter notes for your answer! 📖</div>`;
       messages.scrollTop = messages.scrollHeight;
-    }, 400);
     return;
   }
 
@@ -389,25 +408,44 @@ async function handleForgotPassword() {
 // ─── CONTENT GATING ───
 function gateContent() {
   if (isLoggedIn()) return;
-  const sections = document.querySelectorAll('.section');
-  if (sections.length <= 1) return;
-  // Lock all sections after the first one
-  for (let i = 1; i < sections.length; i++) {
-    sections[i].classList.add('content-locked');
-    sections[i].style.maxHeight = '300px';
-    sections[i].style.overflow = 'hidden';
+
+  // Gate everything after hero/first section on ALL pages
+  const allSections = document.querySelectorAll('.section, .chapter-body');
+  const heroExists = document.querySelector('.hero, .page-hero');
+
+  if (allSections.length === 0) return;
+
+  const startIndex = heroExists ? 0 : 0;
+  let gated = false;
+
+  for (let i = startIndex; i < allSections.length; i++) {
+    if (i === 0 && document.querySelector('.hero')) continue;
+    allSections[i].classList.add('content-locked');
+    allSections[i].style.maxHeight = '250px';
+    allSections[i].style.overflow = 'hidden';
+    if (!gated) {
+      const prompt = document.createElement('div');
+      prompt.className = 'lock-prompt';
+      prompt.innerHTML = `
+        <h3>🔒 Register or Login to Access Full Content</h3>
+        <p>Sign up for free to unlock all chapters, questions, flashcards, and AKSpected practice sets.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="modal-btn" style="max-width:220px" onclick="showAuthModal(); showRegister()">Register for Free →</button>
+          <button class="modal-btn gold" style="max-width:220px" onclick="showAuthModal(); showLogin()">Already Registered? Login →</button>
+        </div>`;
+      allSections[i].parentNode.insertBefore(prompt, allSections[i].nextSibling);
+      gated = true;
+    }
   }
-  // Add lock prompt after first locked section
-  const firstLocked = sections[1];
-  if (firstLocked) {
-    const prompt = document.createElement('div');
-    prompt.className = 'lock-prompt';
-    prompt.innerHTML = `
-      <h3>🔒 Register to Access Full Content</h3>
-      <p>Sign up for free to unlock all chapters, questions, flashcards, and AKSpected practice sets.</p>
-      <button class="modal-btn" style="max-width:280px;margin:0 auto;display:block" onclick="showAuthModal()">Register for Free →</button>`;
-    firstLocked.parentNode.insertBefore(prompt, firstLocked.nextSibling);
-  }
+
+  // Also gate flashcard container, chapter body etc.
+  const extraGates = document.querySelectorAll('.flashcard-container, .chapter-main, #pyqList');
+  extraGates.forEach(el => {
+    if (!gated) return;
+    el.classList.add('content-locked');
+    el.style.maxHeight = '200px';
+    el.style.overflow = 'hidden';
+  });
 }
 
 // ─── USER BAR (logged-in state) ───
@@ -628,7 +666,7 @@ function closeTeacherPanel() {
 }
 
 // Save Grok API Key
-function saveGrokKey() {
+async function saveGrokKey() {
   const key = document.getElementById('grokKeyInput').value.trim();
   const status = document.getElementById('grokKeyStatus');
   if (!key || !key.startsWith('xai-')) {
@@ -638,14 +676,19 @@ function saveGrokKey() {
     return;
   }
   localStorage.setItem('bstbaba_grok_key', key);
-  status.textContent = '✓ API key saved! Chatbot and Question Generator are now active.';
+  try {
+    await db.collection('bstbaba_config').doc('grok').set({apiKey: key, updated: new Date().toISOString()});
+    status.textContent = '✓ API key saved to cloud! Works on all devices now.';
+  } catch(e) {
+    status.textContent = '✓ Key saved locally. Cloud save failed — check Firestore setup.';
+  }
   status.style.color = 'var(--accent)';
   status.style.display = 'block';
 }
 
 // Question generator placeholder
-function generateQuestions() {
-  const apiKey = localStorage.getItem('bstbaba_grok_key');
+async function generateQuestions() {
+  const apiKey = await getGrokKey();
   const type = document.getElementById('qgenType').value;
   const ch = document.getElementById('qgenChapter').value;
   const count = document.getElementById('qgenCount').value;
