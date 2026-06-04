@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 12 Dashboard | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html" class="active">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Class 12</div>
+    <h1>Class 12 — Board Exam Ready</h1>
+    <div class="meta-bar">
+      <span>📖 12 Chapters</span>
+      <span>📊 80 Marks Theory</span>
+      <span>📋 20 Marks Project</span>
+      <span>⏰ 3 Hours</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="weightage-section">
+    <div class="section-label">Know Where the Marks Are</div>
+    <div class="section-title" style="margin-bottom:20px">Chapter-Wise Marks Weightage</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:28px">
+      <div>
+        <h3 style="font-size:0.82rem;font-weight:700;margin-bottom:12px;color:var(--accent)">Part A: Principles & Functions (50 marks)</h3>
+        <div class="wt-bar"><span class="wt-label">Ch 1: Nature of Mgmt</span><div class="wt-track"><div class="wt-fill" style="width:55%"></div></div><span class="wt-marks">6 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 2: Principles</span><div class="wt-track"><div class="wt-fill" style="width:64%"></div></div><span class="wt-marks">7 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 3: Business Env.</span><div class="wt-track"><div class="wt-fill" style="width:36%"></div></div><span class="wt-marks">4 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 4: Planning</span><div class="wt-track"><div class="wt-fill" style="width:55%"></div></div><span class="wt-marks">6 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 5: Organising</span><div class="wt-track"><div class="wt-fill high" style="width:73%"></div></div><span class="wt-marks">8 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 6: Staffing</span><div class="wt-track"><div class="wt-fill" style="width:64%"></div></div><span class="wt-marks">7 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 7: Directing</span><div class="wt-track"><div class="wt-fill high" style="width:73%"></div></div><span class="wt-marks">8 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 8: Controlling</span><div class="wt-track"><div class="wt-fill" style="width:36%"></div></div><span class="wt-marks">4 m</span></div>
+      </div>
+      <div>
+        <h3 style="font-size:0.82rem;font-weight:700;margin-bottom:12px;color:var(--accent-gold)">Part B: Business Finance & Marketing (30 marks)</h3>
+        <div class="wt-bar"><span class="wt-label">Ch 9: Financial Mgmt</span><div class="wt-track"><div class="wt-fill high" style="width:73%"></div></div><span class="wt-marks">8 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 10: Financial Mkts</span><div class="wt-track"><div class="wt-fill" style="width:64%"></div></div><span class="wt-marks">7 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 11: Marketing</span><div class="wt-track"><div class="wt-fill high" style="width:100%"></div></div><span class="wt-marks">11 m</span></div>
+        <div class="wt-bar"><span class="wt-label">Ch 12: Consumer Prot.</span><div class="wt-track"><div class="wt-fill" style="width:36%"></div></div><span class="wt-marks">4 m</span></div>
+      </div>
+    </div>
+    <div class="akspected-tip" style="margin-top:20px">
+      <div class="tip-label">AKSpected Strategy</div>
+      <p><strong>Marketing (11m) + Organising (8m) + Directing (8m) + Financial Mgmt (8m) = 35 marks</strong> from just 4 chapters. That's 44% of your theory paper. Master these first.</p>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:44px">Part A · 50 Marks</div>
+  <div class="section-title" style="margin-bottom:18px">Principles & Functions of Management</div>
+  <div class="chapter-grid">
+    <a href="chapter.html?class=12&ch=ch01" class="chapter-card"><div class="ch-number">01</div><h3>Nature and Significance of Management</h3><p>Concept, objectives, importance. Management as Science, Art & Profession. Levels. Coordination.</p><span class="ch-marks medium">6 Marks</span></a>
+    <a href="chapter.html?class=12&ch=ch02" class="chapter-card"><div class="ch-number">02</div><h3>Principles of Management</h3><p>Fayol's 14 Principles. Taylor's Scientific Management. Techniques — time study, motion study.</p><span class="ch-marks medium">7 Marks</span></a>
+    <a href="chapter.html?class=12&ch=ch03" class="chapter-card"><div class="ch-number">03</div><h3>Business Environment</h3><p>Dimensions — Economic, Social, Technological, Political, Legal. Demonetisation.</p><span class="ch-marks low">4 Marks</span></a>
+    <a href="chapter.html?class=12&ch=ch04" class="chapter-card"><div class="ch-number">04</div><h3>Planning</h3><p>Concept, importance & limitations. Planning process. Types of plans.</p><span class="ch-marks medium">6 Marks</span></a>
+    <a href="chapter.html?class=12&ch=ch05" class="chapter-card"><div class="ch-number">05</div><h3>Organising</h3><p>Functional & Divisional structure. Formal & Informal org. Delegation & Decentralisation.</p><span class="ch-marks high">8 Marks ★</span></a>
+    <a href="chapter.html?class=12&ch=ch06" class="chapter-card"><div class="ch-number">06</div><h3>Staffing</h3><p>Staffing process. Recruitment & Selection. Training methods.</p><span class="ch-marks medium">7 Marks</span></a>
+    <a href="chapter.html?class=12&ch=ch07" class="chapter-card"><div class="ch-number">07</div><h3>Directing</h3><p>Motivation & Maslow's hierarchy. Leadership styles. Communication & barriers.</p><span class="ch-marks high">8 Marks ★</span></a>
+    <a href="chapter.html?class=12&ch=ch08" class="chapter-card"><div class="ch-number">08</div><h3>Controlling</h3><p>Concept & importance. Control process. Planning vs Controlling.</p><span class="ch-marks low">4 Marks</span></a>
+  </div>
+
+  <div class="section-label" style="margin-top:44px">Part B · 30 Marks</div>
+  <div class="section-title" style="margin-bottom:18px">Business Finance & Marketing</div>
+  <div class="chapter-grid">
+    <a href="chapter.html?class=12&ch=ch09" class="chapter-card"><div class="ch-number">09</div><h3>Financial Management</h3><p>Financial decisions. Capital structure. Fixed & Working capital.</p><span class="ch-marks high">8 Marks ★</span></a>
+    <a href="chapter.html?class=12&ch=ch10" class="chapter-card"><div class="ch-number">10</div><h3>Financial Markets</h3><p>Money & Capital market. Stock Exchange. SEBI.</p><span class="ch-marks medium">7 Marks</span></a>
+    <a href="chapter.html?class=12&ch=ch11" class="chapter-card"><div class="ch-number">11</div><h3>Marketing Management</h3><p>Marketing mix (4Ps). Branding, Labelling, Packaging.</p><span class="ch-marks high">11 Marks ★★</span></a>
+    <a href="chapter.html?class=12&ch=ch12" class="chapter-card"><div class="ch-number">12</div><h3>Consumer Protection</h3><p>Consumer rights. Consumer Protection Act 2019. Redressal.</p><span class="ch-marks low">4 Marks</span></a>
+  </div>
+
+  <div style="margin-top:36px;display:flex;gap:10px;flex-wrap:wrap">
+    <a href="flashcards.html?class=12&ch=ch02" class="btn-quiz" style="background:var(--accent)">⚡ Flashcards</a>
+    <a href="pyq-bank.html" class="btn-quiz" style="background:var(--accent-gold)">📄 PYQ Bank</a>
+    <a href="answer-templates.html" class="btn-quiz" style="background:var(--accent)">📋 Answer Templates</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero" id="chapterHero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb" id="breadcrumb">Loading...</div>
+    <h1 id="chapterTitle">Loading chapter...</h1>
+    <div class="meta-bar" id="chapterMeta"></div>
+  </div>
+</div>
+
+<div class="chapter-body">
+  <div class="chapter-main">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(this,'summary')">Quick Summary</button>
+      <button class="tab" onclick="switchTab(this,'notes')">Detailed Notes</button>
+      <button class="tab" onclick="switchTab(this,'tables')">Key Tables</button>
+      <button class="tab" onclick="switchTab(this,'questions')">Practice Qs</button>
+      <button class="tab" onclick="switchTab(this,'pyqs')">PYQs</button>
+    </div>
+
+    <div class="tab-content active" id="tab-summary">
+      <div id="summaryContent">Loading...</div>
+    </div>
+
+    <div class="tab-content" id="tab-notes">
+      <div id="notesContent" class="notes-content">Loading...</div>
+    </div>
+
+    <div class="tab-content" id="tab-tables">
+      <div id="tablesContent">Loading...</div>
+    </div>
+
+    <div class="tab-content" id="tab-questions">
+      <div id="questionsContent">Loading...</div>
+    </div>
+
+    <div class="tab-content" id="tab-pyqs">
+      <div id="pyqsContent">Loading...</div>
+    </div>
+  </div>
+
+  <aside class="chapter-sidebar">
+    <div id="sidebarContent">
+      <div class="sidebar-card">
+        <h4>Loading...</h4>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+(async function() {
+  const cls = getParam('class') || '12';
+  const ch = getParam('ch') || 'ch02';
+  const dashLink = cls === '11' ? 'class11-dashboard.html' : 'class12-dashboard.html';
+
+  // Update nav active state
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.remove('active');
+    if (a.href.includes(`class${cls}-dashboard`)) a.classList.add('active');
+  });
+
+  // Try to load chapter JSON
+  let data;
+  try {
+    const res = await fetch(`content/class${cls}/${ch}.json`);
+    if (!res.ok) throw new Error('not found');
+    data = await res.json();
+  } catch(e) {
+    // Load chapter info from chapters.json as fallback
+    try {
+      const res2 = await fetch('content/chapters.json');
+      const chapters = await res2.json();
+      const classData = chapters[`class${cls}`];
+      let chInfo = null;
+      for (const part of classData.parts) {
+        for (const c of part.chapters) {
+          if (c.slug === ch) { chInfo = c; break; }
+        }
+        if (chInfo) break;
+      }
+      if (chInfo) {
+        document.title = `${chInfo.title} | BSt Baba - AKSpected`;
+        document.getElementById('breadcrumb').innerHTML = `<a href="index.html">Home</a> / <a href="${dashLink}">Class ${cls}</a> / Chapter ${chInfo.num}`;
+        document.getElementById('chapterTitle').textContent = chInfo.title;
+        document.getElementById('chapterMeta').innerHTML = `<span>📖 Class ${cls} · Chapter ${chInfo.num}</span>` + (chInfo.marks ? `<span>📊 ${chInfo.marks} Marks</span>` : '');
+        document.getElementById('summaryContent').innerHTML = `
+          <div class="summary-box">
+            <h3>Topics in this Chapter</h3>
+            <ul>${chInfo.topics.map(t => `<li>${t}</li>`).join('')}</ul>
+          </div>
+          <div class="teacher-tip">
+            <div class="tip-label">Content Coming Soon</div>
+            <p>Detailed notes, questions, and PYQs for this chapter will be added soon. In the meantime, check out <a href="chapter.html?class=12&ch=ch02">Chapter 2: Principles of Management</a> for a fully populated example.</p>
+          </div>`;
+        document.getElementById('notesContent').innerHTML = '<p style="color:var(--text-muted)">Detailed notes coming soon.</p>';
+        document.getElementById('tablesContent').innerHTML = '<p style="color:var(--text-muted)">Key tables coming soon.</p>';
+        document.getElementById('questionsContent').innerHTML = '<p style="color:var(--text-muted)">Practice questions coming soon.</p>';
+        document.getElementById('pyqsContent').innerHTML = '<p style="color:var(--text-muted)">Previous year questions coming soon.</p>';
+        buildSidebar(chInfo, cls, dashLink);
+      }
+    } catch(e2) {}
+    return;
+  }
+
+  // Full chapter render
+  document.title = `${data.title} | BSt Baba - AKSpected`;
+  document.getElementById('breadcrumb').innerHTML = `<a href="index.html">Home</a> / <a href="${dashLink}">Class ${cls}</a> / Chapter ${data.chapter}`;
+  document.getElementById('chapterTitle').textContent = data.title;
+
+  let metaHTML = `<span>📖 Class ${cls} · Chapter ${data.chapter}</span>`;
+  if (data.marks) metaHTML += `<span>📊 ${data.marks} Marks</span>`;
+  metaHTML += `<span>🔥 High frequency in boards</span>`;
+  document.getElementById('chapterMeta').innerHTML = metaHTML;
+
+  // SUMMARY
+  let sumHTML = '<div class="summary-box"><h3>Chapter at a Glance</h3><ul>';
+  data.summary.forEach(s => sumHTML += `<li>${s}</li>`);
+  sumHTML += '</ul></div>';
+  if (data.teacher_tip) {
+    sumHTML += `<div class="teacher-tip"><div class="tip-label">${data.teacher_tip.title}</div><p>${data.teacher_tip.text}</p></div>`;
+  }
+  if (data.mnemonics && data.mnemonics.length > 0) {
+    sumHTML += '<div style="margin-top:20px">';
+    data.mnemonics.forEach(m => {
+      sumHTML += `<div class="teacher-tip" style="margin-top:12px"><div class="tip-label">${m.title}</div><p>${m.text}</p></div>`;
+    });
+    sumHTML += '</div>';
+  }
+  document.getElementById('summaryContent').innerHTML = sumHTML;
+
+  // NOTES
+  let notesHTML = '';
+  if (data.notes && data.notes.sections) {
+    data.notes.sections.forEach(sec => {
+      notesHTML += `<h3>${sec.title}</h3>`;
+      if (sec.definition) {
+        notesHTML += `<div class="definition-box"><strong>${sec.definition.term}:</strong> ${sec.definition.text}</div>`;
+      }
+      if (sec.content) notesHTML += `<p>${sec.content}</p>`;
+      if (sec.points) {
+        notesHTML += '<ul>';
+        sec.points.forEach(p => notesHTML += `<li>${p}</li>`);
+        notesHTML += '</ul>';
+      }
+    });
+  }
+  document.getElementById('notesContent').innerHTML = notesHTML || '<p>Notes coming soon.</p>';
+
+  // TABLES
+  let tabHTML = '';
+  if (data.tables && data.tables.length > 0) {
+    data.tables.forEach(tbl => {
+      tabHTML += `<h3 style="font-size:1.05rem;margin-bottom:16px">${tbl.title}</h3>`;
+      tabHTML += '<table class="comp-table"><thead><tr>';
+      tbl.headers.forEach(h => tabHTML += `<th>${h}</th>`);
+      tabHTML += '</tr></thead><tbody>';
+      tbl.rows.forEach(row => {
+        tabHTML += '<tr>';
+        row.forEach(cell => tabHTML += `<td>${cell}</td>`);
+        tabHTML += '</tr>';
+      });
+      tabHTML += '</tbody></table>';
+      if (tbl.tip) {
+        tabHTML += `<div class="teacher-tip"><div class="tip-label">Exam Tip</div><p>${tbl.tip}</p></div>`;
+      }
+      tabHTML += '<div style="height:24px"></div>';
+    });
+  }
+  document.getElementById('tablesContent').innerHTML = tabHTML || '<p>Tables coming soon.</p>';
+
+  // QUESTIONS
+  let qHTML = '';
+  if (data.questions && data.questions.length > 0) {
+    const markTypes = [...new Set(data.questions.map(q => q.marks))].sort((a,b) => a - b);
+    qHTML += '<div class="question-filter"><button class="q-filter-btn active" onclick="filterQ(this,\'all\')">All</button>';
+    markTypes.forEach(m => {
+      qHTML += `<button class="q-filter-btn" onclick="filterQ(this,'${m}')">${m} Mark${m>1?'s':''}</button>`;
+    });
+    qHTML += '</div>';
+    data.questions.forEach(q => {
+      qHTML += `<div class="question-item" data-marks="${q.marks}">
+        <div class="q-header"><span class="q-type">${q.type}</span><span class="q-marks">${q.marks} Mark${q.marks>1?'s':''}</span></div>
+        <div class="q-text">${q.text}</div>
+        <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+        <div class="q-answer">${q.answer}</div>
+      </div>`;
+    });
+  }
+  document.getElementById('questionsContent').innerHTML = qHTML || '<p>Questions coming soon.</p>';
+
+  // PYQs
+  let pyqHTML = '';
+  if (data.pyqs && data.pyqs.length > 0) {
+    pyqHTML += `<h3 style="font-size:1rem;margin-bottom:6px">Previous Year Questions — ${data.title}</h3>`;
+    pyqHTML += `<p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">Sorted by year, newest first.</p>`;
+    data.pyqs.forEach(q => {
+      pyqHTML += `<div class="question-item">
+        <div class="q-header"><span class="q-type">${q.year} Board</span><span class="q-marks">${q.marks} Mark${q.marks>1?'s':''}</span></div>
+        <div class="q-text">${q.text}</div>
+        <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+        <div class="q-answer">${q.answer}</div>
+      </div>`;
+    });
+    if (data.pyqs.length > 0) {
+      pyqHTML += `<div class="teacher-tip" style="margin-top:16px"><div class="tip-label">Pattern Alert</div>
+        <p>Most repeated from this chapter: <strong>Unity of Direction vs Unity of Command</strong>, <strong>Fayol vs Taylor</strong>, and <strong>case study on identifying principles</strong>. These appear almost every year.</p></div>`;
+    }
+  }
+  document.getElementById('pyqsContent').innerHTML = pyqHTML || '<p>PYQs coming soon.</p>';
+
+  // SIDEBAR
+  buildSidebar(data, cls, dashLink);
+})();
+
+function buildSidebar(data, cls, dashLink) {
+  let sHTML = '';
+
+  // This chapter tools
+  const ch = getParam('ch') || 'ch02';
+  sHTML += `<div class="sidebar-card">
+    <h4>This Chapter</h4>
+    <a href="flashcards.html?class=${cls}&ch=${ch}" class="sidebar-link"><span class="sl-arrow">⚡</span> Flashcards</a>
+    <a href="pyq-bank.html" class="sidebar-link"><span class="sl-arrow">📄</span> PYQ Bank</a>
+    <a href="answer-templates.html" class="sidebar-link"><span class="sl-arrow">📋</span> Answer Templates</a>
+  </div>`;
+
+  // Related chapters
+  if (data.related_chapters && data.related_chapters.length > 0) {
+    sHTML += '<div class="sidebar-card"><h4>Connected Chapters</h4>';
+    data.related_chapters.forEach(rc => {
+      sHTML += `<a href="chapter.html?class=${cls}&ch=ch${String(rc.num).padStart(2,'0')}" class="sidebar-link">
+        <span class="sl-arrow">→</span> Ch ${rc.num}: ${rc.title}</a>`;
+    });
+    sHTML += '</div>';
+  }
+
+  // Navigation
+  const chNum = data.chapter || parseInt((getParam('ch')||'ch01').replace('ch',''));
+  const maxCh = cls === '12' ? 12 : 11;
+  sHTML += '<div class="sidebar-card"><h4>Navigate</h4><div class="nav-arrows">';
+  if (chNum > 1) {
+    sHTML += `<a href="chapter.html?class=${cls}&ch=ch${String(chNum-1).padStart(2,'0')}" class="nav-arrow"><small>← Previous</small>Chapter ${chNum-1}</a>`;
+  }
+  if (chNum < maxCh) {
+    sHTML += `<a href="chapter.html?class=${cls}&ch=ch${String(chNum+1).padStart(2,'0')}" class="nav-arrow"><small>Next →</small>Chapter ${chNum+1}</a>`;
+  }
+  sHTML += '</div></div>';
+
+  // Back to dashboard
+  sHTML += `<div class="sidebar-card"><a href="${dashLink}" class="sidebar-link" style="border:none;color:var(--accent);font-weight:600"><span class="sl-arrow">←</span> Back to Class ${cls} Dashboard</a></div>`;
+
+  document.getElementById('sidebarContent').innerHTML = sHTML;
+}
+</script>
+</body>
+</html>

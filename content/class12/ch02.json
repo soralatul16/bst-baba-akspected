@@ -1,0 +1,164 @@
+{
+  "chapter": 2,
+  "class": 12,
+  "title": "Principles of Management",
+  "marks": 7,
+  "slug": "ch02",
+  "summary": [
+    "This chapter covers two management thinkers: <strong>Henri Fayol</strong> (14 Principles of Management) and <strong>F.W. Taylor</strong> (Scientific Management).",
+    "Fayol studied management from the <strong>top-level</strong> (CEO/director perspective). Taylor studied it from the <strong>shop-floor</strong> (worker/factory level).",
+    "Fayol is called the <strong>Father of General Management</strong>. Taylor is the <strong>Father of Scientific Management</strong>.",
+    "Fayol gave <strong>14 general principles</strong> based on personal experience. Taylor gave <strong>principles + techniques</strong> based on experiments.",
+    "Board exam pattern: Expect <strong>1 case study (identify the principle)</strong> + 1–2 direct questions = ~7 marks.",
+    "Principles of management are <strong>flexible, universal, and based on cause-effect relationships</strong>. They are guidelines, not rigid rules."
+  ],
+  "teacher_tip": {
+    "title": "Teacher's Shortcut",
+    "text": "If the question mentions <strong>factory, workers, fatigue, or efficiency</strong> → it's Taylor. If it mentions <strong>company, manager, department, or authority</strong> → it's Fayol. This alone can help you crack most case studies."
+  },
+  "notes": {
+    "sections": [
+      {
+        "title": "What are Principles of Management?",
+        "content": "Principles of management are broad and fundamental truths that establish a relationship between cause and effect. They serve as guidelines for managerial decision-making.",
+        "definition": {
+          "term": "Principle",
+          "text": "A statement that provides a guide to thought and action, serving as the foundation for a system of belief or behaviour."
+        }
+      },
+      {
+        "title": "Nature of Management Principles",
+        "points": [
+          "<strong>Universal:</strong> Apply to all types of organisations — business and non-business, small and large.",
+          "<strong>Flexible:</strong> Can be adapted and modified depending on the situation.",
+          "<strong>Based on Practice:</strong> Developed through research, experiments, and experience.",
+          "<strong>Cause & Effect:</strong> Establish relationship between cause and effect to help predict outcomes.",
+          "<strong>Human Behaviour:</strong> Deal with human behaviour, so they must be applied creatively.",
+          "<strong>Contingent:</strong> Application depends on the prevailing situation — they are relative, not absolute."
+        ]
+      },
+      {
+        "title": "Significance of Management Principles",
+        "points": [
+          "Provide managers with <strong>useful insights</strong> into real work situations.",
+          "Help in <strong>optimum utilisation of resources</strong> — maximum benefit with minimum cost.",
+          "Enable <strong>scientific decision-making</strong> based on facts, not bias.",
+          "Help organisations <strong>adapt to changing environments</strong>.",
+          "Guide managers in <strong>fulfilling social responsibilities</strong>.",
+          "Form the basis for <strong>management training, education, and research</strong>."
+        ]
+      },
+      {
+        "title": "Fayol's 14 Principles of Management",
+        "points": [
+          "<strong>1. Division of Work:</strong> Divide total work into smaller tasks assigned to specialists. Leads to greater efficiency and productivity.",
+          "<strong>2. Authority & Responsibility:</strong> Authority = right to make decisions. Responsibility = obligation to complete the task. Both must go hand in hand.",
+          "<strong>3. Discipline:</strong> Obedience, respect for authority, and following rules. Maintained through good supervision and fair penalties.",
+          "<strong>4. Unity of Command:</strong> Every employee should receive orders from <em>one superior only</em>. Avoids confusion and conflict.",
+          "<strong>5. Unity of Direction:</strong> One head and one plan for a group of activities with the same objective. Ensures coordination.",
+          "<strong>6. Subordination of Individual Interest:</strong> Organisation's interest takes priority over individual interest.",
+          "<strong>7. Remuneration:</strong> Fair pay based on the paying capacity of the organisation. Should ensure reasonable standard of living.",
+          "<strong>8. Centralisation & Decentralisation:</strong> Balance between concentrating decision-making (centralisation) and dispersing it (decentralisation).",
+          "<strong>9. Scalar Chain:</strong> Formal line of authority from highest to lowest. Can be bypassed via <em>Gang Plank</em> in emergencies.",
+          "<strong>10. Order:</strong> A place for everything and everything in its place (material order). A place for everyone and everyone in their place (social order).",
+          "<strong>11. Equity:</strong> Fair and just treatment of employees. No discrimination or favouritism.",
+          "<strong>12. Stability of Personnel:</strong> Minimise employee turnover. Allow time for employees to learn and show results.",
+          "<strong>13. Initiative:</strong> Encourage employees to develop and implement improvement plans on their own.",
+          "<strong>14. Esprit De Corps:</strong> Foster team spirit, unity, and harmony among employees. 'Union is strength.'"
+        ]
+      },
+      {
+        "title": "Taylor's Scientific Management",
+        "content": "F.W. Taylor defined scientific management as: \"The art of knowing exactly what you want your men to do and then seeing that they do it in the best and cheapest way.\"",
+        "definition": {
+          "term": "Scientific Management",
+          "text": "The application of scientific methods to the problems of management, replacing traditional rule-of-thumb approaches with systematic study and experimentation."
+        }
+      },
+      {
+        "title": "Principles of Scientific Management",
+        "points": [
+          "<strong>1. Science, Not Rule of Thumb:</strong> Every task should be based on scientific study, not hit-and-trial. Develop standardised methods for each job.",
+          "<strong>2. Harmony, Not Discord:</strong> Complete harmony between management and workers. Taylor called for a <em>Mental Revolution</em> — both sides should change their attitude.",
+          "<strong>3. Cooperation, Not Individualism:</strong> Replace individualism with cooperation. Encourage constructive suggestions from workers.",
+          "<strong>4. Development of Each Person:</strong> Select workers scientifically, train them, and assign work based on capability. Develop every person to their greatest efficiency."
+        ]
+      },
+      {
+        "title": "Techniques of Scientific Management",
+        "points": [
+          "<strong>Functional Foremanship:</strong> Separate planning from execution. 8 foremen — 4 under Planning (Instruction Card Clerk, Route Clerk, Time & Cost Clerk, Disciplinarian) and 4 under Production (Speed Boss, Gang Boss, Repair Boss, Inspector).",
+          "<strong>Standardisation & Simplification:</strong> Set consistent standards for processes, materials, and output. Eliminate unnecessary varieties.",
+          "<strong>Method Study:</strong> Find the most efficient way to perform a task — maximise productivity and customer satisfaction.",
+          "<strong>Motion Study:</strong> Analyse workers' movements to eliminate wasteful motions and improve efficiency.",
+          "<strong>Time Study:</strong> Determine standard time required to complete a task. Helps in planning, incentive schemes, and calculating labour costs.",
+          "<strong>Fatigue Study:</strong> Assess necessary rest intervals. Prevents accidents and illnesses, improves overall performance.",
+          "<strong>Differential Piece Wage System:</strong> Different wage rates for efficient vs inefficient workers. Those meeting/exceeding standard output get higher rate per unit."
+        ]
+      }
+    ]
+  },
+  "tables": [
+    {
+      "title": "Fayol vs Taylor — The Classic Board Question",
+      "tip": "This table is a guaranteed 4-mark question. Learn any 4 rows for full marks.",
+      "headers": ["Basis", "Henri Fayol", "F.W. Taylor"],
+      "rows": [
+        ["Known as", "Father of General Management", "Father of Scientific Management"],
+        ["Basis", "Personal experience", "Observation & experimentation"],
+        ["Focus", "Overall management efficiency", "Worker-level productivity"],
+        ["Applicability", "Universal (all organisations)", "Mainly factories & production"],
+        ["Perspective", "Top-level management", "Shop-floor / operative level"],
+        ["Contribution", "14 Principles of Management", "Principles + Techniques (time study, motion study, etc.)"]
+      ]
+    },
+    {
+      "title": "Unity of Command vs Unity of Direction",
+      "tip": "A very common 'distinguish between' question. Know all 4 differences.",
+      "headers": ["Basis", "Unity of Command", "Unity of Direction"],
+      "rows": [
+        ["Meaning", "One employee, one superior only", "One head and one plan for a group of activities"],
+        ["Purpose", "Prevents overlapping orders & confusion", "Prevents repetition of activities"],
+        ["Relates to", "Functioning of people (superior-subordinate)", "Activities of the organisation"],
+        ["Outcome", "Effective functioning of individuals", "Unity of action and coordination"]
+      ]
+    }
+  ],
+  "questions": [
+    {"type": "MCQ", "marks": 1, "text": "Who is known as the Father of Scientific Management?", "answer": "F.W. Taylor is known as the Father of Scientific Management."},
+    {"type": "MCQ", "marks": 1, "text": "Which principle of Fayol states that there should be 'a place for everything and everything in its place'?", "answer": "The principle of <strong>Order</strong> — both material order (right thing in right place) and social order (right person in right position)."},
+    {"type": "MCQ", "marks": 1, "text": "What is 'Gang Plank' in the context of Scalar Chain?", "answer": "Gang Plank is a shorter route of communication allowed in emergencies, where employees at the same level can communicate directly by informing their immediate superiors."},
+    {"type": "Short Answer", "marks": 3, "text": "State any three principles of management given by Fayol.", "answer": "(i) <strong>Division of Work</strong> — Work should be divided into small tasks assigned to specialists for greater efficiency.<br>(ii) <strong>Unity of Command</strong> — An employee should receive orders from one boss only to avoid confusion.<br>(iii) <strong>Equity</strong> — Management should treat all employees with fairness and justice, without discrimination."},
+    {"type": "Short Answer", "marks": 3, "text": "Explain the principle of 'Harmony, Not Discord' given by Taylor.", "answer": "Taylor emphasised that there should be complete harmony between management and workers. Both should realise their mutual dependence and work together. He called for a <strong>Mental Revolution</strong> — a change in attitude of both management (sharing profits) and workers (giving their best effort). Conflict wastes energy that could be used productively."},
+    {"type": "Short Answer", "marks": 3, "text": "What is meant by 'Differential Piece Wage System'? Give an example.", "answer": "It is Taylor's technique where efficient and inefficient workers are paid different wage rates. Workers exceeding standard output get a <strong>higher rate per unit</strong>, while those below standard get a <strong>lower rate</strong>.<br><br>Example: If standard output is 20 units/day — those making 21+ units get ₹100/unit (21 × 100 = ₹2100), while those making 18 units get ₹80/unit (18 × 80 = ₹1440). The ₹660 gap motivates inefficient workers to improve."},
+    {"type": "Distinguish Between", "marks": 4, "text": "Distinguish between the contributions of Fayol and Taylor to management thought.", "answer": "Refer to the Fayol vs Taylor comparison table. Any 4 points of difference with proper basis will score full marks:<br>(1) Fayol focused on top-level management; Taylor on shop-floor level.<br>(2) Fayol used personal experience; Taylor used experiments.<br>(3) Fayol's principles are universally applicable; Taylor's mainly for factories.<br>(4) Fayol gave 14 general principles; Taylor gave principles + techniques."},
+    {"type": "Distinguish Between", "marks": 4, "text": "Distinguish between 'Unity of Command' and 'Unity of Direction'.", "answer": "(1) Unity of Command means one employee should get orders from <em>one superior only</em>. Unity of Direction means one head and one plan for a <em>group of activities</em>.<br>(2) Unity of Command prevents overlapping orders. Unity of Direction prevents repetition of activities.<br>(3) Unity of Command relates to people (superior-subordinate). Unity of Direction relates to activities.<br>(4) Unity of Command ensures effective individual functioning. Unity of Direction ensures coordinated group action."},
+    {"type": "Case Study", "marks": 5, "text": "Rajesh, a manager at XYZ Ltd, ensures that every worker in his department reports to him only and does not take instructions from any other manager. He also makes sure that all the activities related to sales are handled by one department under one plan.<br><br>Identify the two principles of Fayol mentioned above and explain them briefly.", "answer": "<strong>1. Unity of Command:</strong> 'Every worker reports to him only' — An employee should receive orders from one and only one superior. This avoids confusion, conflicting instructions, and divided loyalty.<br><br><strong>2. Unity of Direction:</strong> 'All sales activities under one department and one plan' — Activities with the same objective should have one head and one plan. This ensures coordination, focus, and avoids duplication of effort."},
+    {"type": "Case Study", "marks": 5, "text": "In a factory, workers were observed performing unnecessary hand movements while assembling products. The management decided to study these movements and eliminate the wasteful ones. They also determined the standard time for completing each unit and provided rest intervals to reduce worker fatigue.<br><br>Identify and explain any three techniques of Scientific Management mentioned above.", "answer": "<strong>1. Motion Study:</strong> 'Study movements and eliminate wasteful ones' — Systematic analysis of workers' physical movements to identify and remove unnecessary or unproductive motions, improving efficiency.<br><br><strong>2. Time Study:</strong> 'Determined standard time for completing each unit' — Establishing the standard time required to complete a specific task. Helps in planning schedules, designing incentive schemes, and calculating labour costs.<br><br><strong>3. Fatigue Study:</strong> 'Provided rest intervals to reduce fatigue' — Assessing necessary rest breaks during work to prevent exhaustion, accidents, and illness, leading to better overall performance."},
+    {"type": "Long Answer", "marks": 6, "text": "Explain any four principles of management given by Henri Fayol.", "answer": "<strong>1. Division of Work:</strong> The total work should be divided into small tasks and each task assigned to a trained specialist. This leads to specialisation, greater efficiency, and increased productivity.<br><br><strong>2. Authority & Responsibility:</strong> Authority is the right to give orders and make decisions. Responsibility is the obligation to perform the assigned task. Both must go together — authority without responsibility leads to misuse; responsibility without authority makes a person ineffective.<br><br><strong>3. Unity of Command:</strong> Every employee should receive orders from one superior only. Dual subordination leads to confusion, conflicting instructions, and undermines discipline.<br><br><strong>4. Esprit De Corps:</strong> Management should promote team spirit, unity, and a sense of belonging among employees. 'Union is strength' — when employees work together harmoniously, the organisation benefits from their collective effort."}
+  ],
+  "pyqs": [
+    {"year": 2025, "marks": 3, "text": "State any three characteristics of Principles of Management.", "answer": "(i) <strong>Universal applicability</strong> — Apply to all types of organisations.<br>(ii) <strong>Flexible</strong> — Can be modified as per situation.<br>(iii) <strong>Cause & Effect</strong> — Establish relationship between cause and effect."},
+    {"year": 2025, "marks": 5, "text": "'A company manufacturing garments has its own fabric division, stitching division and finishing division. Each division has a separate head who is responsible for planning and executing activities of his own division.' Identify the principle of management followed here and explain it.", "answer": "<strong>Unity of Direction</strong> — Each division (fabric, stitching, finishing) has one head and one plan for its group of activities. This principle states that activities with the same objective should have one head and one plan, ensuring coordinated and focused effort."},
+    {"year": 2024, "marks": 4, "text": "Distinguish between 'Unity of Command' and 'Unity of Direction'.", "answer": "(1) Meaning: One employee, one superior vs One head, one plan for activities.<br>(2) Purpose: Prevents confusion vs Prevents repetition.<br>(3) Relates to: People vs Activities.<br>(4) Outcome: Individual effectiveness vs Group coordination."},
+    {"year": 2024, "marks": 1, "text": "Fayol's principle that suggests maintaining a chain of superiors from the highest to the lowest is called:", "answer": "<strong>Scalar Chain.</strong>"},
+    {"year": 2023, "marks": 5, "text": "'In a factory, weights of different articles are measured, movement of workers is studied, and exact time to complete a task is determined.' Identify the techniques of Scientific Management.", "answer": "<strong>1. Standardisation</strong> — Measuring weights of articles to set consistent standards.<br><strong>2. Motion Study</strong> — Studying movement of workers to eliminate wasteful motions.<br><strong>3. Time Study</strong> — Determining exact time to complete a task for efficiency planning."},
+    {"year": 2023, "marks": 3, "text": "State the principle of management that requires a manager to be kind, fair and just to the subordinates.", "answer": "<strong>Equity.</strong> This principle states that management should treat employees with fairness and justice, without discrimination or favouritism. Good sense and experience are needed to ensure equitable treatment of all."}
+  ],
+  "related_chapters": [
+    {"num": 1, "title": "Nature of Management", "reason": "Principles guide the functions discussed in Ch 1"},
+    {"num": 4, "title": "Planning", "reason": "Fayol's planning principle connects directly"},
+    {"num": 5, "title": "Organising", "reason": "Division of Work, Authority, Scalar Chain apply here"},
+    {"num": 7, "title": "Directing", "reason": "Taylor's Mental Revolution relates to motivation"}
+  ],
+  "mnemonics": [
+    {
+      "title": "Remember Fayol's 14 Principles",
+      "text": "<strong>D-A-D-U-U-S-R-C-S-O-E-S-I-E</strong><br>Division of Work, Authority & Responsibility, Discipline, Unity of Command, Unity of Direction, Subordination, Remuneration, Centralisation, Scalar Chain, Order, Equity, Stability, Initiative, Esprit De Corps"
+    },
+    {
+      "title": "Taylor's 4 Principles — SHCD",
+      "text": "<strong>S</strong>cience not Rule of Thumb<br><strong>H</strong>armony not Discord<br><strong>C</strong>ooperation not Individualism<br><strong>D</strong>evelopment of each person"
+    }
+  ]
+}

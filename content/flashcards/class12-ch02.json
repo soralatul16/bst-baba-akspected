@@ -1,0 +1,57 @@
+{
+  "chapter": 2,
+  "class": 12,
+  "title": "Principles of Management",
+  "cards": {
+    "definitions": [
+      {"term": "Management Principles", "definition": "Broad and fundamental truths that establish a relationship between cause and effect, serving as guidelines for managerial decision-making."},
+      {"term": "Division of Work", "definition": "Dividing total work into smaller tasks, each assigned to a specialist, leading to greater efficiency and productivity."},
+      {"term": "Unity of Command", "definition": "An employee should receive orders from one and only one superior to avoid confusion and conflicting instructions."},
+      {"term": "Unity of Direction", "definition": "One head and one plan for a group of activities having the same objective, ensuring coordinated effort."},
+      {"term": "Scalar Chain", "definition": "The formal line of authority from the highest to the lowest rank. Can be bypassed through 'Gang Plank' in emergencies."},
+      {"term": "Esprit De Corps", "definition": "Promoting team spirit, unity and harmony among employees. 'Union is strength.'"},
+      {"term": "Equity", "definition": "Fair and just treatment of all employees by management, without discrimination or favouritism."},
+      {"term": "Scientific Management", "definition": "Taylor's approach: 'The art of knowing exactly what you want your men to do and seeing that they do it in the best and cheapest way.'"},
+      {"term": "Mental Revolution", "definition": "Taylor's concept where both management and workers change their attitudes toward each other — from conflict to cooperation."},
+      {"term": "Functional Foremanship", "definition": "Taylor's technique of separating planning from execution, with 8 specialised foremen (4 for planning, 4 for production)."},
+      {"term": "Time Study", "definition": "Determining the standard time required to complete a specific task, used for planning, incentives, and labour cost calculation."},
+      {"term": "Motion Study", "definition": "Analysing workers' movements to eliminate wasteful motions and improve efficiency."},
+      {"term": "Gang Plank", "definition": "A shorter route of communication where employees at the same level can communicate directly in emergencies, bypassing the scalar chain."},
+      {"term": "Differential Piece Wage System", "definition": "Taylor's wage system where efficient workers (above standard output) get higher per-unit wages than inefficient workers (below standard)."}
+    ],
+    "distinctions": [
+      {
+        "between": "Fayol vs Taylor",
+        "points": [
+          {"basis": "Known as", "a": "Father of General Management", "b": "Father of Scientific Management"},
+          {"basis": "Focus", "a": "Overall management efficiency", "b": "Worker-level productivity"},
+          {"basis": "Level", "a": "Top-level management", "b": "Shop-floor / operative level"},
+          {"basis": "Basis", "a": "Personal experience", "b": "Observation & experimentation"},
+          {"basis": "Applicability", "a": "Universal (all organisations)", "b": "Mainly factories & production"},
+          {"basis": "Contribution", "a": "14 Principles", "b": "Principles + Techniques"}
+        ]
+      },
+      {
+        "between": "Unity of Command vs Unity of Direction",
+        "points": [
+          {"basis": "Meaning", "a": "One employee, one superior", "b": "One head, one plan for a group"},
+          {"basis": "Purpose", "a": "Prevents confusion & overlap", "b": "Prevents repetition of activities"},
+          {"basis": "Relates to", "a": "People (superior-subordinate)", "b": "Activities of the organisation"},
+          {"basis": "Outcome", "a": "Individual effectiveness", "b": "Group coordination"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A worker at Tata Motors receives instructions from both the production manager and the quality manager, causing confusion.", "answer": "Unity of Command (violated)", "principle": "Fayol"},
+      {"scenario": "All marketing activities of Hindustan Unilever are handled by one marketing head with a single marketing plan.", "answer": "Unity of Direction", "principle": "Fayol"},
+      {"scenario": "Workers at a steel plant are given rest intervals after every 2 hours of heavy work.", "answer": "Fatigue Study", "principle": "Taylor"},
+      {"scenario": "A company studies the movements of assembly line workers to remove unnecessary hand motions.", "answer": "Motion Study", "principle": "Taylor"},
+      {"scenario": "A manager ensures that raw materials are always stored in the correct warehouse section.", "answer": "Order (Material Order)", "principle": "Fayol"},
+      {"scenario": "The CEO of a company shares profits with workers to maintain industrial peace.", "answer": "Harmony, Not Discord (Mental Revolution)", "principle": "Taylor"},
+      {"scenario": "In an emergency, two department heads communicate directly instead of going through the CEO.", "answer": "Scalar Chain with Gang Plank", "principle": "Fayol"},
+      {"scenario": "Workers who produce 25+ units per day get ₹50/unit, while those producing fewer get ₹40/unit.", "answer": "Differential Piece Wage System", "principle": "Taylor"},
+      {"scenario": "A bank manager encourages employees to come up with new ideas for improving customer service.", "answer": "Initiative", "principle": "Fayol"},
+      {"scenario": "Management organises a team outing to build unity and team spirit among employees.", "answer": "Esprit De Corps", "principle": "Fayol"}
+    ]
+  }
+}

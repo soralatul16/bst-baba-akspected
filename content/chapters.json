@@ -1,0 +1,59 @@
+{
+  "class12": {
+    "title": "Class 12 — Board Exam Ready",
+    "subtitle": "12 chapters · 80 marks theory + 20 marks project",
+    "parts": [
+      {
+        "name": "Part A: Principles & Functions of Management",
+        "marks": 50,
+        "chapters": [
+          {"num": 1, "slug": "ch01", "title": "Nature and Significance of Management", "marks": 6, "topics": ["Concept, objectives & importance", "Management as Science, Art & Profession", "Levels of Management", "Coordination"], "weight": "medium"},
+          {"num": 2, "slug": "ch02", "title": "Principles of Management", "marks": 7, "topics": ["Fayol's 14 Principles", "Taylor's Scientific Management", "Techniques of Scientific Management"], "weight": "medium"},
+          {"num": 3, "slug": "ch03", "title": "Business Environment", "marks": 4, "topics": ["Concept & importance", "Dimensions: Economic, Social, Technological, Political, Legal", "Demonetisation"], "weight": "low"},
+          {"num": 4, "slug": "ch04", "title": "Planning", "marks": 6, "topics": ["Concept, importance & limitations", "Planning process", "Types of plans"], "weight": "medium"},
+          {"num": 5, "slug": "ch05", "title": "Organising", "marks": 8, "topics": ["Organising process", "Functional & Divisional structure", "Formal & Informal organisation", "Delegation & Decentralisation"], "weight": "high"},
+          {"num": 6, "slug": "ch06", "title": "Staffing", "marks": 7, "topics": ["Staffing process", "Recruitment & Selection", "Training & Development methods"], "weight": "medium"},
+          {"num": 7, "slug": "ch07", "title": "Directing", "marks": 8, "topics": ["Elements of Directing", "Motivation & Maslow's hierarchy", "Leadership styles", "Communication & barriers"], "weight": "high"},
+          {"num": 8, "slug": "ch08", "title": "Controlling", "marks": 4, "topics": ["Concept & importance", "Steps in control process", "Planning vs Controlling"], "weight": "low"}
+        ]
+      },
+      {
+        "name": "Part B: Business Finance & Marketing",
+        "marks": 30,
+        "chapters": [
+          {"num": 9, "slug": "ch09", "title": "Financial Management", "marks": 8, "topics": ["Financial decisions", "Capital structure", "Fixed & Working capital", "Financial planning"], "weight": "high"},
+          {"num": 10, "slug": "ch10", "title": "Financial Markets", "marks": 7, "topics": ["Money market & Capital market", "Primary & Secondary markets", "Stock Exchange", "SEBI"], "weight": "medium"},
+          {"num": 11, "slug": "ch11", "title": "Marketing Management", "marks": 11, "topics": ["Marketing mix (4Ps)", "Product, Price, Place, Promotion", "Branding, Labelling, Packaging"], "weight": "high"},
+          {"num": 12, "slug": "ch12", "title": "Consumer Protection", "marks": 4, "topics": ["Consumer rights", "Consumer Protection Act 2019", "Redressal machinery", "Role of NGOs"], "weight": "low"}
+        ]
+      }
+    ]
+  },
+  "class11": {
+    "title": "Class 11 — Build Your Base",
+    "subtitle": "11 chapters · Strong here = less panic in Class 12",
+    "parts": [
+      {
+        "name": "Part A: Foundations of Business",
+        "chapters": [
+          {"num": 1, "slug": "ch01", "title": "Business, Trade and Commerce", "topics": ["Concept of business", "Objectives", "Role of trade and commerce"]},
+          {"num": 2, "slug": "ch02", "title": "Forms of Business Organisation", "topics": ["Sole proprietorship", "Partnership", "Company", "Cooperative society"]},
+          {"num": 3, "slug": "ch03", "title": "Private, Public and Global Enterprises", "topics": ["Private sector", "Public sector enterprises", "MNCs", "Joint ventures"]},
+          {"num": 4, "slug": "ch04", "title": "Business Services", "topics": ["Banking", "Insurance", "Transportation", "Warehousing", "Communication"]},
+          {"num": 5, "slug": "ch05", "title": "Emerging Modes of Business", "topics": ["E-commerce", "Outsourcing (BPO/KPO)", "Impact of technology"]},
+          {"num": 6, "slug": "ch06", "title": "Social Responsibilities of Business and Business Ethics", "topics": ["CSR concept", "Responsibilities to stakeholders", "Business ethics"]}
+        ]
+      },
+      {
+        "name": "Part B: Corporate Organisation, Finance & Trade",
+        "chapters": [
+          {"num": 7, "slug": "ch07", "title": "Formation of a Company", "topics": ["Stages of formation", "Documents: MOA, AOA", "Incorporation"]},
+          {"num": 8, "slug": "ch08", "title": "Sources of Business Finance", "topics": ["Owner's funds", "Borrowed funds", "Equity vs Debt", "Retained earnings"]},
+          {"num": 9, "slug": "ch09", "title": "MSME and Business Entrepreneurship", "topics": ["Role of MSMEs", "Entrepreneurship", "Government support schemes"]},
+          {"num": 10, "slug": "ch10", "title": "Internal Trade", "topics": ["Wholesale & Retail", "Types of retailers", "Departmental stores", "GST basics"]},
+          {"num": 11, "slug": "ch11", "title": "International Business", "topics": ["Export-Import", "World Trade Organisation", "Trade barriers", "FDI"]}
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html" class="active">Tools</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Flashcards</div>
+    <h1>Flashcards</h1>
+    <div class="meta-bar">
+      <span>⚡ Three revision modes</span>
+      <span>📖 Tap to flip</span>
+      <span>🧠 Track your score</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <!-- Mode selector -->
+  <div class="fc-mode-selector">
+    <button class="q-filter-btn active" onclick="setMode('definitions',this)">📖 Definitions</button>
+    <button class="q-filter-btn" onclick="setMode('distinctions',this)">⚖️ Distinctions</button>
+    <button class="q-filter-btn" onclick="setMode('scenarios',this)">🎯 Which Principle?</button>
+  </div>
+
+  <!-- Chapter selector -->
+  <div style="text-align:center;margin-bottom:24px">
+    <select id="chapterSelect" onchange="loadChapter()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:0.88rem">
+      <option value="class12-ch02">Class 12 — Ch 2: Principles of Management</option>
+    </select>
+  </div>
+
+  <!-- Flashcard -->
+  <div class="flashcard-container">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-face flashcard-front">
+        <div class="fc-label" id="fcLabel">Definition</div>
+        <h3 id="fcFront">Loading...</h3>
+        <p style="margin-top:16px;font-size:0.78rem;color:var(--text-muted)">Tap to reveal answer</p>
+      </div>
+      <div class="flashcard-face flashcard-back">
+        <div class="fc-label">Answer</div>
+        <p id="fcBack">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="flashcard-controls">
+    <button class="fc-btn" onclick="prevCard()">← Previous</button>
+    <button class="fc-btn primary" onclick="nextCard()">Next →</button>
+  </div>
+  <div class="fc-progress">
+    <span id="fcCounter">Card 1 of 14</span>
+  </div>
+  <div class="fc-score" id="fcScore" style="text-align:center;color:var(--accent)"></div>
+
+  <!-- Quick links -->
+  <div style="margin-top:48px;text-align:center">
+    <div class="section-label">More Tools</div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+      <a href="pyq-bank.html" class="tool-card" style="max-width:240px">
+        <div class="tool-icon gold">📄</div>
+        <h3>PYQ Bank</h3>
+        <p>10 years of board questions with answers.</p>
+      </a>
+      <a href="answer-templates.html" class="tool-card" style="max-width:240px">
+        <div class="tool-icon green">📋</div>
+        <h3>Answer Templates</h3>
+        <p>Write answers that score full marks.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+let allCards = [];
+let currentCards = [];
+let currentIndex = 0;
+let currentMode = 'definitions';
+let score = {correct: 0, total: 0};
+
+async function loadChapter() {
+  const sel = document.getElementById('chapterSelect').value;
+  try {
+    const res = await fetch(`content/flashcards/${sel}.json`);
+    allCards = await res.json();
+    setMode(currentMode);
+  } catch(e) {
+    document.getElementById('fcFront').textContent = 'Flashcards coming soon for this chapter.';
+    document.getElementById('fcBack').textContent = 'Check back later!';
+  }
+}
+
+function setMode(mode, btn) {
+  currentMode = mode;
+  currentIndex = 0;
+  score = {correct: 0, total: 0};
+  document.getElementById('fcScore').textContent = '';
+
+  document.querySelectorAll('.fc-mode-selector .q-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  else document.querySelector(`.fc-mode-selector .q-filter-btn`).classList.add('active');
+
+  if (!allCards.cards) return;
+
+  if (mode === 'definitions') {
+    currentCards = allCards.cards.definitions.map(d => ({
+      front: d.term,
+      back: d.definition,
+      label: 'Define this term'
+    }));
+  } else if (mode === 'distinctions') {
+    currentCards = allCards.cards.distinctions.map(d => ({
+      front: d.between,
+      back: d.points.map(p => `<strong>${p.basis}:</strong> ${p.a} vs ${p.b}`).join('<br>'),
+      label: 'Distinguish between'
+    }));
+  } else if (mode === 'scenarios') {
+    currentCards = allCards.cards.scenarios.map(s => ({
+      front: s.scenario,
+      back: `<strong>${s.answer}</strong><br><em>(${s.principle})</em>`,
+      label: 'Which principle / technique?'
+    }));
+  }
+
+  // Shuffle
+  for (let i = currentCards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];
+  }
+
+  showCard();
+}
+
+function showCard() {
+  if (currentCards.length === 0) {
+    document.getElementById('fcFront').textContent = 'No cards available';
+    document.getElementById('fcBack').textContent = '';
+    return;
+  }
+  const card = currentCards[currentIndex];
+  document.getElementById('fcLabel').textContent = card.label;
+  document.getElementById('fcFront').innerHTML = card.front;
+  document.getElementById('fcBack').innerHTML = card.back;
+  document.getElementById('fcCounter').textContent = `Card ${currentIndex + 1} of ${currentCards.length}`;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+
+function flipCard() {
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+
+function nextCard() {
+  if (currentIndex < currentCards.length - 1) {
+    currentIndex++;
+    showCard();
+  } else {
+    document.getElementById('fcFront').innerHTML = '🎉 Done!';
+    document.getElementById('fcBack').innerHTML = `You've reviewed all ${currentCards.length} cards in this set. Click "Next" to restart.`;
+    document.getElementById('fcCounter').textContent = `Completed!`;
+    document.getElementById('flashcard').classList.remove('flipped');
+    currentIndex = -1;
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showCard();
+  }
+}
+
+// Keyboard support
+document.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipCard(); }
+  if (e.key === 'ArrowRight') nextCard();
+  if (e.key === 'ArrowLeft') prevCard();
+});
+
+// Init
+const urlCls = getParam('class') || '12';
+const urlCh = getParam('ch') || 'ch02';
+document.getElementById('chapterSelect').value = `class${urlCls}-${urlCh}`;
+loadChapter();
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PYQ Bank | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html" class="active">Tools</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / PYQ Bank</div>
+    <h1>Previous Year Questions</h1>
+    <div class="meta-bar">
+      <span>📄 2016–2026</span>
+      <span>📊 Filter by chapter & marks</span>
+      <span>✅ Model answers included</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="teacher-tip" style="margin-bottom:32px">
+    <div class="tip-label">Why PYQs Matter</div>
+    <p>CBSE repeats question patterns every year. A question that appeared in 2023 will appear again in 2026 — maybe with different company names, but the same concept. Solve all PYQs and you've essentially seen the exam before walking in.</p>
+  </div>
+
+  <!-- Filters -->
+  <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+    <select id="pyqChFilter" onchange="filterPYQs()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:0.85rem">
+      <option value="all">All Chapters</option>
+      <option value="ch02" selected>Ch 2: Principles of Management</option>
+      <option value="ch01">Ch 1: Nature of Management</option>
+      <option value="ch03">Ch 3: Business Environment</option>
+      <option value="ch04">Ch 4: Planning</option>
+      <option value="ch05">Ch 5: Organising</option>
+      <option value="ch06">Ch 6: Staffing</option>
+      <option value="ch07">Ch 7: Directing</option>
+      <option value="ch08">Ch 8: Controlling</option>
+      <option value="ch09">Ch 9: Financial Management</option>
+      <option value="ch10">Ch 10: Financial Markets</option>
+      <option value="ch11">Ch 11: Marketing</option>
+      <option value="ch12">Ch 12: Consumer Protection</option>
+    </select>
+    <div class="question-filter" style="margin:0">
+      <button class="q-filter-btn active" onclick="filterPYQMarks(this,'all')">All</button>
+      <button class="q-filter-btn" onclick="filterPYQMarks(this,'1')">1 Mark</button>
+      <button class="q-filter-btn" onclick="filterPYQMarks(this,'3')">3 Marks</button>
+      <button class="q-filter-btn" onclick="filterPYQMarks(this,'4')">4 Marks</button>
+      <button class="q-filter-btn" onclick="filterPYQMarks(this,'5')">5 Marks</button>
+    </div>
+  </div>
+
+  <div id="pyqList">
+    <!-- Ch 2 PYQs loaded from data -->
+    <div class="question-item" data-marks="3" data-chapter="ch02">
+      <div class="q-header"><span class="q-type">2025 Board</span><span class="q-marks">3 Marks</span></div>
+      <div class="q-text">State any three characteristics of Principles of Management.</div>
+      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+      <div class="q-answer">(i) <strong>Universal applicability</strong> — Apply to all types of organisations.<br>(ii) <strong>Flexible</strong> — Can be modified as per situation.<br>(iii) <strong>Cause & Effect</strong> — Establish relationship between cause and effect.</div>
+    </div>
+
+    <div class="question-item" data-marks="5" data-chapter="ch02">
+      <div class="q-header"><span class="q-type">2025 Board</span><span class="q-marks">5 Marks</span></div>
+      <div class="q-text">'A company manufacturing garments has its own fabric division, stitching division and finishing division. Each division has a separate head who is responsible for planning and executing activities of his own division.' Identify the principle of management followed here and explain it.</div>
+      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+      <div class="q-answer"><strong>Unity of Direction</strong> — Each division has one head and one plan for its group of activities. This principle states that activities with the same objective should have one head and one plan, ensuring coordinated and focused effort.</div>
+    </div>
+
+    <div class="question-item" data-marks="4" data-chapter="ch02">
+      <div class="q-header"><span class="q-type">2024 Board</span><span class="q-marks">4 Marks</span></div>
+      <div class="q-text">Distinguish between 'Unity of Command' and 'Unity of Direction'.</div>
+      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+      <div class="q-answer">(1) Meaning: One employee, one superior vs One head, one plan for activities.<br>(2) Purpose: Prevents confusion vs Prevents repetition.<br>(3) Relates to: People vs Activities.<br>(4) Outcome: Individual effectiveness vs Group coordination.</div>
+    </div>
+
+    <div class="question-item" data-marks="1" data-chapter="ch02">
+      <div class="q-header"><span class="q-type">2024 Board</span><span class="q-marks">1 Mark</span></div>
+      <div class="q-text">Fayol's principle that suggests maintaining a chain of superiors from the highest to the lowest is called:</div>
+      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+      <div class="q-answer"><strong>Scalar Chain.</strong></div>
+    </div>
+
+    <div class="question-item" data-marks="5" data-chapter="ch02">
+      <div class="q-header"><span class="q-type">2023 Board</span><span class="q-marks">5 Marks</span></div>
+      <div class="q-text">'In a factory, weights of different articles are measured, movement of workers is studied, and exact time to complete a task is determined.' Identify the techniques of Scientific Management.</div>
+      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+      <div class="q-answer"><strong>1. Standardisation</strong> — Measuring weights to set consistent standards.<br><strong>2. Motion Study</strong> — Studying movement to eliminate wasteful motions.<br><strong>3. Time Study</strong> — Determining exact time for efficiency planning.</div>
+    </div>
+
+    <div class="question-item" data-marks="3" data-chapter="ch02">
+      <div class="q-header"><span class="q-type">2023 Board</span><span class="q-marks">3 Marks</span></div>
+      <div class="q-text">State the principle of management that requires a manager to be kind, fair and just to the subordinates.</div>
+      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
+      <div class="q-answer"><strong>Equity.</strong> This principle states that management should treat employees with fairness and justice, without discrimination or favouritism.</div>
+    </div>
+  </div>
+
+  <div class="teacher-tip" style="margin-top:24px">
+    <div class="tip-label">Most Repeated Patterns</div>
+    <p><strong>Fayol vs Taylor (4 marks)</strong> — appeared 8 out of 10 years. <strong>Case study identifying principles (5 marks)</strong> — every single year. <strong>Unity of Command vs Unity of Direction (4 marks)</strong> — 7 out of 10 years. Learn these three and you've covered 12+ guaranteed marks.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+function filterPYQs() {
+  // Future: load different chapter PYQs
+}
+function filterPYQMarks(btn, marks) {
+  btn.closest('.question-filter').querySelectorAll('.q-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.question-item').forEach(q => {
+    q.style.display = (marks === 'all' || q.dataset.marks === marks) ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
