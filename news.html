@@ -121,12 +121,13 @@ const defaultNews = [];
 let allNews = [...defaultNews];
 let teacherMode = false;
 
-// Ctrl+Shift+N to add news (teacher only)
+// Ctrl+Shift+I to add news (teacher only)
 document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'N') {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
     e.preventDefault();
     if (teacherMode) {
-      document.getElementById('addNewsForm').style.display = 'block';
+      var form = document.getElementById('addNewsForm');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
       return;
     }
     const pwd = prompt('Enter Teacher Password:');

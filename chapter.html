@@ -73,24 +73,40 @@
   </div>
 </div>
 
-<!-- Teacher: Media Editor (hidden, shown via Ctrl+Shift+I) -->
-<div id="mediaEditor" style="display:none;max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 16px">
-  <div style="background:var(--bg-card);border:1px solid var(--accent-gold);border-radius:var(--radius);padding:20px">
-    <h3 style="font-size:0.95rem;font-weight:700;color:var(--accent-gold);margin-bottom:14px">📎 Add Images & Files (Teacher Only)</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <input type="text" id="mediaTitle" placeholder="Title (e.g. Planning Process Diagram)" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
-      <select id="mediaType" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
-        <option value="image">🖼️ Image / Diagram</option>
-        <option value="file">📄 PDF / File</option>
-      </select>
+<!-- Teacher: Unified Content Editor (hidden, shown via Ctrl+Shift+I) -->
+<div id="teacherEditor" style="display:none;max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 16px">
+  <div style="background:var(--bg-card);border:1px solid var(--accent);border-radius:var(--radius);padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="font-size:0.95rem;font-weight:700;color:var(--accent)">🎓 Teacher — Chapter Content Manager</h3>
+      <button onclick="document.getElementById('teacherEditor').style.display='none'" style="padding:4px 12px;border-radius:6px;background:var(--border);color:var(--text);border:none;font-size:0.8rem;cursor:pointer">✕ Close</button>
     </div>
-    <input type="text" id="mediaUrl" placeholder="Paste image/file URL (Google Drive, Imgur, direct link)" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem;margin-bottom:10px">
-    <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px">💡 For Google Drive: Open file → Share → Copy link → Change to "Anyone with link". For images: right-click → Copy image address.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <!-- Tab buttons -->
+    <div style="display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px">
+      <button class="te-tab active" onclick="switchTeacherTab(this,'yt')" style="padding:6px 16px;border-radius:6px;border:1px solid var(--accent);background:var(--accent-light);color:var(--accent);font-size:0.78rem;font-weight:700;cursor:pointer">🎥 YouTube Video</button>
+      <button class="te-tab" onclick="switchTeacherTab(this,'media')" style="padding:6px 16px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text-muted);font-size:0.78rem;font-weight:700;cursor:pointer">📎 Images & Files</button>
+    </div>
+    <!-- YouTube tab -->
+    <div id="teTabYt">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="ytLinkInput" placeholder="Paste YouTube URL here..." style="flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
+        <button onclick="saveYTLink()" style="padding:8px 16px;border-radius:8px;background:var(--accent);color:#0B0F19;border:none;font-size:0.8rem;font-weight:700;cursor:pointer">Save Video</button>
+        <button onclick="removeYTLink()" style="padding:8px 16px;border-radius:8px;background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.3);font-size:0.8rem;font-weight:700;cursor:pointer">Remove</button>
+      </div>
+    </div>
+    <!-- Media tab -->
+    <div id="teTabMedia" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <input type="text" id="mediaTitle" placeholder="Title (e.g. Planning Process Diagram)" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
+        <select id="mediaType" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
+          <option value="image">🖼️ Image / Diagram</option>
+          <option value="file">📄 PDF / File</option>
+        </select>
+      </div>
+      <input type="text" id="mediaUrl" placeholder="Paste image/file URL (Google Drive, Imgur, direct link)" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem;margin-bottom:10px">
+      <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px">💡 For Google Drive: Open file → Share → Copy link → Change to "Anyone with link". For images: right-click → Copy image address.</p>
       <button onclick="addMedia()" style="padding:8px 20px;border-radius:8px;background:var(--accent-gold);color:#0B0F19;border:none;font-size:0.8rem;font-weight:700;cursor:pointer">Add to Chapter →</button>
-      <button onclick="document.getElementById('mediaEditor').style.display='none'" style="padding:8px 16px;border-radius:8px;background:var(--border);color:var(--text);border:none;font-size:0.8rem;font-weight:600;cursor:pointer">Close</button>
+      <div id="mediaEditorList" style="margin-top:14px"></div>
     </div>
-    <div id="mediaEditorList" style="margin-top:14px"></div>
   </div>
 </div>
 
@@ -317,7 +333,6 @@
 })();
 
 // ─── YOUTUBE VIDEO SYSTEM ───
-let ytTeacherMode = false;
 
 function getYTId(url) {
   if (!url) return null;
@@ -339,26 +354,49 @@ async function loadYTVideo(cls, ch) {
   } catch(e) {}
 }
 
-// Ctrl+Shift+U → Teacher YouTube editor
+// ─── UNIFIED TEACHER EDITOR (Ctrl+Shift+I) ───
+let teacherEditorUnlocked = false;
+
+function switchTeacherTab(btn, tab) {
+  document.querySelectorAll('.te-tab').forEach(b => {
+    b.style.background = 'none';
+    b.style.color = 'var(--text-muted)';
+    b.style.borderColor = 'var(--border)';
+  });
+  btn.style.background = 'var(--accent-light)';
+  btn.style.color = 'var(--accent)';
+  btn.style.borderColor = 'var(--accent)';
+  document.getElementById('teTabYt').style.display = tab === 'yt' ? 'block' : 'none';
+  document.getElementById('teTabMedia').style.display = tab === 'media' ? 'block' : 'none';
+  if (tab === 'media') renderEditorList();
+}
+
 document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && (e.key === 'U' || e.key === 'u')) {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
     e.preventDefault();
-    if (ytTeacherMode) {
-      document.getElementById('ytEditor').style.display = document.getElementById('ytEditor').style.display === 'none' ? 'block' : 'none';
+    if (teacherEditorUnlocked) {
+      const ed = document.getElementById('teacherEditor');
+      ed.style.display = ed.style.display === 'none' ? 'block' : 'none';
+      if (ed.style.display === 'block') {
+        renderEditorList();
+        var cls2 = getParam('class') || '12';
+        var ch2 = getParam('ch') || 'ch02';
+        db.collection('bstbaba_videos').doc(cls2 + '_' + ch2).get().then(function(doc) {
+          if (doc.exists && doc.data().url) document.getElementById('ytLinkInput').value = doc.data().url;
+        }).catch(function(){});
+      }
       return;
     }
-    const pwd = prompt('Enter Teacher Password:');
+    var pwd = prompt('Enter Teacher Password:');
     if (pwd === 'aks1234') {
-      ytTeacherMode = true;
-      document.getElementById('ytEditor').style.display = 'block';
-      // Pre-fill existing link
-      const cls = getParam('class') || '12';
-      const ch = getParam('ch') || 'ch02';
-      db.collection('bstbaba_videos').doc(cls + '_' + ch).get().then(doc => {
-        if (doc.exists && doc.data().url) {
-          document.getElementById('ytLinkInput').value = doc.data().url;
-        }
-      }).catch(() => {});
+      teacherEditorUnlocked = true;
+      document.getElementById('teacherEditor').style.display = 'block';
+      renderEditorList();
+      var cls2 = getParam('class') || '12';
+      var ch2 = getParam('ch') || 'ch02';
+      db.collection('bstbaba_videos').doc(cls2 + '_' + ch2).get().then(function(doc) {
+        if (doc.exists && doc.data().url) document.getElementById('ytLinkInput').value = doc.data().url;
+      }).catch(function(){});
     }
   }
 });
@@ -397,7 +435,6 @@ async function removeYTLink() {
 }
 
 // ─── MEDIA (IMAGES & FILES) SYSTEM ───
-let mediaTeacherMode = false;
 let chapterMedia = [];
 
 function convertDriveUrl(url) {
@@ -461,25 +498,6 @@ function renderMedia(items) {
   });
   grid.innerHTML = html;
 }
-
-// Ctrl+Shift+I → Teacher media editor
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
-    e.preventDefault();
-    if (mediaTeacherMode) {
-      const ed = document.getElementById('mediaEditor');
-      ed.style.display = ed.style.display === 'none' ? 'block' : 'none';
-      if (ed.style.display === 'block') renderEditorList();
-      return;
-    }
-    const pwd = prompt('Enter Teacher Password:');
-    if (pwd === 'aks1234') {
-      mediaTeacherMode = true;
-      document.getElementById('mediaEditor').style.display = 'block';
-      renderEditorList();
-    }
-  }
-});
 
 async function addMedia() {
   const title = document.getElementById('mediaTitle').value.trim();
