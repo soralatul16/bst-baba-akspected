@@ -629,7 +629,45 @@ function injectTeacherPanel() {
           <h3>📚 Question Library <span style="font-size:0.68rem;color:var(--accent);font-weight:700;background:var(--accent-light);padding:2px 8px;border-radius:4px">Manager</span></h3>
           <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">All saved question sets. Edit, delete, or view. Students see these in the <a href="library.html" style="color:var(--accent)">Library page</a>.</p>
           <div id="tpLibraryList" style="max-height:400px;overflow-y:auto">Loading library...</div>
-          <button class="modal-btn" style="max-width:200px;margin-top:12px" onclick="window.open('library.html','_blank')">Open Full Library →</button>
+          <button class="modal-btn" style="max-width:200px;margin-top:12px" onclick="openLibraryView()">Open Full Library →</button>
+        </div>
+
+        <!-- LIBRARY FULL VIEW (hidden, shown when Open Full Library is clicked) -->
+        <div class="tp-section" id="tpLibraryFullView" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h3>📚 Question Library — Full View</h3>
+            <div style="display:flex;gap:6px">
+              <button class="lib-btn" onclick="closeLibraryView()" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">← Back</button>
+              <button class="lib-btn" onclick="closeTeacherPanel()" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">🏠 Home</button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+            <select id="tpLibFilterChapter" onchange="applyTPLibFilters()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.78rem">
+              <option value="all">All Chapters</option>
+              <option value="1">Ch 1</option><option value="2">Ch 2</option><option value="3">Ch 3</option>
+              <option value="4">Ch 4</option><option value="5">Ch 5</option><option value="6">Ch 6</option>
+              <option value="7">Ch 7</option><option value="8">Ch 8</option><option value="9">Ch 9</option>
+              <option value="10">Ch 10</option><option value="11">Ch 11</option><option value="12">Ch 12</option>
+            </select>
+            <select id="tpLibFilterType" onchange="applyTPLibFilters()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.78rem">
+              <option value="all">All Types</option>
+              <option value="mcq">MCQs</option><option value="case">Case Study</option>
+              <option value="assertion">Assertion-Reason</option><option value="short">Short Answer</option>
+              <option value="long">Long Answer</option><option value="full">Full Paper</option>
+            </select>
+            <select id="tpLibFilterDiff" onchange="applyTPLibFilters()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.78rem">
+              <option value="all">All Difficulty</option>
+              <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
+            </select>
+          </div>
+
+          <!-- Chapter sidebar + sets -->
+          <div style="display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px">
+            <div style="background:var(--bg);border-radius:8px;padding:12px;max-height:500px;overflow-y:auto" id="tpLibChapterTree">Loading...</div>
+            <div id="tpLibSetsView" style="max-height:500px;overflow-y:auto">Loading...</div>
+          </div>
         </div>
 
         <!-- Broadcast -->
@@ -961,6 +999,144 @@ async function broadcastEmail() {
   const emails = students.map(s => s.email).filter(Boolean).join(',');
   if (!emails) { alert('No student emails found.'); return; }
   window.open('mailto:' + emails + '?subject=' + encodeURIComponent('BSt Baba - AKSpected Update') + '&body=' + encodeURIComponent(msg), '_blank');
+}
+
+// ─── INLINE LIBRARY VIEW (inside teacher panel) ───
+let tpLibSets = [];
+let tpTopicsData = {};
+
+function openLibraryView() {
+  // Hide all other tp-sections, show only the library full view
+  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(el => {
+    if (el.id !== 'tpLibraryFullView') el.style.display = 'none';
+  });
+  document.getElementById('tpLibraryFullView').style.display = 'block';
+  loadTPLibraryFull();
+}
+
+function closeLibraryView() {
+  document.getElementById('tpLibraryFullView').style.display = 'none';
+  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(el => {
+    if (el.id !== 'tpLibraryFullView') el.style.display = '';
+  });
+}
+
+async function loadTPLibraryFull() {
+  // Load topics
+  try {
+    const res = await fetch('content/topics.json');
+    tpTopicsData = await res.json();
+  } catch(e) {}
+
+  // Load sets
+  try {
+    const snap = await db.collection('bstbaba_question_sets').orderBy('created', 'desc').get();
+    tpLibSets = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+  } catch(e) { tpLibSets = []; }
+
+  buildTPChapterTree();
+  applyTPLibFilters();
+}
+
+function buildTPChapterTree() {
+  const container = document.getElementById('tpLibChapterTree');
+  let html = '<div style="margin-bottom:8px"><button style="width:100%;text-align:left;padding:6px 8px;border:none;background:var(--accent-light);color:var(--accent);font-size:0.78rem;font-weight:700;cursor:pointer;border-radius:4px" onclick="tpLibShowAll()">All Sets (' + tpLibSets.length + ')</button></div>';
+
+  for (const [num, ch] of Object.entries(tpTopicsData)) {
+    const chCount = tpLibSets.filter(s => s.chapters && s.chapters.includes(num)).length;
+    html += '<div style="margin-bottom:2px">';
+    html += '<button style="width:100%;text-align:left;padding:5px 8px;border:none;background:none;color:var(--text);font-size:0.75rem;font-weight:600;cursor:pointer;border-radius:4px;display:flex;justify-content:space-between" onclick="tpLibToggleCh(this,\'' + num + '\')">';
+    html += '<span>Ch ' + num + ': ' + ch.title.substring(0, 22) + '</span>';
+    html += '<span style="font-size:0.65rem;background:var(--border);padding:0 5px;border-radius:3px">' + chCount + '</span>';
+    html += '</button>';
+    html += '<div id="tpLibTopics' + num + '" style="display:none;padding-left:10px">';
+    ch.topics.forEach(t => {
+      const tCount = tpLibSets.filter(s => s.topics && s.topics.includes(t)).length;
+      html += '<button style="width:100%;text-align:left;padding:3px 6px;border:none;background:none;color:var(--text-muted);font-size:0.7rem;cursor:pointer;border-radius:3px;display:flex;justify-content:space-between" onclick="tpLibFilterTopic(\'' + num + '\',\'' + t.replace(/'/g,"\\'") + '\')">';
+      html += '<span>' + t.substring(0, 25) + '</span>';
+      html += '<span style="font-size:0.6rem">' + tCount + '</span>';
+      html += '</button>';
+    });
+    html += '</div></div>';
+  }
+  container.innerHTML = html;
+}
+
+function tpLibToggleCh(btn, num) {
+  const el = document.getElementById('tpLibTopics' + num);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  document.getElementById('tpLibFilterChapter').value = num;
+  applyTPLibFilters();
+}
+
+function tpLibShowAll() {
+  document.getElementById('tpLibFilterChapter').value = 'all';
+  document.getElementById('tpLibFilterType').value = 'all';
+  document.getElementById('tpLibFilterDiff').value = 'all';
+  applyTPLibFilters();
+}
+
+function tpLibFilterTopic(chNum, topic) {
+  document.getElementById('tpLibFilterChapter').value = chNum;
+  const filtered = tpLibSets.filter(s =>
+    s.chapters && s.chapters.includes(chNum) &&
+    s.topics && s.topics.includes(topic)
+  );
+  renderTPLibSets(filtered);
+}
+
+function applyTPLibFilters() {
+  const ch = document.getElementById('tpLibFilterChapter').value;
+  const type = document.getElementById('tpLibFilterType').value;
+  const diff = document.getElementById('tpLibFilterDiff').value;
+
+  let filtered = [...tpLibSets];
+  if (ch !== 'all') filtered = filtered.filter(s => s.chapters && s.chapters.includes(ch));
+  if (type !== 'all') filtered = filtered.filter(s => s.type && s.type.includes(type));
+  if (diff !== 'all') filtered = filtered.filter(s => s.difficulty === diff);
+  renderTPLibSets(filtered);
+}
+
+function renderTPLibSets(sets) {
+  const container = document.getElementById('tpLibSetsView');
+  if (sets.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)"><p>No question sets match these filters.</p></div>';
+    return;
+  }
+  container.innerHTML = sets.map(s => {
+    const preview = (s.content || '').substring(0, 300).replace(/\n/g, '<br>');
+    return '<div style="padding:14px;background:var(--bg);border-radius:8px;margin-bottom:10px;border:1px solid var(--border)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+        '<strong style="font-size:0.88rem">' + escapeHtml(s.title || 'Untitled') + '</strong>' +
+        '<span style="font-size:0.68rem;color:var(--text-muted)">' + (s.created ? new Date(s.created).toLocaleDateString() : '') + '</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">' +
+        (s.type ? '<span style="font-size:0.63rem;font-weight:600;padding:2px 6px;border-radius:3px;background:var(--accent-light);color:var(--accent)">' + s.type + '</span>' : '') +
+        (s.difficulty ? '<span style="font-size:0.63rem;font-weight:600;padding:2px 6px;border-radius:3px;background:var(--accent-gold-light);color:var(--accent-gold)">' + s.difficulty + '</span>' : '') +
+        ((s.chapters||[]).map(c => '<span style="font-size:0.63rem;font-weight:600;padding:2px 6px;border-radius:3px;background:var(--border);color:var(--text-muted)">Ch ' + c + '</span>').join('')) +
+        (s.questionCount ? '<span style="font-size:0.63rem;font-weight:600;padding:2px 6px;border-radius:3px;background:var(--border);color:var(--text-muted)">' + s.questionCount + ' Qs</span>' : '') +
+      '</div>' +
+      '<div style="font-size:0.78rem;color:var(--text-muted);line-height:1.6;max-height:120px;overflow:hidden">' + preview + '...</div>' +
+      '<div style="display:flex;gap:4px;margin-top:8px">' +
+        '<button style="font-size:0.7rem;padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer" onclick="viewFullSet(\'' + s.id + '\')">View Full</button>' +
+        '<button style="font-size:0.7rem;padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer" onclick="editSet(\'' + s.id + '\')">Edit</button>' +
+        '<button style="font-size:0.7rem;padding:4px 10px;border-radius:4px;border:1px solid rgba(248,113,113,0.3);background:var(--bg-card);color:#f87171;cursor:pointer" onclick="deleteSetTP(\'' + s.id + '\');loadTPLibraryFull()">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function viewFullSet(setId) {
+  const s = tpLibSets.find(x => x.id === setId);
+  if (!s) return;
+  const container = document.getElementById('tpLibSetsView');
+  container.innerHTML = '<div style="padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border)">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">' +
+      '<h3 style="font-size:1rem;font-weight:700">' + escapeHtml(s.title || 'Question Set') + '</h3>' +
+      '<button style="font-size:0.75rem;padding:4px 12px;border-radius:4px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer" onclick="applyTPLibFilters()">← Back to list</button>' +
+    '</div>' +
+    '<div style="white-space:pre-wrap;font-size:0.83rem;line-height:1.7;color:var(--text)">' + (s.content || '').replace(/\n/g, '<br>') + '</div>' +
+  '</div>';
 }
 
 // ─── KEY LISTENER (B = Teacher Panel) + Hidden button for mobile/iPad ───
