@@ -196,7 +196,7 @@ async function sendChat() {
       'Authorization': 'Bearer ' + apiKey
     },
     body: JSON.stringify({
-      model: 'grok-3-mini',
+      model: 'grok-2',
       messages: [
         {role: 'system', content: 'You are BSt Baba, an expert CBSE Class 11 and 12 Business Studies teacher created by Aakassh Soral (AKS). Answer only Business Studies questions. Be concise, accurate, and exam-focused. Use examples from NCERT. Format answers with bullet points where helpful. If the question is not about Business Studies, politely decline and redirect to the subject.'},
         {role: 'user', content: msg}
@@ -727,7 +727,7 @@ async function generateQuestions() {
     method: 'POST',
     headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
     body: JSON.stringify({
-      model: 'grok-3-mini',
+      model: 'grok-2',
       messages: [
         {role: 'system', content: 'You are an expert CBSE Class 12 Business Studies question paper setter. Generate questions exactly matching the CBSE board exam pattern for 2026-27. Include marks allocation. Be accurate with NCERT content.'},
         {role: 'user', content: prompt}
