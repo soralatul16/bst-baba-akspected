@@ -95,7 +95,7 @@
     <button class="q-filter-btn" onclick="filterNews(this,'9-10')">Ch 9-10 Finance</button>
     <button class="q-filter-btn" onclick="filterNews(this,'11')">Ch 11 Marketing</button>
     <button class="q-filter-btn" onclick="filterNews(this,'12')">Ch 12 Consumer</button>
-    <button class="q-filter-btn" onclick="refreshAINews()" style="margin-left:auto;background:var(--accent-light);color:var(--accent);border-color:var(--accent)">🔄 Generate Fresh News</button>
+    <button class="q-filter-btn" onclick="refreshAINews()" style="margin-left:auto;background:var(--accent-light);color:var(--accent);border-color:var(--accent)">🔄 Refresh News</button>
   </div>
 
   <div class="news-grid" id="newsGrid">Loading news...</div>
@@ -168,7 +168,7 @@ async function loadNews() {
 
       // Generate new AI news if none exists for today
       if (aiNews.length === 0 || !aiNews.find(n => n.date === today)) {
-        grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><p>Generating today\'s business news...</p></div>';
+        grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><p>Extracting today\'s business news...</p></div>';
         await generateAINews(today);
         // Reload after generation
         const newSnap = await db.collection('bstbaba_news').where('createdBy', '==', 'AI').orderBy('date', 'desc').limit(10).get();
@@ -269,7 +269,7 @@ function filterNews(btn, range) {
 
 async function refreshAINews() {
   const grid = document.getElementById('newsGrid');
-  grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><p>🔄 Generating fresh news from AI... This may take 10-15 seconds.</p></div>';
+  grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><p>🔄 Extracting the latest business news... This may take 10-15 seconds.</p></div>';
   const today = new Date().toISOString().split('T')[0];
   await generateAINews(today);
   await loadNews();
