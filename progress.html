@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Progress | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.prog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,200px),1fr)); gap: 14px; margin-bottom: 28px; }
+.prog-stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+.prog-stat .stat-big { font-size: 2rem; font-weight: 800; color: var(--accent); }
+.prog-stat .stat-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.prog-readiness { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; }
+.prog-readiness h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; }
+.readiness-bar { width: 100%; height: 20px; background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+.readiness-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--accent), var(--accent-gold)); transition: width 0.6s; }
+.readiness-label { font-size: 0.82rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+.prog-chapters { display: flex; flex-direction: column; gap: 8px; }
+.prog-ch-row { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; transition: all 0.2s; }
+.prog-ch-row:hover { border-color: var(--border-hover); }
+.prog-ch-num { font-size: 1.2rem; font-weight: 800; color: var(--accent); opacity: 0.3; width: 30px; }
+.prog-ch-info { flex: 1; }
+.prog-ch-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+.prog-ch-meta { font-size: 0.72rem; color: var(--text-muted); }
+.prog-ch-bar { width: 120px; }
+.prog-ch-bar-track { width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.prog-ch-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+.prog-ch-score { width: 50px; text-align: right; font-size: 0.82rem; font-weight: 700; color: var(--accent); }
+.prog-ch-status { width: 24px; text-align: center; font-size: 1rem; }
+.prog-section-title { font-size: 0.85rem; font-weight: 700; margin: 20px 0 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.prog-quiz-history { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-top: 24px; }
+.prog-quiz-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+.prog-quiz-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / My Progress</div>
+    <h1 id="progTitle">My Progress</h1>
+    <div class="meta-bar">
+      <span>📊 Track your preparation</span>
+      <span>📖 Chapter-wise performance</span>
+      <span>🎯 Board Readiness score</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div id="progLoginPrompt" style="display:none;text-align:center;padding:60px 20px">
+    <h3 style="font-size:1.2rem;margin-bottom:8px">Login to see your progress</h3>
+    <p style="color:var(--text-muted);margin-bottom:16px">Register or login to track your quiz scores, chapter completion, and board readiness.</p>
+    <button class="modal-btn" style="max-width:250px;margin:0 auto;display:block" onclick="showAuthModal()">Register / Login →</button>
+  </div>
+
+  <div id="progContent" style="display:none">
+    <!-- Stats row -->
+    <div class="prog-grid">
+      <div class="prog-stat">
+        <div class="stat-big" id="progQuizzes">0</div>
+        <div class="stat-label">Quizzes Taken</div>
+      </div>
+      <div class="prog-stat">
+        <div class="stat-big" id="progAvg">0%</div>
+        <div class="stat-label">Average Score</div>
+      </div>
+      <div class="prog-stat">
+        <div class="stat-big" style="color:var(--accent-gold)" id="progStreak">0</div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+      <div class="prog-stat">
+        <div class="stat-big" id="progChapters">0/12</div>
+        <div class="stat-label">Chapters Attempted</div>
+      </div>
+    </div>
+
+    <!-- Board Readiness -->
+    <div class="prog-readiness">
+      <h3>🎯 Board Exam Readiness</h3>
+      <div class="readiness-bar"><div class="readiness-fill" id="readinessFill" style="width:0%"></div></div>
+      <div class="readiness-label">
+        <span>Not Started</span>
+        <span id="readinessPercent">0%</span>
+        <span>Board Ready</span>
+      </div>
+    </div>
+
+    <!-- Chapter-wise progress -->
+    <div class="prog-section-title">Chapter-wise Performance</div>
+    <div class="prog-chapters" id="progChapterList"></div>
+
+    <!-- Quiz History -->
+    <div class="prog-quiz-history">
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:14px">📝 Recent Quiz History</h3>
+      <div id="progQuizHistory">Loading...</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+const chapterNames = {
+  1:"Nature of Management",2:"Principles of Management",3:"Business Environment",
+  4:"Planning",5:"Organising",6:"Staffing",7:"Directing",8:"Controlling",
+  9:"Financial Management",10:"Financial Markets",11:"Marketing",12:"Consumer Protection"
+};
+const chapterMarks = {1:6,2:7,3:4,4:6,5:8,6:7,7:8,8:4,9:8,10:7,11:11,12:4};
+
+async function initProgress() {
+  if (typeof auth === 'undefined') {
+    document.getElementById('progLoginPrompt').style.display = 'block';
+    return;
+  }
+
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      document.getElementById('progLoginPrompt').style.display = 'block';
+      document.getElementById('progContent').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('progLoginPrompt').style.display = 'none';
+    document.getElementById('progContent').style.display = 'block';
+
+    const userName = (getUser() || {}).name || 'Student';
+    document.getElementById('progTitle').textContent = userName + "'s Progress";
+
+    // Load quiz scores
+    try {
+      const snap = await db.collection('bstbaba_quiz_scores')
+        .where('uid', '==', user.uid)
+        .orderBy('timestamp', 'desc')
+        .get();
+
+      const scores = snap.docs.map(d => d.data());
+      const totalQuizzes = scores.length;
+      const totalScore = scores.reduce((a, s) => a + s.score, 0);
+      const totalPossible = scores.reduce((a, s) => a + s.total, 0);
+      const avg = totalPossible > 0 ? Math.round((totalScore / totalPossible) * 100) : 0;
+      const streak = scores.length > 0 ? (scores[0].streak || 0) : 0;
+
+      document.getElementById('progQuizzes').textContent = totalQuizzes;
+      document.getElementById('progAvg').textContent = avg + '%';
+      document.getElementById('progStreak').textContent = streak;
+
+      // Readiness = based on quizzes taken + average score
+      const readiness = Math.min(100, Math.round((totalQuizzes / 30) * 50 + (avg / 100) * 50));
+      document.getElementById('readinessFill').style.width = readiness + '%';
+      document.getElementById('readinessPercent').textContent = readiness + '%';
+
+      // Chapter-wise (from user profile)
+      const userDoc = await db.collection('bstbaba_users').doc(user.uid).get();
+      const userData = userDoc.exists ? userDoc.data() : {};
+      const chaptersAttempted = userData.chaptersVisited || [];
+
+      document.getElementById('progChapters').textContent = chaptersAttempted.length + '/12';
+
+      // Chapter list
+      let chHtml = '';
+      for (let i = 1; i <= 12; i++) {
+        const attempted = chaptersAttempted.includes(String(i));
+        const chScores = scores.filter(s => s.chapters && s.chapters.includes(String(i)));
+        const chAvg = chScores.length > 0 ? Math.round(chScores.reduce((a, s) => a + s.score, 0) / chScores.length * 20) : 0;
+
+        chHtml += `<div class="prog-ch-row">
+          <div class="prog-ch-num">${String(i).padStart(2, '0')}</div>
+          <div class="prog-ch-info">
+            <div class="prog-ch-title">${chapterNames[i]}</div>
+            <div class="prog-ch-meta">${chapterMarks[i]} marks · ${chScores.length} quiz${chScores.length !== 1 ? 'zes' : ''}</div>
+          </div>
+          <div class="prog-ch-bar"><div class="prog-ch-bar-track"><div class="prog-ch-bar-fill" style="width:${chAvg}%"></div></div></div>
+          <div class="prog-ch-score">${chAvg}%</div>
+          <div class="prog-ch-status">${chAvg >= 80 ? '✅' : chAvg > 0 ? '📝' : '⬜'}</div>
+        </div>`;
+      }
+      document.getElementById('progChapterList').innerHTML = chHtml;
+
+      // Quiz history
+      const historyHtml = scores.slice(0, 15).map(s => `
+        <div class="prog-quiz-row">
+          <span>${s.date || ''}</span>
+          <span style="font-weight:600;color:${s.score >= 4 ? 'var(--accent)' : s.score >= 3 ? 'var(--accent-gold)' : '#f87171'}">${s.score}/${s.total}</span>
+          <span style="color:var(--text-muted)">🔥${s.streak || 0}</span>
+        </div>`).join('');
+      document.getElementById('progQuizHistory').innerHTML = historyHtml || '<p style="color:var(--text-muted);text-align:center">No quizzes taken yet. <a href="daily-quiz.html" style="color:var(--accent)">Take today\'s quiz →</a></p>';
+
+    } catch(e) {
+      console.error('Progress load error:', e);
+      document.getElementById('progContent').innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px">Could not load progress. Make sure you are logged in.</p>';
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initProgress);
+</script>
+</body>
+</html>

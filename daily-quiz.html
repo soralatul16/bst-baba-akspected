@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Quiz | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.dq-container { max-width: 640px; margin: 0 auto; }
+.dq-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.dq-streak { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 700; color: var(--accent-gold); }
+.dq-streak .streak-num { font-size: 1.4rem; }
+.dq-timer { font-size: 0.82rem; color: var(--text-muted); }
+.dq-progress-bar { width: 100%; height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 24px; overflow: hidden; }
+.dq-progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
+.dq-question-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 16px; }
+.dq-q-number { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 10px; }
+.dq-q-text { font-size: 1rem; font-weight: 600; line-height: 1.6; margin-bottom: 18px; }
+.dq-options { display: flex; flex-direction: column; gap: 8px; }
+.dq-option { padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; background: var(--bg); }
+.dq-option:hover { border-color: var(--accent); background: var(--accent-light); }
+.dq-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 600; }
+.dq-option.correct { border-color: #22c55e; background: rgba(34,197,94,0.1); color: #22c55e; }
+.dq-option.wrong { border-color: #f87171; background: rgba(248,113,113,0.1); color: #f87171; }
+.dq-option.disabled { pointer-events: none; opacity: 0.7; }
+.dq-option-letter { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+.dq-option.selected .dq-option-letter { border-color: var(--accent); background: var(--accent); color: #0B0F19; }
+.dq-option.correct .dq-option-letter { border-color: #22c55e; background: #22c55e; color: #fff; }
+.dq-option.wrong .dq-option-letter { border-color: #f87171; background: #f87171; color: #fff; }
+.dq-explanation { margin-top: 12px; padding: 12px 16px; background: var(--accent-light); border-radius: 8px; font-size: 0.82rem; line-height: 1.6; display: none; }
+.dq-explanation.show { display: block; }
+.dq-nav { display: flex; justify-content: space-between; margin-top: 16px; }
+.dq-nav button { padding: 10px 24px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); cursor: pointer; }
+.dq-nav button:hover { border-color: var(--accent); color: var(--accent); }
+.dq-nav button.primary { background: var(--accent); color: #0B0F19; border-color: var(--accent); }
+
+/* Results */
+.dq-results { text-align: center; padding: 40px 20px; }
+.dq-score-circle { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.dq-score-num { font-size: 2rem; font-weight: 800; color: var(--accent); }
+.dq-score-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Leaderboard */
+.lb-container { max-width: 500px; margin: 32px auto 0; }
+.lb-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; text-align: center; }
+.lb-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-size: 0.85rem; }
+.lb-row:nth-child(1) { background: rgba(251,191,36,0.1); }
+.lb-row:nth-child(2) { background: rgba(34,211,238,0.06); }
+.lb-row:nth-child(3) { background: rgba(34,211,238,0.03); }
+.lb-rank { width: 28px; height: 28px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.78rem; flex-shrink: 0; }
+.lb-row:nth-child(1) .lb-rank { background: var(--accent-gold); color: #0B0F19; }
+.lb-row:nth-child(2) .lb-rank { background: var(--accent); color: #0B0F19; }
+.lb-name { flex: 1; font-weight: 600; }
+.lb-score { font-weight: 700; color: var(--accent); }
+.lb-streak { font-size: 0.75rem; color: var(--accent-gold); }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Daily Quiz</div>
+    <h1>Today's AKSpected 5</h1>
+    <div class="meta-bar">
+      <span>📝 5 Questions daily</span>
+      <span>🔥 Build your streak</span>
+      <span>🏆 Climb the leaderboard</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="dq-container">
+    <div class="dq-header">
+      <div class="dq-streak">🔥 <span class="streak-num" id="dqStreak">0</span> day streak</div>
+      <div class="dq-timer" id="dqTimer">New quiz in: --:--:--</div>
+    </div>
+    <div class="dq-progress-bar"><div class="dq-progress-fill" id="dqProgress" style="width:0%"></div></div>
+    <div id="dqQuizArea">Loading today's quiz...</div>
+    <div id="dqResultsArea" style="display:none"></div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="lb-container">
+    <div class="lb-title">🏆 Weekly Leaderboard</div>
+    <div id="leaderboard">Loading leaderboard...</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+const dailyQuestions = [
+  {ch:1, topic:"Effectiveness vs Efficiency", q:"A production manager produces 10,000 units at ₹160 per unit instead of the target ₹150. He is:", options:["Effective and Efficient","Effective but not Efficient","Efficient but not Effective","Neither Effective nor Efficient"], correct:1, explanation:"He met the target quantity (effective) but exceeded the cost (not efficient)."},
+  {ch:1, topic:"Characteristics of Management", q:"Management is called an 'intangible force' because:", options:["It cannot be seen but felt through results","It is temporary","It applies only to businesses","It is optional"], correct:0, explanation:"Management cannot be physically seen, but its presence is felt when targets are met and there is orderliness."},
+  {ch:2, topic:"Fayol's Principles", q:"'A place for everything and everything in its place' refers to:", options:["Unity of Command","Scalar Chain","Order","Discipline"], correct:2, explanation:"Fayol's principle of Order — material order (right thing in right place) and social order (right person in right position)."},
+  {ch:2, topic:"Taylor's Techniques", q:"Training workers in a simulated factory setup with same equipment is called:", options:["Apprenticeship","Vestibule Training","Job Rotation","Internship"], correct:1, explanation:"Vestibule Training uses a duplicate work environment so training doesn't disrupt actual production."},
+  {ch:2, topic:"Fayol vs Taylor", q:"Who is called the 'Father of General Management'?", options:["F.W. Taylor","Henri Fayol","Peter Drucker","Abraham Maslow"], correct:1, explanation:"Henri Fayol is the Father of General Management. Taylor is the Father of Scientific Management."},
+  {ch:3, topic:"Dimensions", q:"Rising interest rates and inflation are part of which dimension?", options:["Social","Legal","Economic","Political"], correct:2, explanation:"Interest rates, inflation, and disposable income are part of the Economic Environment."},
+  {ch:4, topic:"Types of Plans", q:"'No smoking in the office' is an example of:", options:["Policy","Rule","Procedure","Method"], correct:1, explanation:"A Rule is a specific statement that allows no flexibility — it tells what must or must not be done."},
+  {ch:5, topic:"Delegation", q:"Which element of delegation CANNOT be further delegated?", options:["Authority","Responsibility","Accountability","All of these"], correct:2, explanation:"Accountability always flows upward. The delegator remains ultimately answerable for the outcome."},
+  {ch:5, topic:"Organisation Structure", q:"Grouping activities by products like 'Garments Division' and 'Shoes Division' is:", options:["Functional Structure","Divisional Structure","Informal Organisation","Matrix Structure"], correct:1, explanation:"Divisional Structure groups activities by products, each division operating as a semi-autonomous unit."},
+  {ch:7, topic:"Maslow's Hierarchy", q:"'Job security and pension plan' satisfy which need in Maslow's hierarchy?", options:["Physiological","Safety/Security","Social","Esteem"], correct:1, explanation:"Safety needs include job security, pension plans, and stability of income."},
+  {ch:7, topic:"Leadership", q:"A leadership style where subordinates are given full freedom to make decisions is:", options:["Autocratic","Democratic","Laissez-faire","Bureaucratic"], correct:2, explanation:"Laissez-faire (Free Rein) leadership gives full autonomy to subordinates with minimal supervision."},
+  {ch:9, topic:"Financial Decisions", q:"Interest on debt is tax-deductible. This makes debt:", options:["More risky than equity","Costlier than equity","Cheaper than equity","Same as equity"], correct:2, explanation:"Tax deductibility of interest reduces the effective cost of debt, making it cheaper than equity financing."},
+  {ch:10, topic:"Money Market", q:"Treasury Bills are issued by:", options:["Commercial Banks","RBI on behalf of Government","SEBI","Stock Exchange"], correct:1, explanation:"Treasury Bills are short-term government securities issued by RBI, sold at discount and redeemed at par."},
+  {ch:11, topic:"Marketing Mix", q:"Free samples and contests are examples of:", options:["Advertising","Personal Selling","Sales Promotion","Public Relations"], correct:2, explanation:"Sales Promotion uses short-term incentives like free samples, discounts, and contests to boost sales."},
+  {ch:12, topic:"Consumer Protection", q:"A complaint for goods worth ₹8 crore should be filed with:", options:["District Commission","State Commission","National Commission","Supreme Court"], correct:1, explanation:"State Commission handles complaints from ₹1 crore to ₹10 crore."}
+];
+
+let currentQ = 0;
+let answers = [];
+let todayQuiz = [];
+let quizCompleted = false;
+
+function getTodayKey() { return new Date().toISOString().split('T')[0]; }
+
+function getDailyQuiz() {
+  const today = getTodayKey();
+  const seed = today.split('-').reduce((a, b) => a + parseInt(b), 0);
+  const shuffled = [...dailyQuestions].sort((a, b) => {
+    const ha = (a.q.length * seed) % 100;
+    const hb = (b.q.length * seed) % 100;
+    return ha - hb;
+  });
+  return shuffled.slice(0, 5);
+}
+
+function initQuiz() {
+  const today = getTodayKey();
+  const saved = JSON.parse(localStorage.getItem('dq_' + today) || 'null');
+
+  todayQuiz = getDailyQuiz();
+  answers = new Array(5).fill(-1);
+
+  if (saved && saved.completed) {
+    quizCompleted = true;
+    answers = saved.answers;
+    showResults();
+    return;
+  }
+
+  currentQ = 0;
+  renderQuestion();
+  updateStreak();
+  startCountdown();
+}
+
+function renderQuestion() {
+  const q = todayQuiz[currentQ];
+  const letters = ['A', 'B', 'C', 'D'];
+  const answered = answers[currentQ] >= 0;
+
+  document.getElementById('dqProgress').style.width = ((currentQ + 1) / 5 * 100) + '%';
+
+  let html = `<div class="dq-question-card">
+    <div class="dq-q-number">Question ${currentQ + 1} of 5 · Ch ${q.ch} · ${q.topic}</div>
+    <div class="dq-q-text">${q.q}</div>
+    <div class="dq-options">`;
+
+  q.options.forEach((opt, i) => {
+    let cls = 'dq-option';
+    if (answered) {
+      cls += ' disabled';
+      if (i === q.correct) cls += ' correct';
+      else if (i === answers[currentQ] && i !== q.correct) cls += ' wrong';
+    } else if (answers[currentQ] === i) {
+      cls += ' selected';
+    }
+    html += `<div class="${cls}" onclick="selectAnswer(${i})">
+      <span class="dq-option-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </div>`;
+  });
+
+  html += `</div>
+    <div class="dq-explanation ${answered ? 'show' : ''}" id="dqExplanation">${answered ? (answers[currentQ] === q.correct ? '✅ Correct! ' : '❌ Wrong. ') + q.explanation : ''}</div>
+  </div>`;
+
+  html += `<div class="dq-nav">
+    <button ${currentQ === 0 ? 'disabled style="opacity:0.3"' : ''} onclick="prevQuestion()">← Previous</button>
+    ${currentQ < 4 ? `<button class="primary" onclick="nextQuestion()" ${!answered ? 'disabled style="opacity:0.3"' : ''}>Next →</button>` :
+    `<button class="primary" onclick="finishQuiz()" ${!answered ? 'disabled style="opacity:0.3"' : ''}>Finish Quiz →</button>`}
+  </div>`;
+
+  document.getElementById('dqQuizArea').innerHTML = html;
+}
+
+function selectAnswer(idx) {
+  if (answers[currentQ] >= 0) return;
+  answers[currentQ] = idx;
+  renderQuestion();
+}
+
+function nextQuestion() { if (currentQ < 4) { currentQ++; renderQuestion(); } }
+function prevQuestion() { if (currentQ > 0) { currentQ--; renderQuestion(); } }
+
+async function finishQuiz() {
+  quizCompleted = true;
+  const score = answers.reduce((acc, a, i) => acc + (a === todayQuiz[i].correct ? 1 : 0), 0);
+  const today = getTodayKey();
+
+  localStorage.setItem('dq_' + today, JSON.stringify({completed: true, answers, score}));
+
+  // Update streak
+  const streakData = JSON.parse(localStorage.getItem('bstbaba_streak') || '{"count":0,"lastDate":""}');
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  if (streakData.lastDate === yesterday) streakData.count++;
+  else if (streakData.lastDate !== today) streakData.count = 1;
+  streakData.lastDate = today;
+  localStorage.setItem('bstbaba_streak', JSON.stringify(streakData));
+  document.getElementById('dqStreak').textContent = streakData.count;
+
+  // Save to Firestore
+  if (typeof auth !== 'undefined' && auth.currentUser) {
+    try {
+      const uid = auth.currentUser.uid;
+      await db.collection('bstbaba_quiz_scores').add({
+        uid, score, total: 5, date: today,
+        streak: streakData.count,
+        name: (getUser() || {}).name || 'Anonymous',
+        timestamp: new Date().toISOString()
+      });
+      // Update user profile
+      await db.collection('bstbaba_users').doc(uid).update({
+        quizzes: firebase.firestore.FieldValue.increment(1),
+        totalScore: firebase.firestore.FieldValue.increment(score),
+        lastQuizDate: today,
+        streak: streakData.count
+      });
+    } catch(e) { console.log('Score save error:', e); }
+  }
+
+  showResults();
+}
+
+function showResults() {
+  const score = answers.reduce((acc, a, i) => acc + (a === todayQuiz[i].correct ? 1 : 0), 0);
+  document.getElementById('dqProgress').style.width = '100%';
+  document.getElementById('dqQuizArea').style.display = 'none';
+
+  const streakData = JSON.parse(localStorage.getItem('bstbaba_streak') || '{"count":0}');
+  let msg = score === 5 ? 'Perfect Score!' : score >= 3 ? 'Good Job!' : 'Keep Practicing!';
+
+  document.getElementById('dqResultsArea').style.display = 'block';
+  document.getElementById('dqResultsArea').innerHTML = `
+    <div class="dq-results">
+      <div class="dq-score-circle">
+        <div class="dq-score-num">${score}/5</div>
+        <div class="dq-score-label">${msg}</div>
+      </div>
+      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:8px">🔥 Current streak: <strong>${streakData.count} days</strong></p>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">Come back tomorrow for new questions!</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <a href="index.html" style="padding:10px 20px;border-radius:8px;font-size:0.85rem;font-weight:600;border:1px solid var(--border);color:var(--text);text-decoration:none">🏠 Home</a>
+        <a href="chapter.html?class=12&ch=ch0${todayQuiz[0].ch}" style="padding:10px 20px;border-radius:8px;font-size:0.85rem;font-weight:600;background:var(--accent);color:#0B0F19;text-decoration:none;border:none">📖 Review Chapter ${todayQuiz[0].ch}</a>
+      </div>
+    </div>`;
+
+  loadLeaderboard();
+}
+
+async function loadLeaderboard() {
+  const container = document.getElementById('leaderboard');
+  try {
+    const thisWeekStart = new Date();
+    thisWeekStart.setDate(thisWeekStart.getDate() - thisWeekStart.getDay());
+    const weekStr = thisWeekStart.toISOString().split('T')[0];
+
+    const snap = await db.collection('bstbaba_quiz_scores')
+      .where('date', '>=', weekStr)
+      .orderBy('date')
+      .get();
+
+    const playerScores = {};
+    snap.docs.forEach(doc => {
+      const d = doc.data();
+      if (!playerScores[d.uid]) playerScores[d.uid] = {name: d.name, total: 0, quizzes: 0, streak: d.streak || 0};
+      playerScores[d.uid].total += d.score;
+      playerScores[d.uid].quizzes++;
+      playerScores[d.uid].streak = Math.max(playerScores[d.uid].streak, d.streak || 0);
+    });
+
+    const sorted = Object.values(playerScores).sort((a, b) => b.total - a.total);
+
+    if (sorted.length === 0) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">No quiz scores this week yet. Be the first!</p>';
+      return;
+    }
+
+    container.innerHTML = sorted.slice(0, 10).map((p, i) => `
+      <div class="lb-row">
+        <div class="lb-rank">${i + 1}</div>
+        <div class="lb-name">${escapeHtml(p.name)}</div>
+        <div class="lb-score">${p.total}/${p.quizzes * 5}</div>
+        <div class="lb-streak">🔥${p.streak}</div>
+      </div>`).join('');
+  } catch(e) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-muted)">Leaderboard loads when Firebase is connected.</p>';
+  }
+}
+
+function updateStreak() {
+  const data = JSON.parse(localStorage.getItem('bstbaba_streak') || '{"count":0}');
+  document.getElementById('dqStreak').textContent = data.count;
+}
+
+function startCountdown() {
+  setInterval(() => {
+    const now = new Date();
+    const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0, 0, 0, 0);
+    const diff = tomorrow - now;
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('dqTimer').textContent = `New quiz in: ${h}h ${m}m ${s}s`;
+  }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  loadLeaderboard();
+});
+</script>
+</body>
+</html>

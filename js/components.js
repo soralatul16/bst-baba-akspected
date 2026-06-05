@@ -484,6 +484,12 @@ function injectUserBar() {
   if (!nav) return;
   const bookBtn = nav.querySelector('.btn-book');
   if (bookBtn) {
+    const progressLink = document.createElement('a');
+    progressLink.href = 'progress.html';
+    progressLink.style.cssText = 'font-size:0.75rem;color:var(--accent-gold);font-weight:600;margin-right:8px;text-decoration:none';
+    progressLink.textContent = '📊 My Progress';
+    bookBtn.parentNode.insertBefore(progressLink, bookBtn);
+
     const userBadge = document.createElement('span');
     userBadge.style.cssText = 'font-size:0.75rem;color:var(--accent);font-weight:600;margin-right:4px;cursor:pointer';
     userBadge.textContent = `Hi, ${user.name.split(' ')[0]}`;
