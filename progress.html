@@ -34,6 +34,14 @@
 .prog-quiz-history { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-top: 24px; }
 .prog-quiz-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
 .prog-quiz-row:last-child { border-bottom: none; }
+
+.badge { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 10px; text-align: center; transition: all 0.2s; }
+.badge.earned { border-color: var(--accent-gold); background: var(--accent-gold-light); }
+.badge.locked { opacity: 0.35; }
+.badge-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.badge-name { font-size: 0.68rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.badge-desc { font-size: 0.6rem; color: var(--text-muted); line-height: 1.4; }
+.badge.earned .badge-name { color: var(--accent-gold); }
 </style>
 </head>
 <body>
@@ -47,6 +55,7 @@
     <a href="library.html">Library</a>
     <a href="mock-test.html">Mock Test</a>
     <a href="crack-the-case.html">Crack the Case</a>
+    <a href="revision-planner.html">Planner</a>
     <a href="about.html">About</a>
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
     <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
@@ -103,6 +112,17 @@
         <span id="readinessPercent">0%</span>
         <span>Board Ready</span>
       </div>
+    </div>
+
+    <!-- Achievement Badges -->
+    <div class="prog-section-title">Achievement Badges</div>
+    <div id="progBadges" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,140px),1fr));gap:10px;margin-bottom:24px"></div>
+
+    <!-- Quick Links -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+      <a href="revision-planner.html" style="padding:10px 20px;border-radius:8px;background:var(--accent);color:#0B0F19;font-size:0.85rem;font-weight:600;text-decoration:none">📅 Revision Planner</a>
+      <a href="daily-quiz.html" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;text-decoration:none">📝 Daily Quiz</a>
+      <a href="crack-the-case.html" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;text-decoration:none">🕵️ Crack the Case</a>
     </div>
 
     <!-- Chapter-wise progress -->
@@ -206,6 +226,9 @@ async function initProgress() {
       }
       document.getElementById('progChapterList').innerHTML = chHtml;
 
+      // Badges
+      renderBadges(totalQuizzes, avg, streak, chaptersAttempted.length);
+
       // Quiz history
       const historyHtml = scores.slice(0, 15).map(s => `
         <div class="prog-quiz-row">
@@ -220,6 +243,33 @@ async function initProgress() {
       document.getElementById('progContent').innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px">Could not load progress. Make sure you are logged in.</p>';
     }
   });
+}
+
+function renderBadges(quizzes, avgScore, streak, chaptersCount) {
+  const badges = [
+    {icon:'🎯',name:'First Quiz',desc:'Complete your first quiz',earned: quizzes >= 1},
+    {icon:'📝',name:'Quiz Regular',desc:'Complete 5 quizzes',earned: quizzes >= 5},
+    {icon:'🏆',name:'Quiz Champion',desc:'Complete 20 quizzes',earned: quizzes >= 20},
+    {icon:'💯',name:'Quiz Legend',desc:'Complete 50 quizzes',earned: quizzes >= 50},
+    {icon:'🔥',name:'3-Day Streak',desc:'3 consecutive days',earned: streak >= 3},
+    {icon:'⚡',name:'7-Day Streak',desc:'7 consecutive days',earned: streak >= 7},
+    {icon:'🌟',name:'14-Day Streak',desc:'14 consecutive days',earned: streak >= 14},
+    {icon:'👑',name:'30-Day Streak',desc:'30 consecutive days',earned: streak >= 30},
+    {icon:'📖',name:'Explorer',desc:'Visit 3 chapters',earned: chaptersCount >= 3},
+    {icon:'🗺️',name:'Traveller',desc:'Visit 6 chapters',earned: chaptersCount >= 6},
+    {icon:'🌍',name:'All Rounder',desc:'Visit all 12 chapters',earned: chaptersCount >= 12},
+    {icon:'🧠',name:'Sharp Mind',desc:'Average score 80%+',earned: avgScore >= 80},
+    {icon:'💎',name:'Perfectionist',desc:'Average score 95%+',earned: avgScore >= 95},
+    {icon:'📊',name:'BSt Baba',desc:'All badges unlocked',earned: quizzes>=50 && streak>=30 && chaptersCount>=12 && avgScore>=80}
+  ];
+
+  const container = document.getElementById('progBadges');
+  container.innerHTML = badges.map(b => `
+    <div class="badge ${b.earned ? 'earned' : 'locked'}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-desc">${b.earned ? '✓ Earned!' : b.desc}</div>
+    </div>`).join('');
 }
 
 document.addEventListener('DOMContentLoaded', initProgress);

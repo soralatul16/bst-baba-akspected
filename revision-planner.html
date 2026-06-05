@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HYN85DHB3B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HYN85DHB3B");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revision Planner | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.rp-setup { max-width: 500px; margin: 0 auto; text-align: center; }
+.rp-setup h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
+.rp-setup p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+.rp-form { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: left; }
+.rp-form label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-bottom: 6px; }
+.rp-form input, .rp-form select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 0.88rem; margin-bottom: 16px; }
+.rp-form input:focus, .rp-form select:focus { border-color: var(--accent); outline: none; }
+.rp-weak-chs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.rp-ch-toggle { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; background: var(--bg); color: var(--text-muted); transition: all 0.15s; }
+.rp-ch-toggle.selected { background: rgba(248,113,113,0.1); border-color: #f87171; color: #f87171; }
+.rp-ch-toggle:hover { border-color: var(--accent); }
+
+.rp-plan { max-width: 800px; margin: 0 auto; }
+.rp-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,150px),1fr)); gap: 12px; margin-bottom: 28px; }
+.rp-sum-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+.rp-sum-card .big { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+.rp-sum-card .label { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.rp-sum-card .big.gold { color: var(--accent-gold); }
+.rp-sum-card .big.red { color: #f87171; }
+
+.rp-week { margin-bottom: 24px; }
+.rp-week-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: var(--accent-light); border-radius: 10px 10px 0 0; border: 1px solid rgba(34,211,238,0.1); }
+.rp-week-header h3 { font-size: 0.82rem; font-weight: 700; color: var(--accent); }
+.rp-week-header span { font-size: 0.72rem; color: var(--text-muted); }
+.rp-day { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border: 1px solid var(--border); border-top: none; background: var(--bg-card); }
+.rp-day:last-child { border-radius: 0 0 10px 10px; }
+.rp-day-date { min-width: 55px; text-align: center; }
+.rp-day-date .day-name { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+.rp-day-date .day-num { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+.rp-day-content { flex: 1; }
+.rp-day-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+.rp-day-tasks { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+.rp-day-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+.rp-day-tags span { font-size: 0.62rem; font-weight: 600; padding: 2px 6px; border-radius: 3px; }
+.rp-day-tags .study { background: var(--accent-light); color: var(--accent); }
+.rp-day-tags .revise { background: var(--accent-gold-light); color: var(--accent-gold); }
+.rp-day-tags .test { background: rgba(168,85,247,0.1); color: #a855f7; }
+.rp-day-tags .rest { background: rgba(34,197,94,0.1); color: #22c55e; }
+.rp-day-tags .weak { background: rgba(248,113,113,0.1); color: #f87171; }
+
+.rp-day.rest-day { opacity: 0.6; }
+.rp-day.rest-day .rp-day-title { color: #22c55e; }
+
+@media print {
+  nav, .floating-btns, .chatbot-panel, .feedback-panel, footer { display: none !important; }
+  .rp-setup { display: none; }
+  body::after { content: 'BSt Baba AKSpected'; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-35deg); font-size: 70px; font-family: 'Monotype Corsiva', cursive; color: rgba(0,0,0,0.04); z-index: 9999; pointer-events: none; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="mock-test.html">Mock Test</a>
+    <a href="crack-the-case.html">Crack the Case</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Revision Planner</div>
+    <h1>AKSpected Revision Planner</h1>
+    <div class="meta-bar">
+      <span>📅 Personalized schedule</span>
+      <span>📊 Based on chapter weightage</span>
+      <span>🎯 Focus on weak areas</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <!-- SETUP -->
+  <div id="rpSetup" class="rp-setup">
+    <h2>Plan Your Revision</h2>
+    <p>Enter your exam date and weak chapters. We'll generate a day-by-day study plan optimized for maximum marks.</p>
+    <div class="rp-form">
+      <label>Exam Date</label>
+      <input type="date" id="rpExamDate">
+
+      <label>Study Hours Per Day</label>
+      <select id="rpHours">
+        <option value="2">2 hours</option>
+        <option value="3">3 hours</option>
+        <option value="4" selected>4 hours</option>
+        <option value="5">5 hours</option>
+        <option value="6">6 hours</option>
+        <option value="8">8 hours (intensive)</option>
+      </select>
+
+      <label>Mark Your Weak Chapters (click to select)</label>
+      <div class="rp-weak-chs" id="rpWeakChs"></div>
+
+      <label>Rest Day</label>
+      <select id="rpRestDay">
+        <option value="none">No rest day</option>
+        <option value="0" selected>Sunday</option>
+        <option value="6">Saturday</option>
+        <option value="5">Friday</option>
+      </select>
+
+      <button class="modal-btn" style="width:100%;margin-top:8px" onclick="generatePlan()">Generate My Revision Plan →</button>
+    </div>
+  </div>
+
+  <!-- PLAN -->
+  <div id="rpPlan" class="rp-plan" style="display:none"></div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+const chapters = [
+  {num:1,title:"Nature of Management",marks:6,hours:3,topics:["Meaning","Characteristics","Objectives","Importance","Art/Science/Profession","Levels","Coordination"]},
+  {num:2,title:"Principles of Management",marks:7,hours:4,topics:["Nature","Significance","Fayol's 14 Principles","Taylor's Scientific Mgmt","Techniques","Fayol vs Taylor"]},
+  {num:3,title:"Business Environment",marks:4,hours:2,topics:["Features","Importance","Dimensions (SLEPT)","Demonetisation"]},
+  {num:4,title:"Planning",marks:6,hours:3,topics:["Features","Importance","Limitations","Process","Types of Plans"]},
+  {num:5,title:"Organising",marks:8,hours:4,topics:["Process","Functional vs Divisional","Formal vs Informal","Delegation","Decentralisation"]},
+  {num:6,title:"Staffing",marks:7,hours:4,topics:["Process","Recruitment Sources","Selection Process","Training Methods"]},
+  {num:7,title:"Directing",marks:8,hours:5,topics:["Elements","Maslow's Hierarchy","Financial/Non-Financial Incentives","Leadership Styles","Communication","Barriers"]},
+  {num:8,title:"Controlling",marks:4,hours:2,topics:["Importance","Process Steps","Planning vs Controlling"]},
+  {num:9,title:"Financial Management",marks:8,hours:4,topics:["Financial Decisions","Capital Structure","Financial Planning","Fixed & Working Capital"]},
+  {num:10,title:"Financial Markets",marks:7,hours:4,topics:["Money Market","Capital Market","Primary vs Secondary","Stock Exchange","SEBI"]},
+  {num:11,title:"Marketing",marks:11,hours:5,topics:["Marketing Mix 4Ps","Branding/Labelling/Packaging","Price Factors","Channels","Promotion Mix"]},
+  {num:12,title:"Consumer Protection",marks:4,hours:2,topics:["Consumer Rights","CPA 2019","Redressal Machinery","Quality Marks"]}
+];
+
+const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let weakChapters = new Set();
+
+// Build weak chapter toggles
+const weakContainer = document.getElementById('rpWeakChs');
+chapters.forEach(ch => {
+  const btn = document.createElement('button');
+  btn.className = 'rp-ch-toggle';
+  btn.textContent = 'Ch ' + ch.num;
+  btn.title = ch.title;
+  btn.onclick = () => {
+    btn.classList.toggle('selected');
+    if (weakChapters.has(ch.num)) weakChapters.delete(ch.num);
+    else weakChapters.add(ch.num);
+  };
+  weakContainer.appendChild(btn);
+});
+
+// Set default exam date to ~30 days from now
+const defaultDate = new Date();
+defaultDate.setDate(defaultDate.getDate() + 30);
+document.getElementById('rpExamDate').value = defaultDate.toISOString().split('T')[0];
+
+function generatePlan() {
+  const examDate = new Date(document.getElementById('rpExamDate').value);
+  const hoursPerDay = parseInt(document.getElementById('rpHours').value);
+  const restDay = document.getElementById('rpRestDay').value;
+  const today = new Date(); today.setHours(0,0,0,0);
+  examDate.setHours(0,0,0,0);
+
+  const totalDays = Math.ceil((examDate - today) / 86400000);
+  if (totalDays < 3) { alert('Please select a date at least 3 days from now.'); return; }
+
+  // Sort chapters by priority: weak chapters first, then by marks (descending)
+  const sorted = [...chapters].sort((a, b) => {
+    const aWeak = weakChapters.has(a.num) ? 1 : 0;
+    const bWeak = weakChapters.has(b.num) ? 1 : 0;
+    if (aWeak !== bWeak) return bWeak - aWeak;
+    return b.marks - a.marks;
+  });
+
+  // Calculate phases
+  const studyDays = totalDays <= 7 ? totalDays : Math.ceil(totalDays * 0.6);
+  const reviseDays = totalDays <= 7 ? 0 : Math.ceil(totalDays * 0.25);
+  const testDays = totalDays - studyDays - reviseDays;
+
+  // Generate day-by-day plan
+  const plan = [];
+  let chIdx = 0;
+  let phase = 'study';
+
+  for (let d = 0; d < totalDays; d++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + d);
+    const dayOfWeek = date.getDay();
+    const isRest = restDay !== 'none' && dayOfWeek === parseInt(restDay);
+
+    if (d >= studyDays + reviseDays) phase = 'test';
+    else if (d >= studyDays) phase = 'revise';
+
+    if (isRest) {
+      plan.push({date, phase: 'rest', title: 'Rest & Recharge', tasks: 'Light revision only. Review flashcards or mnemonics. No new chapters.', tags: ['rest']});
+      continue;
+    }
+
+    if (phase === 'study') {
+      const ch = sorted[chIdx % sorted.length];
+      const isWeak = weakChapters.has(ch.num);
+      const topicStart = Math.floor((chIdx / sorted.length) * ch.topics.length) % ch.topics.length;
+      const topicSlice = ch.topics.slice(topicStart, topicStart + 3).join(', ');
+
+      plan.push({
+        date, phase: 'study',
+        title: `Ch ${ch.num}: ${ch.title}`,
+        tasks: `Study: ${topicSlice || ch.topics.join(', ')}. Solve 5-10 practice questions. Review key tables and definitions.`,
+        tags: isWeak ? ['study', 'weak'] : ['study'],
+        marks: ch.marks
+      });
+      chIdx++;
+    } else if (phase === 'revise') {
+      const ch1 = sorted[(d - studyDays) * 2 % sorted.length];
+      const ch2 = sorted[((d - studyDays) * 2 + 1) % sorted.length];
+      plan.push({
+        date, phase: 'revise',
+        title: `Revise: Ch ${ch1.num} + Ch ${ch2.num}`,
+        tasks: `Quick revision of ${ch1.title} and ${ch2.title}. Use flashcards. Solve PYQs. Focus on comparison tables and case studies.`,
+        tags: ['revise']
+      });
+    } else {
+      const testTypes = ['Full Mock Test (80 marks)', 'Chapter-wise MCQs — All Chapters', 'Case Study Practice — Top 4 Chapters', 'AKSpected Paper + Self Evaluation', 'Weak Chapter Deep Practice', 'Final Revision — Formulas & Tables Only'];
+      plan.push({
+        date, phase: 'test',
+        title: testTypes[(d - studyDays - reviseDays) % testTypes.length],
+        tasks: 'Timed practice. Simulate exam conditions. Review wrong answers immediately.',
+        tags: ['test']
+      });
+    }
+  }
+
+  // Render
+  const restDayCount = plan.filter(d => d.phase === 'rest').length;
+  let html = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+      <h2 style="font-size:1.2rem;font-weight:800">Your Personalized Revision Plan</h2>
+      <div style="display:flex;gap:8px">
+        <button onclick="window.print()" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:0.75rem;font-weight:600;cursor:pointer">🖨️ Print</button>
+        <button onclick="document.getElementById('rpSetup').style.display='block';document.getElementById('rpPlan').style.display='none'" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:0.75rem;font-weight:600;cursor:pointer">← Edit Plan</button>
+      </div>
+    </div>
+    <div class="rp-summary">
+      <div class="rp-sum-card"><div class="big">${totalDays}</div><div class="label">Total Days</div></div>
+      <div class="rp-sum-card"><div class="big">${studyDays}</div><div class="label">Study Days</div></div>
+      <div class="rp-sum-card"><div class="big gold">${reviseDays}</div><div class="label">Revision Days</div></div>
+      <div class="rp-sum-card"><div class="big" style="color:#a855f7">${testDays}</div><div class="label">Test Days</div></div>
+      <div class="rp-sum-card"><div class="big red">${weakChapters.size}</div><div class="label">Weak Chapters</div></div>
+      <div class="rp-sum-card"><div class="big">${hoursPerDay}h</div><div class="label">Daily Hours</div></div>
+    </div>`;
+
+  // Group by week
+  let weekNum = 0;
+  let lastWeekStart = -1;
+
+  plan.forEach((day, idx) => {
+    const weekOfYear = Math.floor(idx / 7);
+    if (weekOfYear !== lastWeekStart) {
+      if (lastWeekStart >= 0) html += '</div>';
+      weekNum++;
+      const weekEnd = new Date(day.date); weekEnd.setDate(weekEnd.getDate() + 6);
+      html += `<div class="rp-week">
+        <div class="rp-week-header">
+          <h3>Week ${weekNum}</h3>
+          <span>${day.date.getDate()} ${monthNames[day.date.getMonth()]} — ${weekEnd.getDate()} ${monthNames[weekEnd.getMonth()]}</span>
+        </div>`;
+      lastWeekStart = weekOfYear;
+    }
+
+    html += `<div class="rp-day ${day.phase === 'rest' ? 'rest-day' : ''}">
+      <div class="rp-day-date">
+        <div class="day-name">${dayNames[day.date.getDay()]}</div>
+        <div class="day-num">${day.date.getDate()}</div>
+      </div>
+      <div class="rp-day-content">
+        <div class="rp-day-title">${day.title}</div>
+        <div class="rp-day-tasks">${day.tasks}</div>
+        <div class="rp-day-tags">${day.tags.map(t => `<span class="${t}">${t}</span>`).join('')}${day.marks ? `<span class="study">${day.marks}m</span>` : ''}</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+
+  html += `<div class="akspected-tip" style="margin-top:24px">
+    <div class="tip-label">AKSpected Strategy</div>
+    <p>This plan prioritizes <strong>high-weightage chapters</strong> (Marketing 11m, Organising 8m, Directing 8m, Financial Mgmt 8m) and your <strong>weak areas</strong>. The last ${testDays} days are dedicated to mock tests and final revision. Stick to the plan and you'll cover everything systematically.</p>
+  </div>`;
+
+  document.getElementById('rpPlan').innerHTML = html;
+  document.getElementById('rpSetup').style.display = 'none';
+  document.getElementById('rpPlan').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
