@@ -62,6 +62,38 @@
   </div>
 </div>
 
+<!-- Images & Files Section (shown if media exists) -->
+<div id="mediaSection" style="display:none;max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 16px">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+    <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+      📎 <span>Chapter Resources</span>
+      <span id="mediaCount" style="font-size:0.68rem;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:4px;font-weight:700"></span>
+    </h3>
+    <div id="mediaGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:12px"></div>
+  </div>
+</div>
+
+<!-- Teacher: Media Editor (hidden, shown via Ctrl+Shift+I) -->
+<div id="mediaEditor" style="display:none;max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 16px">
+  <div style="background:var(--bg-card);border:1px solid var(--accent-gold);border-radius:var(--radius);padding:20px">
+    <h3 style="font-size:0.95rem;font-weight:700;color:var(--accent-gold);margin-bottom:14px">📎 Add Images & Files (Teacher Only)</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <input type="text" id="mediaTitle" placeholder="Title (e.g. Planning Process Diagram)" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
+      <select id="mediaType" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
+        <option value="image">🖼️ Image / Diagram</option>
+        <option value="file">📄 PDF / File</option>
+      </select>
+    </div>
+    <input type="text" id="mediaUrl" placeholder="Paste image/file URL (Google Drive, Imgur, direct link)" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem;margin-bottom:10px">
+    <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px">💡 For Google Drive: Open file → Share → Copy link → Change to "Anyone with link". For images: right-click → Copy image address.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="addMedia()" style="padding:8px 20px;border-radius:8px;background:var(--accent-gold);color:#0B0F19;border:none;font-size:0.8rem;font-weight:700;cursor:pointer">Add to Chapter →</button>
+      <button onclick="document.getElementById('mediaEditor').style.display='none'" style="padding:8px 16px;border-radius:8px;background:var(--border);color:var(--text);border:none;font-size:0.8rem;font-weight:600;cursor:pointer">Close</button>
+    </div>
+    <div id="mediaEditorList" style="margin-top:14px"></div>
+  </div>
+</div>
+
 <div class="chapter-body">
   <div class="chapter-main">
     <div class="tabs">
@@ -279,8 +311,9 @@
   // SIDEBAR
   buildSidebar(data, cls, dashLink);
 
-  // Load YouTube video if exists
+  // Load YouTube video and media if exists
   loadYTVideo(cls, ch);
+  loadMedia(cls, ch);
 })();
 
 // ─── YOUTUBE VIDEO SYSTEM ───
@@ -361,6 +394,157 @@ async function removeYTLink() {
     document.getElementById('ytLinkInput').value = '';
     alert('Video removed.');
   } catch(e) { alert('Remove failed: ' + e.message); }
+}
+
+// ─── MEDIA (IMAGES & FILES) SYSTEM ───
+let mediaTeacherMode = false;
+let chapterMedia = [];
+
+function convertDriveUrl(url) {
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
+  const m2 = url.match(/id=([a-zA-Z0-9_-]+)/);
+  if (m2) return 'https://drive.google.com/thumbnail?id=' + m2[1] + '&sz=w800';
+  return url;
+}
+
+function getDriveViewUrl(url) {
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return 'https://drive.google.com/file/d/' + m[1] + '/view';
+  return url;
+}
+
+async function loadMedia(cls, ch) {
+  try {
+    const doc = await db.collection('bstbaba_media').doc(cls + '_' + ch).get();
+    if (doc.exists && doc.data().items && doc.data().items.length > 0) {
+      chapterMedia = doc.data().items;
+      renderMedia(chapterMedia);
+      document.getElementById('mediaSection').style.display = 'block';
+    }
+  } catch(e) {}
+}
+
+function renderMedia(items) {
+  const grid = document.getElementById('mediaGrid');
+  const countEl = document.getElementById('mediaCount');
+  const images = items.filter(i => i.type === 'image');
+  const files = items.filter(i => i.type === 'file');
+  countEl.textContent = items.length + ' item' + (items.length !== 1 ? 's' : '');
+
+  let html = '';
+  images.forEach(item => {
+    const imgUrl = convertDriveUrl(item.url);
+    const viewUrl = getDriveViewUrl(item.url);
+    html += '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all 0.3s;cursor:pointer" onclick="window.open(\'' + viewUrl + '\',\'_blank\')">' +
+      '<div style="height:160px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden">' +
+        '<img src="' + imgUrl + '" alt="' + escapeHtml(item.title || 'Image') + '" style="max-width:100%;max-height:100%;object-fit:contain" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<div style=padding:20px;text-align:center;color:var(--text-muted);font-size:0.78rem>🖼️ Click to view image</div>\'">' +
+      '</div>' +
+      '<div style="padding:10px 12px;font-size:0.78rem;font-weight:600;display:flex;justify-content:space-between;align-items:center">' +
+        '<span>' + escapeHtml(item.title || 'Image') + '</span>' +
+        '<span style="font-size:0.65rem;color:var(--accent)">View →</span>' +
+      '</div>' +
+    '</div>';
+  });
+  files.forEach(item => {
+    const viewUrl = getDriveViewUrl(item.url);
+    html += '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all 0.3s;cursor:pointer" onclick="window.open(\'' + viewUrl + '\',\'_blank\')">' +
+      '<div style="height:160px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">' +
+        '<span style="font-size:2.5rem">📄</span>' +
+        '<span style="font-size:0.72rem;color:var(--accent);font-weight:600">Click to open</span>' +
+      '</div>' +
+      '<div style="padding:10px 12px;font-size:0.78rem;font-weight:600;display:flex;justify-content:space-between;align-items:center">' +
+        '<span>' + escapeHtml(item.title || 'File') + '</span>' +
+        '<span style="font-size:0.65rem;color:var(--accent)">Open →</span>' +
+      '</div>' +
+    '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+// Ctrl+Shift+I → Teacher media editor
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+    e.preventDefault();
+    if (mediaTeacherMode) {
+      const ed = document.getElementById('mediaEditor');
+      ed.style.display = ed.style.display === 'none' ? 'block' : 'none';
+      if (ed.style.display === 'block') renderEditorList();
+      return;
+    }
+    const pwd = prompt('Enter Teacher Password:');
+    if (pwd === 'aks1234') {
+      mediaTeacherMode = true;
+      document.getElementById('mediaEditor').style.display = 'block';
+      renderEditorList();
+    }
+  }
+});
+
+async function addMedia() {
+  const title = document.getElementById('mediaTitle').value.trim();
+  const type = document.getElementById('mediaType').value;
+  const url = document.getElementById('mediaUrl').value.trim();
+  if (!url) { alert('Paste a URL first.'); return; }
+  if (!title) { alert('Enter a title for this resource.'); return; }
+
+  const cls = getParam('class') || '12';
+  const ch = getParam('ch') || 'ch02';
+  const docRef = db.collection('bstbaba_media').doc(cls + '_' + ch);
+
+  try {
+    const doc = await docRef.get();
+    let items = (doc.exists && doc.data().items) ? doc.data().items : [];
+    items.push({ title, type, url, added: new Date().toISOString() });
+
+    await docRef.set({ items, chapter: ch, class: cls, updated: new Date().toISOString() });
+
+    chapterMedia = items;
+    renderMedia(items);
+    document.getElementById('mediaSection').style.display = 'block';
+    renderEditorList();
+
+    document.getElementById('mediaTitle').value = '';
+    document.getElementById('mediaUrl').value = '';
+    alert('Resource added! Students can now see it.');
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+async function removeMedia(index) {
+  if (!confirm('Remove this resource?')) return;
+  const cls = getParam('class') || '12';
+  const ch = getParam('ch') || 'ch02';
+  const docRef = db.collection('bstbaba_media').doc(cls + '_' + ch);
+
+  try {
+    chapterMedia.splice(index, 1);
+    await docRef.set({ items: chapterMedia, chapter: ch, class: cls, updated: new Date().toISOString() });
+
+    if (chapterMedia.length === 0) {
+      document.getElementById('mediaSection').style.display = 'none';
+    } else {
+      renderMedia(chapterMedia);
+    }
+    renderEditorList();
+  } catch(e) { alert('Remove failed: ' + e.message); }
+}
+
+function renderEditorList() {
+  const container = document.getElementById('mediaEditorList');
+  if (chapterMedia.length === 0) {
+    container.innerHTML = '<p style="font-size:0.78rem;color:var(--text-muted)">No resources added to this chapter yet.</p>';
+    return;
+  }
+  container.innerHTML = '<div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Current Resources (' + chapterMedia.length + ')</div>' +
+    chapterMedia.map((item, i) =>
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--bg);border-radius:6px;margin-bottom:4px;border:1px solid var(--border)">' +
+        '<div style="display:flex;align-items:center;gap:8px;min-width:0">' +
+          '<span>' + (item.type === 'image' ? '🖼️' : '📄') + '</span>' +
+          '<span style="font-size:0.78rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escapeHtml(item.title) + '</span>' +
+        '</div>' +
+        '<button onclick="removeMedia(' + i + ')" style="padding:4px 10px;border-radius:4px;border:1px solid rgba(248,113,113,0.3);background:none;color:#f87171;font-size:0.7rem;font-weight:600;cursor:pointer;white-space:nowrap">Remove</button>' +
+      '</div>'
+    ).join('');
 }
 
 function buildSidebar(data, cls, dashLink) {
