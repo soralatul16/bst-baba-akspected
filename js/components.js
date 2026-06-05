@@ -108,17 +108,21 @@ async function getStudents() {
   }
 }
 
-// ─── API KEY (Firestore-backed, cached in localStorage) ───
+// ─── API KEY (Always fetch from Firestore, cache locally) ───
 async function getGrokKey() {
-  const cached = localStorage.getItem('bstbaba_grok_key');
-  if (cached) return cached;
+  // Always try Firestore first for the latest key
   try {
     const doc = await db.collection('bstbaba_config').doc('grok').get();
     if (doc.exists && doc.data().apiKey) {
       localStorage.setItem('bstbaba_grok_key', doc.data().apiKey);
       return doc.data().apiKey;
     }
-  } catch(e) {}
+  } catch(e) {
+    console.log('Firestore key fetch failed:', e.message);
+  }
+  // Fall back to localStorage only if Firestore fails
+  const cached = localStorage.getItem('bstbaba_grok_key');
+  if (cached) return cached;
   return null;
 }
 
@@ -181,7 +185,7 @@ async function sendChat() {
 
   const apiKey = await getGrokKey();
   if (!apiKey) {
-    messages.innerHTML += `<div class="chat-msg bot">The AI assistant is not configured yet. Your teacher (AKS) needs to set up the API key. In the meantime, check the chapter notes for your answer! 📖</div>`;
+    messages.innerHTML += `<div class="chat-msg bot">AI is not configured. The API key was not found in the cloud storage. Teacher (AKS) needs to open the Teacher Panel and save the API key again.</div>`;
       messages.scrollTop = messages.scrollHeight;
     return;
   }
@@ -696,14 +700,25 @@ async function saveGrokKey() {
     status.style.display = 'block';
     return;
   }
+
+  status.textContent = 'Saving to cloud...';
+  status.style.color = 'var(--text-muted)';
+  status.style.display = 'block';
+
   localStorage.setItem('bstbaba_grok_key', key);
+
   try {
-    await db.collection('bstbaba_config').doc('grok').set({apiKey: key, updated: new Date().toISOString()});
+    await db.collection('bstbaba_config').doc('grok').set({
+      apiKey: key,
+      updated: new Date().toISOString()
+    });
     status.textContent = '✓ API key saved to cloud! Works on all devices now.';
+    status.style.color = 'var(--accent)';
   } catch(e) {
-    status.textContent = '✓ Key saved locally. Cloud save failed — check Firestore setup.';
+    status.textContent = '✕ Cloud save failed: ' + e.message + '. Key saved locally only.';
+    status.style.color = '#f87171';
+    console.error('Firestore save error:', e);
   }
-  status.style.color = 'var(--accent)';
   status.style.display = 'block';
 }
 
