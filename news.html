@@ -95,6 +95,7 @@
     <button class="q-filter-btn" onclick="filterNews(this,'9-10')">Ch 9-10 Finance</button>
     <button class="q-filter-btn" onclick="filterNews(this,'11')">Ch 11 Marketing</button>
     <button class="q-filter-btn" onclick="filterNews(this,'12')">Ch 12 Consumer</button>
+    <button class="q-filter-btn" onclick="refreshAINews()" style="margin-left:auto;background:var(--accent-light);color:var(--accent);border-color:var(--accent)">🔄 Generate Fresh News</button>
   </div>
 
   <div class="news-grid" id="newsGrid">Loading news...</div>
@@ -114,18 +115,7 @@
 <script src="js/components.js"></script>
 <script>
 // Default news stories (hardcoded for SEO + immediate content)
-const defaultNews = [
-  {emoji:'🏭',title:"Tata Motors Restructures into Separate EV Division",desc:"Tata Motors creates a separate Electric Vehicle division with its own head, budget, and team — a classic example of Divisional Structure in action.",ch:'5',topic:'Divisional Structure',source:'Economic Times',date:'2026-05-15'},
-  {emoji:'📱',title:"Jio's Aggressive Pricing Strategy Disrupts Telecom Market",desc:"Reliance Jio's below-cost pricing forces competitors to cut rates. This illustrates how business environment (economic dimension) affects all players in an industry.",ch:'3',topic:'Economic Environment',source:'Business Standard',date:'2026-04-28'},
-  {emoji:'💰',title:"Zomato's IPO: From Startup to Stock Exchange",desc:"Zomato raised ₹9,375 crore through its IPO on BSE/NSE. A real-world example of primary market, stock exchange listing, and SEBI regulations in action.",ch:'10',topic:'Primary Market & Stock Exchange',source:'Mint',date:'2026-03-10'},
-  {emoji:'🛒',title:"Amul's 'Utterly Butterly' — India's Most Trusted Brand",desc:"Amul's consistent branding, packaging innovation, and cooperative structure make it a textbook case for Marketing Mix and Forms of Business Organisation.",ch:'11',topic:'Branding & Marketing Mix',source:'India Today',date:'2026-02-20'},
-  {emoji:'⚖️',title:"Consumer Court Orders ₹2 Lakh Compensation for Defective Laptop",desc:"A District Consumer Commission ordered a laptop manufacturer to pay ₹2 lakh compensation for selling a defective product. Right to Redressal in practice.",ch:'12',topic:'Consumer Rights & Redressal',source:'Times of India',date:'2026-01-15'},
-  {emoji:'👨‍💼',title:"Infosys CEO's Leadership Style: Democratic Decision-Making",desc:"Infosys CEO involves senior leaders in strategic decisions, conducts regular town halls, and encourages employee feedback — a textbook example of Democratic Leadership.",ch:'7',topic:'Leadership Styles',source:'Business Today',date:'2026-04-05'},
-  {emoji:'🏗️',title:"ITC's Diversification: From Cigarettes to Hotels to FMCG",desc:"ITC's expansion into multiple product lines with separate divisions for each business illustrates Diversification and Divisional Structure at scale.",ch:'5',topic:'Functional vs Divisional',source:'Forbes India',date:'2025-12-18'},
-  {emoji:'📊',title:"RBI Changes Interest Rates — Impact on Business Financing",desc:"RBI's rate cut makes borrowing cheaper for businesses. This affects Financial Management decisions — companies may prefer debt over equity when interest rates are low.",ch:'9',topic:'Financing Decision & Capital Structure',source:'RBI Press Release',date:'2026-05-01'},
-  {emoji:'🌐',title:"Amazon India's Warehouse Automation — Technology Transforms Operations",desc:"Amazon's use of robots and AI in warehouses reduces costs and increases efficiency. A perfect example of how Technological Environment changes business operations.",ch:'3',topic:'Technological Environment',source:'NDTV',date:'2026-03-22'},
-  {emoji:'👥',title:"Flipkart's Campus Recruitment Drive at IIMs",desc:"Flipkart recruits 200+ MBAs directly from IIM campuses — an external source of recruitment. Selected candidates undergo 6-month training programs.",ch:'6',topic:'External Recruitment & Training',source:'Livemint',date:'2026-01-30'}
-];
+const defaultNews = [];
 
 let allNews = [...defaultNews];
 let teacherMode = false;
@@ -147,13 +137,103 @@ document.addEventListener('keydown', (e) => {
 });
 
 async function loadNews() {
-  // Load from Firestore
+  const grid = document.getElementById('newsGrid');
+  const today = new Date().toISOString().split('T')[0];
+
+  // 1. Load teacher-added news from Firestore
+  let teacherNews = [];
   try {
-    const snap = await db.collection('bstbaba_news').orderBy('date', 'desc').get();
-    const firestoreNews = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
-    allNews = [...firestoreNews, ...defaultNews];
+    const snap = await db.collection('bstbaba_news').where('createdBy', '==', 'AKS').orderBy('date', 'desc').get();
+    teacherNews = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
   } catch(e) {}
+
+  // 2. Check if AI news exists for today
+  let aiNews = [];
+  try {
+    const aiSnap = await db.collection('bstbaba_news').where('createdBy', '==', 'AI').where('date', '==', today).get();
+    if (!aiSnap.empty) {
+      aiNews = aiSnap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    } else {
+      // Check recent AI news (last 3 days)
+      const recentDates = [];
+      for (let i = 0; i < 3; i++) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        recentDates.push(d.toISOString().split('T')[0]);
+      }
+      const recentSnap = await db.collection('bstbaba_news').where('createdBy', '==', 'AI').orderBy('date', 'desc').limit(10).get();
+      if (!recentSnap.empty) {
+        aiNews = recentSnap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+      }
+
+      // Generate new AI news if none exists for today
+      if (aiNews.length === 0 || !aiNews.find(n => n.date === today)) {
+        grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><p>Generating today\'s business news...</p></div>';
+        await generateAINews(today);
+        // Reload after generation
+        const newSnap = await db.collection('bstbaba_news').where('createdBy', '==', 'AI').orderBy('date', 'desc').limit(10).get();
+        aiNews = newSnap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+      }
+    }
+  } catch(e) {
+    console.log('News load error:', e);
+  }
+
+  // Combine: teacher news first, then AI news
+  allNews = [...teacherNews, ...aiNews];
+
+  if (allNews.length === 0) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><h3 style="color:var(--text);margin-bottom:8px">No news yet</h3><p>News will appear once the AI API key is configured in the Teacher Panel, or when AKS adds stories manually (Ctrl+Shift+N).</p></div>';
+    return;
+  }
+
   renderNews(allNews);
+}
+
+async function generateAINews(today) {
+  const apiKey = await getGrokKey();
+  if (!apiKey) return;
+
+  const config = getApiConfig(apiKey);
+  try {
+    const res = await fetch(config.url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
+      body: JSON.stringify({
+        model: config.model,
+        messages: [
+          {role: 'system', content: 'You are a CBSE Business Studies current affairs expert. Generate 5 recent Indian business news stories from the last week. Each story must be mapped to a specific CBSE Class 12 Business Studies chapter (1-12). Return ONLY valid JSON array, no markdown, no explanation. Each object must have: emoji (single emoji), title (headline), desc (2-3 line description connecting to CBSE concept), ch (chapter number as string like "5"), topic (specific CBSE topic name), source (news source like Economic Times, NDTV, Business Standard).'},
+          {role: 'user', content: 'Generate 5 current Indian business news stories from this week mapped to CBSE Class 12 Business Studies chapters. Return only the JSON array.'}
+        ]
+      })
+    });
+    const data = await res.json();
+    if (data.error) { console.log('AI news error:', data.error); return; }
+
+    let content = data.choices?.[0]?.message?.content || '';
+    // Extract JSON from response
+    const jsonMatch = content.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) return;
+
+    let stories;
+    try { stories = JSON.parse(jsonMatch[0]); } catch(e) { return; }
+
+    // Save each story to Firestore
+    for (const story of stories) {
+      if (story.title && story.desc && story.ch) {
+        await db.collection('bstbaba_news').add({
+          emoji: story.emoji || '📰',
+          title: story.title,
+          desc: story.desc,
+          ch: String(story.ch),
+          topic: story.topic || '',
+          source: story.source || 'AI Generated',
+          date: today,
+          createdBy: 'AI',
+          generated: new Date().toISOString()
+        });
+      }
+    }
+  } catch(e) { console.log('AI news generation failed:', e); }
 }
 
 function renderNews(news) {
@@ -184,6 +264,14 @@ function filterNews(btn, range) {
   const parts = range.split('-');
   const min = parseInt(parts[0]), max = parseInt(parts[1] || parts[0]);
   renderNews(allNews.filter(n => parseInt(n.ch) >= min && parseInt(n.ch) <= max));
+}
+
+async function refreshAINews() {
+  const grid = document.getElementById('newsGrid');
+  grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><p>🔄 Generating fresh news from AI... This may take 10-15 seconds.</p></div>';
+  const today = new Date().toISOString().split('T')[0];
+  await generateAINews(today);
+  await loadNews();
 }
 
 async function saveNews() {
