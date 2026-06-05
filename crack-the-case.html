@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HYN85DHB3B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HYN85DHB3B");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crack the Case | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.ctc-container { max-width: 680px; margin: 0 auto; }
+.ctc-stats { display: flex; gap: 16px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+.ctc-stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; text-align: center; min-width: 100px; }
+.ctc-stat .num { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+.ctc-stat .label { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.ctc-stat .num.gold { color: var(--accent-gold); }
+
+.ctc-level-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+.ctc-level-label { font-size: 0.72rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+.ctc-level-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.ctc-level-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent-gold)); transition: width 0.5s; }
+.ctc-level-next { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
+
+.ctc-case-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+.ctc-case-header { padding: 16px 24px; background: linear-gradient(135deg, rgba(34,211,238,0.06), rgba(251,191,36,0.04)); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.ctc-case-badge { font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 5px; text-transform: uppercase; letter-spacing: 1px; }
+.ctc-case-badge.easy { background: rgba(34,197,94,0.1); color: #22c55e; }
+.ctc-case-badge.medium { background: var(--accent-gold-light); color: var(--accent-gold); }
+.ctc-case-badge.hard { background: rgba(248,113,113,0.1); color: #f87171; }
+.ctc-case-chapter { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; }
+.ctc-case-body { padding: 24px; }
+.ctc-scenario { font-size: 0.92rem; line-height: 1.8; margin-bottom: 20px; color: var(--text); }
+.ctc-scenario .highlight { background: var(--accent-light); padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+.ctc-question { font-size: 0.88rem; font-weight: 700; margin-bottom: 14px; color: var(--accent); }
+.ctc-options { display: flex; flex-direction: column; gap: 8px; }
+.ctc-opt { padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; background: var(--bg); display: flex; align-items: center; gap: 10px; }
+.ctc-opt:hover { border-color: var(--accent); background: var(--accent-light); }
+.ctc-opt.correct { border-color: #22c55e; background: rgba(34,197,94,0.08); color: #22c55e; pointer-events: none; }
+.ctc-opt.wrong { border-color: #f87171; background: rgba(248,113,113,0.08); color: #f87171; pointer-events: none; }
+.ctc-opt.disabled { pointer-events: none; opacity: 0.5; }
+.ctc-opt-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; }
+.ctc-opt.correct .ctc-opt-dot { border-color: #22c55e; background: #22c55e; color: #fff; }
+.ctc-opt.wrong .ctc-opt-dot { border-color: #f87171; background: #f87171; color: #fff; }
+
+.ctc-feedback { margin-top: 16px; padding: 16px; border-radius: 10px; font-size: 0.85rem; line-height: 1.6; display: none; }
+.ctc-feedback.show { display: block; }
+.ctc-feedback.correct { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
+.ctc-feedback.wrong { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); }
+.ctc-feedback .fb-title { font-weight: 700; margin-bottom: 6px; }
+.ctc-feedback.correct .fb-title { color: #22c55e; }
+.ctc-feedback.wrong .fb-title { color: #f87171; }
+
+.ctc-next-btn { margin-top: 20px; text-align: center; }
+.ctc-next-btn button { padding: 12px 32px; border-radius: 10px; background: var(--accent); color: #0B0F19; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.ctc-next-btn button:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(34,211,238,0.2); }
+
+.ctc-complete { text-align: center; padding: 40px 20px; }
+.ctc-complete h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+.ctc-complete .score-big { font-size: 3rem; font-weight: 800; color: var(--accent); margin: 16px 0; }
+
+.ctc-filter { display: flex; gap: 6px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="mock-test.html">Mock Test</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Crack the Case</div>
+    <h1>Crack the Case</h1>
+    <div class="meta-bar">
+      <span>🕵️ Read the scenario</span>
+      <span>🎯 Identify the concept</span>
+      <span>⚡ Level up your skills</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="ctc-container">
+    <!-- Stats -->
+    <div class="ctc-stats">
+      <div class="ctc-stat"><div class="num" id="ctcScore">0</div><div class="label">Score</div></div>
+      <div class="ctc-stat"><div class="num gold" id="ctcStreak">0</div><div class="label">Streak</div></div>
+      <div class="ctc-stat"><div class="num" id="ctcAccuracy">0%</div><div class="label">Accuracy</div></div>
+      <div class="ctc-stat"><div class="num" id="ctcCasesLeft">0</div><div class="label">Remaining</div></div>
+    </div>
+
+    <!-- Level bar -->
+    <div class="ctc-level-bar">
+      <div class="ctc-level-label" id="ctcLevel">Beginner</div>
+      <div class="ctc-level-track"><div class="ctc-level-fill" id="ctcLevelFill" style="width:0%"></div></div>
+      <div class="ctc-level-next" id="ctcLevelNext">Next: Analyst</div>
+    </div>
+
+    <!-- Chapter filter -->
+    <div class="ctc-filter">
+      <button class="q-filter-btn active" onclick="filterCases(this,'all')">All Chapters</button>
+      <button class="q-filter-btn" onclick="filterCases(this,'1-2')">Ch 1-2</button>
+      <button class="q-filter-btn" onclick="filterCases(this,'3-5')">Ch 3-5</button>
+      <button class="q-filter-btn" onclick="filterCases(this,'6-8')">Ch 6-8</button>
+      <button class="q-filter-btn" onclick="filterCases(this,'9-12')">Ch 9-12</button>
+    </div>
+
+    <!-- Case area -->
+    <div id="ctcCaseArea"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+const cases = [
+  {ch:2, diff:"easy", scenario:"Rajesh, a manager at XYZ Ltd, ensures that <span class='highlight'>every worker in his department reports to him only</span> and does not take instructions from any other manager.", question:"Which principle of Fayol is being followed?", options:["Division of Work","Unity of Command","Unity of Direction","Scalar Chain"], correct:1, explanation:"Unity of Command — every employee should receive orders from one and only one superior. This prevents confusion and conflicting instructions."},
+  {ch:2, diff:"easy", scenario:"A garment company has its own <span class='highlight'>fabric division, stitching division, and finishing division</span>. Each division has a separate head who is responsible for planning and executing activities of his own division.", question:"Identify the principle of management.", options:["Division of Work","Scalar Chain","Unity of Direction","Centralisation"], correct:2, explanation:"Unity of Direction — each group of activities with the same objective must have one head and one plan. Each division operates under its own head independently."},
+  {ch:2, diff:"medium", scenario:"In a factory, workers are observed performing <span class='highlight'>unnecessary hand movements</span> while assembling products. The management decides to study these movements and eliminate the wasteful ones. They also determine the <span class='highlight'>standard time for completing each unit</span>.", question:"Identify TWO techniques of Scientific Management.", options:["Method Study & Time Study","Motion Study & Time Study","Fatigue Study & Method Study","Functional Foremanship & Standardisation"], correct:1, explanation:"Motion Study (studying and eliminating unnecessary movements) and Time Study (determining standard time to complete a task). Both are Taylor's work study techniques."},
+  {ch:2, diff:"medium", scenario:"Workers at a steel plant who produce <span class='highlight'>more than 20 units per day get ₹100 per unit</span>, while those producing <span class='highlight'>fewer than 20 units get ₹80 per unit</span>. An efficient worker making 22 units earns ₹2,200 while an inefficient worker making 18 units earns ₹1,440.", question:"Which technique of Scientific Management is this?", options:["Time Study","Functional Foremanship","Differential Piece Wage System","Standardisation"], correct:2, explanation:"Differential Piece Wage System — Taylor's technique where efficient and inefficient workers are paid different rates. The ₹760 difference motivates inefficient workers to improve."},
+  {ch:5, diff:"easy", scenario:"A marketing manager is allowed to <span class='highlight'>give up to 10% discount</span> to close a deal. However, for any discount beyond 10%, she must get approval from the CEO.", question:"Which concept is illustrated here?", options:["Delegation","Decentralisation","Informal Organisation","Unity of Command"], correct:0, explanation:"Delegation — the CEO has delegated authority to give up to 10% discount, while retaining final authority for higher discounts. Authority flows downward but accountability stays with the CEO."},
+  {ch:5, diff:"medium", scenario:"A company manufacturing <span class='highlight'>motorcycles and cars</span> has two separate divisions. Each division has its own production, marketing, and finance departments. The motorcycle division head and car division head report directly to the MD.", question:"What type of organisational structure is this?", options:["Functional Structure","Divisional Structure","Informal Organisation","Matrix Structure"], correct:1, explanation:"Divisional Structure — activities are grouped by products (motorcycles and cars). Each division operates as a semi-autonomous unit with its own functional departments."},
+  {ch:7, diff:"easy", scenario:"A manager at Reliance <span class='highlight'>recognises top performers publicly</span> at monthly meetings, gives them certificates, and announces their names on the company bulletin board.", question:"Which type of incentive is being used?", options:["Financial Incentive","Non-Financial Incentive — Recognition","Profit Sharing","Bonus"], correct:1, explanation:"Non-Financial Incentive — Employee Recognition. Public acknowledgement of good work satisfies esteem needs (Maslow) and motivates without monetary cost."},
+  {ch:7, diff:"medium", scenario:"A team leader gives <span class='highlight'>full freedom to her team members</span> to decide their own work methods, timelines, and approach. She only intervenes when specifically asked for help.", question:"What leadership style is this?", options:["Autocratic","Democratic","Laissez-faire","Bureaucratic"], correct:2, explanation:"Laissez-faire (Free Rein) — the leader gives complete autonomy to subordinates. This works best with highly skilled, self-motivated teams."},
+  {ch:7, diff:"hard", scenario:"A new employee at TCS earns ₹30,000/month (basic salary). After 2 years, he gets <span class='highlight'>job confirmation with pension benefits</span>. He builds <span class='highlight'>strong friendships with colleagues</span>. When promoted to Team Lead, he receives a <span class='highlight'>new cabin and a designation badge</span>.", question:"Identify the Maslow's needs satisfied in order.", options:["Safety → Social → Esteem → Physiological","Physiological → Safety → Social → Esteem","Physiological → Social → Safety → Esteem","Social → Safety → Physiological → Esteem"], correct:1, explanation:"Basic salary = Physiological. Job confirmation + pension = Safety. Friendships = Social/Belongingness. Cabin + badge = Esteem. This follows Maslow's hierarchy bottom to top."},
+  {ch:1, diff:"easy", scenario:"EcoTrend Electronics produced <span class='highlight'>700 units per day</span> (target: 500) but <span class='highlight'>customer complaints about battery overheating rose by 30%</span> and after-sales costs jumped by 15%.", question:"Is the company effective, efficient, or both?", options:["Effective and Efficient","Effective but Not Efficient","Efficient but Not Effective","Neither"], correct:1, explanation:"Effective (exceeded production target) but Not Efficient (quality declined, costs increased). Efficiency requires doing things right, not just doing more."},
+  {ch:6, diff:"medium", scenario:"A company posts a <span class='highlight'>'WE ARE HIRING' notice at the factory gate</span> for temporary positions. Selected workers then undergo training in a <span class='highlight'>separate room that replicates the actual factory floor</span> with the same machines.", question:"Identify the recruitment source and training method.", options:["Advertisement + Apprenticeship","Direct Recruitment + Vestibule Training","Campus Placement + On-the-job Training","Employment Exchange + Internship"], correct:1, explanation:"Direct Recruitment (notice at factory gate) and Vestibule Training (training in a simulated environment with same equipment, separate from actual production floor)."},
+  {ch:9, diff:"medium", scenario:"A company needs ₹50 crore for expansion. The CFO is deciding between <span class='highlight'>issuing shares (equity) vs taking a bank loan (debt)</span>. The company has stable cash flows and is in a high tax bracket.", question:"Which financing source would be cheaper and why?", options:["Equity — because no repayment needed","Debt — because interest is tax-deductible","Both are the same cost","Equity — because it dilutes ownership"], correct:1, explanation:"Debt is cheaper because interest payments are tax-deductible, reducing the effective cost. With stable cash flows and high tax bracket, the tax shield on debt makes it significantly cheaper than equity."},
+  {ch:10, diff:"easy", scenario:"Ramesh wants to buy shares of Tata Motors. He opens a <span class='highlight'>Demat Account</span> with a depository, contacts a <span class='highlight'>SEBI-registered broker</span>, and places a buy order on NSE.", question:"Which type of market is Ramesh participating in?", options:["Primary Market","Money Market","Secondary Market","Commodity Market"], correct:2, explanation:"Secondary Market (Stock Exchange) — Ramesh is buying existing shares from other investors through NSE. In primary market, shares come directly from the company (IPO)."},
+  {ch:11, diff:"easy", scenario:"A new health drink company offers <span class='highlight'>free samples at malls</span>, runs <span class='highlight'>TV advertisements</span>, and sends <span class='highlight'>sales representatives to meet gym owners</span>.", question:"Identify the THREE promotion mix elements used.", options:["Advertising + PR + Sales Promotion","Sales Promotion + Advertising + Personal Selling","Personal Selling + PR + Advertising","Sales Promotion + Direct Marketing + PR"], correct:1, explanation:"Free samples = Sales Promotion. TV ads = Advertising. Sales reps meeting gym owners = Personal Selling. Three of the four promotion mix elements."},
+  {ch:12, diff:"easy", scenario:"Ramesh bought an electric heater worth ₹3,000 with ISI mark. Within a week, it caused a <span class='highlight'>short circuit and damaged his furniture</span>.", question:"Which consumer right is violated and where should he file a complaint?", options:["Right to Choose — State Commission","Right to Safety — District Commission","Right to be Informed — National Commission","Right to Redressal — District Commission"], correct:1, explanation:"Right to Safety is violated (product caused harm despite ISI mark). File with District Commission since the claim value is under ₹1 crore."},
+  {ch:3, diff:"medium", scenario:"After the government announced <span class='highlight'>100% FDI in coal mining</span> and new <span class='highlight'>environmental regulations</span>, a mining company had to invest in cleaner technology while benefiting from foreign investment.", question:"Identify the dimensions of business environment.", options:["Social and Economic","Political and Legal","Economic and Technological","Political/Legal and Technological"], correct:3, explanation:"FDI policy = Political environment (government decision). Environmental regulations = Legal environment. Cleaner technology = Technological environment. Two dimensions: Political/Legal and Technological."},
+  {ch:4, diff:"hard", scenario:"A startup set sales targets (planning), but when the market suddenly shifted due to a pandemic, their <span class='highlight'>rigid adherence to the original plan</span> caused losses. They couldn't adapt because <span class='highlight'>managers at lower levels had no freedom</span> to deviate from the plan.", question:"Identify TWO limitations of planning shown here.", options:["Rigidity & Reduces Creativity","Huge Costs & Time Consuming","No Guarantee of Success & Rigidity","Rigidity & Dynamic Environment"], correct:3, explanation:"Rigidity (strict adherence to plan with no flexibility) and Dynamic Environment (plans became irrelevant due to pandemic). Both are key limitations of planning as per NCERT."},
+  {ch:8, diff:"medium", scenario:"A production manager set a target of 1000 units/day. Actual production was 850 units. He <span class='highlight'>analysed the deviation</span>, found that raw material supply was delayed, and <span class='highlight'>took corrective action</span> by changing the supplier.", question:"Which steps of the controlling process are shown?", options:["Setting standards & Measuring performance","Comparing & Taking corrective action","Analysing deviations & Taking corrective action","All four steps"], correct:2, explanation:"Analysing Deviations (identified the cause — delayed raw material) and Taking Corrective Action (changed supplier). These are steps 4 and 5 of the controlling process."}
+];
+
+let currentCases = [];
+let currentIdx = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let totalAttempted = 0;
+let totalCorrect = 0;
+let answered = false;
+
+const levels = [
+  {name:'Beginner', min:0, color:'var(--text-muted)'},
+  {name:'Analyst', min:5, color:'var(--accent)'},
+  {name:'Strategist', min:12, color:'var(--accent-gold)'},
+  {name:'Case Expert', min:20, color:'#22c55e'},
+  {name:'BSt Baba', min:30, color:'#a855f7'}
+];
+
+function getLevel(score) {
+  for (let i = levels.length - 1; i >= 0; i--) {
+    if (score >= levels[i].min) return {current: levels[i], next: levels[i+1] || null, idx: i};
+  }
+  return {current: levels[0], next: levels[1], idx: 0};
+}
+
+function filterCases(btn, range) {
+  document.querySelectorAll('.ctc-filter .q-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (range === 'all') { currentCases = [...cases]; }
+  else {
+    const [min, max] = range.split('-').map(Number);
+    currentCases = cases.filter(c => c.ch >= min && c.ch <= max);
+  }
+
+  // Shuffle
+  for (let i = currentCases.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentCases[i], currentCases[j]] = [currentCases[j], currentCases[i]];
+  }
+
+  currentIdx = 0;
+  score = 0; streak = 0; totalAttempted = 0; totalCorrect = 0;
+  updateStats();
+  renderCase();
+}
+
+function renderCase() {
+  if (currentIdx >= currentCases.length) { showComplete(); return; }
+  answered = false;
+  const c = currentCases[currentIdx];
+  const diffClass = c.diff === 'easy' ? 'easy' : c.diff === 'medium' ? 'medium' : 'hard';
+  const points = c.diff === 'easy' ? 1 : c.diff === 'medium' ? 2 : 3;
+
+  document.getElementById('ctcCasesLeft').textContent = currentCases.length - currentIdx;
+
+  const html = `<div class="ctc-case-card">
+    <div class="ctc-case-header">
+      <span class="ctc-case-badge ${diffClass}">${c.diff} · +${points}pts</span>
+      <span class="ctc-case-chapter">Chapter ${c.ch}</span>
+    </div>
+    <div class="ctc-case-body">
+      <div class="ctc-scenario">${c.scenario}</div>
+      <div class="ctc-question">${c.question}</div>
+      <div class="ctc-options">
+        ${c.options.map((opt, i) => `<div class="ctc-opt" id="ctcOpt${i}" onclick="selectCase(${i})">
+          <span class="ctc-opt-dot"></span>
+          <span>${opt}</span>
+        </div>`).join('')}
+      </div>
+      <div class="ctc-feedback" id="ctcFeedback"></div>
+      <div class="ctc-next-btn" id="ctcNextBtn" style="display:none">
+        <button onclick="nextCase()">Next Case →</button>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('ctcCaseArea').innerHTML = html;
+}
+
+function selectCase(idx) {
+  if (answered) return;
+  answered = true;
+  totalAttempted++;
+
+  const c = currentCases[currentIdx];
+  const points = c.diff === 'easy' ? 1 : c.diff === 'medium' ? 2 : 3;
+  const isCorrect = idx === c.correct;
+
+  // Style options
+  c.options.forEach((_, i) => {
+    const el = document.getElementById('ctcOpt' + i);
+    if (i === c.correct) el.classList.add('correct');
+    else if (i === idx && !isCorrect) el.classList.add('wrong');
+    else el.classList.add('disabled');
+  });
+
+  // Feedback
+  const fb = document.getElementById('ctcFeedback');
+  if (isCorrect) {
+    score += points;
+    streak++;
+    bestStreak = Math.max(bestStreak, streak);
+    totalCorrect++;
+    fb.className = 'ctc-feedback show correct';
+    fb.innerHTML = `<div class="fb-title">✅ Correct! +${points} points</div><p>${c.explanation}</p>`;
+  } else {
+    streak = 0;
+    fb.className = 'ctc-feedback show wrong';
+    fb.innerHTML = `<div class="fb-title">❌ Wrong — The answer is: ${c.options[c.correct]}</div><p>${c.explanation}</p>`;
+  }
+
+  document.getElementById('ctcNextBtn').style.display = 'block';
+  updateStats();
+}
+
+function nextCase() {
+  currentIdx++;
+  renderCase();
+}
+
+function updateStats() {
+  document.getElementById('ctcScore').textContent = score;
+  document.getElementById('ctcStreak').textContent = streak;
+  document.getElementById('ctcAccuracy').textContent = totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) + '%' : '0%';
+
+  const lvl = getLevel(score);
+  document.getElementById('ctcLevel').textContent = lvl.current.name;
+  document.getElementById('ctcLevel').style.color = lvl.current.color;
+  if (lvl.next) {
+    const progress = ((score - lvl.current.min) / (lvl.next.min - lvl.current.min)) * 100;
+    document.getElementById('ctcLevelFill').style.width = Math.min(100, progress) + '%';
+    document.getElementById('ctcLevelNext').textContent = 'Next: ' + lvl.next.name + ' (' + lvl.next.min + 'pts)';
+  } else {
+    document.getElementById('ctcLevelFill').style.width = '100%';
+    document.getElementById('ctcLevelNext').textContent = 'Max Level!';
+  }
+}
+
+function showComplete() {
+  const accuracy = totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) : 0;
+  const lvl = getLevel(score);
+  document.getElementById('ctcCaseArea').innerHTML = `
+    <div class="ctc-complete">
+      <h2>🎉 All Cases Cracked!</h2>
+      <div class="score-big">${score} pts</div>
+      <p style="font-size:0.92rem;font-weight:600;color:${lvl.current.color}">Level: ${lvl.current.name}</p>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin:12px 0">Accuracy: ${accuracy}% · Best Streak: ${bestStreak} · Cases: ${totalAttempted}</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+        <button onclick="filterCases(document.querySelector('.ctc-filter .q-filter-btn'),'all')" style="padding:10px 24px;border-radius:8px;background:var(--accent);color:#0B0F19;border:none;font-weight:700;font-size:0.85rem;cursor:pointer">🔄 Play Again</button>
+        <a href="daily-quiz.html" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;text-decoration:none">📝 Daily Quiz</a>
+        <a href="mock-test.html" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;text-decoration:none">📋 Mock Test</a>
+      </div>
+    </div>`;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  currentCases = [...cases];
+  for (let i = currentCases.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentCases[i], currentCases[j]] = [currentCases[j], currentCases[i]];
+  }
+  updateStats();
+  renderCase();
+});
+</script>
+</body>
+</html>
