@@ -317,28 +317,21 @@ function downloadSet(setId) {
   const set = allSets.find(s => s.id === setId);
   if (!set) return;
 
-  const printWin = window.open('', '_blank');
-  printWin.document.write(`<!DOCTYPE html><html><head>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HYN85DHB3B"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HYN85DHB3B");</script><title>${set.title || 'Question Set'} - BSt Baba AKSpected</title>
-  <style>
-    body { font-family: -apple-system, 'Segoe UI', sans-serif; padding: 40px; color: #1a1a1a; line-height: 1.8; font-size: 14px; position: relative; }
-    h1 { font-size: 20px; margin-bottom: 4px; }
-    .sub { font-size: 12px; color: #666; margin-bottom: 24px; }
-    .q { padding: 8px 0; border-bottom: 1px solid #eee; }
-    .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-35deg); font-family: 'Monotype Corsiva','Apple Chancery','Segoe Script',cursive; font-size: 90px; color: rgba(0,0,0,0.06); z-index: 9999; pointer-events: none; white-space: nowrap; }
-    .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee; padding-top: 12px; }
-    @media print { .watermark { color: rgba(0,0,0,0.06) !important; } }
-  </style></head><body>
-    <div class="watermark">BSt Baba AKSpected</div>
-    <h1>${escapeHtml(set.title || 'Question Set')}</h1>
-    <div class="sub">BSt Baba AKSpected | ${set.type || ''} | ${(set.chapters||[]).map(c=>'Ch '+c).join(', ')} | ${set.created ? new Date(set.created).toLocaleDateString() : ''}</div>
-    ${(set.content || '').split('\n').filter(l=>l.trim()).map(l => '<div class="q">' + l + '</div>').join('')}
-    <div class="footer">BSt Baba - AKSpected | By Aakassh Soral (AKS) | aakasshsoral@gmail.com</div>
-  </body></html>`);
+  var printWin = window.open('', '_blank');
+  var title = escapeHtml(set.title || 'Question Set');
+  var sub = 'BSt Baba AKSpected | ' + (set.type || '') + ' | ' + (set.chapters||[]).map(function(c){return 'Ch '+c}).join(', ') + ' | ' + (set.created ? new Date(set.created).toLocaleDateString() : '');
+  var qs = (set.content || '').split('\n').filter(function(l){return l.trim()}).map(function(l){return '<div class="q">' + l + '<\/div>'}).join('');
+  var html = '<!DOCTYPE html><html><head><title>' + title + ' - BSt Baba AKSpected<\/title>' +
+    '<style>body{font-family:-apple-system,"Segoe UI",sans-serif;padding:40px;color:#1a1a1a;line-height:1.8;font-size:14px;position:relative}h1{font-size:20px;margin-bottom:4px}.sub{font-size:12px;color:#666;margin-bottom:24px}.q{padding:8px 0;border-bottom:1px solid #eee}.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-family:"Monotype Corsiva","Apple Chancery","Segoe Script",cursive;font-size:90px;color:rgba(0,0,0,0.06);z-index:9999;pointer-events:none;white-space:nowrap}.footer{margin-top:40px;text-align:center;font-size:11px;color:#999;border-top:1px solid #eee;padding-top:12px}@media print{.watermark{color:rgba(0,0,0,0.06)!important}}<\/style><\/head><body>' +
+    '<div class="watermark">BSt Baba AKSpected<\/div>' +
+    '<h1>' + title + '<\/h1>' +
+    '<div class="sub">' + sub + '<\/div>' +
+    qs +
+    '<div class="footer">BSt Baba - AKSpected | By Aakassh Soral (AKS) | aakasshsoral@gmail.com<\/div>' +
+    '<\/body><\/html>';
+  printWin.document.write(html);
   printWin.document.close();
-  setTimeout(() => { printWin.print(); }, 500);
+  setTimeout(function(){ printWin.print(); }, 500);
 }
 
 // Teacher: Edit set
