@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://soralatul16.github.io/bst-baba-akspected/sitemap.xml
