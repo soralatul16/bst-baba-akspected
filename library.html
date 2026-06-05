@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question Library | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.lib-layout { display: grid; grid-template-columns: 280px minmax(0,1fr); gap: 24px; min-height: 60vh; }
+.lib-sidebar { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; overflow-y: auto; max-height: 80vh; position: sticky; top: calc(var(--nav-height) + 20px); }
+.lib-sidebar h3 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 12px; }
+.lib-ch-item { margin-bottom: 4px; }
+.lib-ch-btn { width: 100%; text-align: left; padding: 8px 10px; border: none; background: none; color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+.lib-ch-btn:hover, .lib-ch-btn.active { background: var(--accent-light); color: var(--accent); }
+.lib-ch-btn .ch-count { font-size: 0.68rem; background: var(--border); padding: 1px 6px; border-radius: 4px; color: var(--text-muted); font-weight: 700; }
+.lib-topics { padding-left: 12px; display: none; }
+.lib-topics.open { display: block; }
+.lib-topic-btn { width: 100%; text-align: left; padding: 5px 10px; border: none; background: none; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; border-radius: 4px; display: flex; justify-content: space-between; transition: all 0.15s; }
+.lib-topic-btn:hover, .lib-topic-btn.active { color: var(--accent); background: var(--accent-light); }
+.lib-topic-btn .t-count { font-size: 0.65rem; color: var(--text-muted); }
+.lib-main { }
+.lib-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.lib-filters select { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 0.8rem; }
+.lib-set-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; transition: all 0.2s; }
+.lib-set-card:hover { border-color: var(--border-hover); }
+.lib-set-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.lib-set-header h3 { font-size: 0.95rem; font-weight: 700; flex: 1; }
+.lib-set-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.lib-set-tags span { font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; background: var(--accent-light); color: var(--accent); }
+.lib-set-tags span.gold { background: var(--accent-gold-light); color: var(--accent-gold); }
+.lib-set-body { font-size: 0.83rem; line-height: 1.7; color: var(--text-muted); }
+.lib-set-body .q-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.lib-set-body .q-item:last-child { border-bottom: none; }
+.lib-set-actions { display: flex; gap: 6px; margin-top: 12px; }
+.lib-btn { padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); cursor: pointer; transition: all 0.15s; }
+.lib-btn:hover { border-color: var(--accent); color: var(--accent); }
+.lib-btn.primary { background: var(--accent); color: #0B0F19; border-color: var(--accent); }
+.lib-btn.danger { color: #f87171; border-color: rgba(248,113,113,0.3); }
+.lib-btn.danger:hover { background: rgba(248,113,113,0.1); }
+.lib-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.lib-empty h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
+
+/* Print watermark */
+@media print {
+  nav, .floating-btns, .chatbot-panel, .feedback-panel, .lib-sidebar, .lib-filters, .lib-set-actions, .lib-btn { display: none !important; }
+  .lib-layout { grid-template-columns: 1fr; }
+  body::after {
+    content: 'BSt Baba AKSpected';
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    font-size: 80px; font-family: 'Monotype Corsiva', 'Apple Chancery', cursive;
+    color: rgba(0,0,0,0.06);
+    z-index: 9999; pointer-events: none;
+    white-space: nowrap;
+  }
+}
+
+/* Download watermark overlay */
+.watermark-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; z-index: 1000;
+}
+.watermark-text {
+  font-family: 'Monotype Corsiva', 'Apple Chancery', 'Segoe Script', cursive;
+  font-size: 72px; color: rgba(34,211,238,0.07);
+  transform: rotate(-35deg);
+  white-space: nowrap; user-select: none;
+}
+
+@media (max-width: 768px) {
+  .lib-layout { grid-template-columns: 1fr; }
+  .lib-sidebar { position: static; max-height: none; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html" class="active">Library</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Question Library</div>
+    <h1>AKSpected Question Library</h1>
+    <div class="meta-bar">
+      <span>📚 Browse question sets</span>
+      <span>🔍 Filter by chapter, topic, type</span>
+      <span>📥 Download with watermark</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="lib-layout">
+    <!-- LEFT SIDEBAR: Chapter → Topic tree -->
+    <div class="lib-sidebar" id="libSidebar">
+      <h3>Chapters & Topics</h3>
+      <div id="chapterTree">Loading...</div>
+    </div>
+
+    <!-- MAIN: Filters + Question Sets -->
+    <div class="lib-main">
+      <div class="lib-filters">
+        <select id="filterChapter" onchange="applyFilters()">
+          <option value="all">All Chapters</option>
+        </select>
+        <select id="filterType" onchange="applyFilters()">
+          <option value="all">All Types</option>
+          <option value="full">Full Paper</option>
+          <option value="chapter">Chapter-wise</option>
+          <option value="mcq">MCQs</option>
+          <option value="case">Case Studies</option>
+          <option value="assertion">Assertion-Reason</option>
+          <option value="topic">Topic-wise</option>
+        </select>
+        <select id="filterMarks" onchange="applyFilters()">
+          <option value="all">All Marks</option>
+          <option value="1">1 Mark</option>
+          <option value="3">3 Marks</option>
+          <option value="4">4 Marks</option>
+          <option value="5">5 Marks</option>
+          <option value="6">6 Marks</option>
+        </select>
+        <select id="filterDifficulty" onchange="applyFilters()">
+          <option value="all">All Difficulty</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div id="libContent">
+        <div class="lib-empty">
+          <h3>📚 Question Library</h3>
+          <p>Question sets generated by AKS will appear here. Use filters or browse chapters on the left.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+let topicsData = {};
+let allSets = [];
+let isTeacher = false;
+
+async function initLibrary() {
+  // Load topics
+  try {
+    const res = await fetch('content/topics.json');
+    topicsData = await res.json();
+  } catch(e) { console.error('Topics load failed'); }
+
+  // Build chapter tree
+  buildChapterTree();
+
+  // Populate chapter filter
+  const chFilter = document.getElementById('filterChapter');
+  for (const [num, ch] of Object.entries(topicsData)) {
+    chFilter.innerHTML += `<option value="${num}">Ch ${num}: ${ch.title}</option>`;
+  }
+
+  // Check if teacher
+  isTeacher = !!localStorage.getItem('bstbaba_tp_unlocked');
+
+  // Load question sets from Firestore
+  await loadQuestionSets();
+}
+
+function buildChapterTree() {
+  const container = document.getElementById('chapterTree');
+  let html = '';
+  for (const [num, ch] of Object.entries(topicsData)) {
+    html += `<div class="lib-ch-item">
+      <button class="lib-ch-btn" onclick="toggleChapter(this, '${num}')">
+        <span>Ch ${num}: ${ch.title}</span>
+        <span class="ch-count" id="chCount${num}">0</span>
+      </button>
+      <div class="lib-topics" id="chTopics${num}">
+        ${ch.topics.map((t, i) => `<button class="lib-topic-btn" onclick="filterByTopic('${num}','${t}',this)">
+          <span>${t}</span>
+          <span class="t-count" id="tCount${num}_${i}">0</span>
+        </button>`).join('')}
+      </div>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+function toggleChapter(btn, num) {
+  const topics = document.getElementById('chTopics' + num);
+  topics.classList.toggle('open');
+  btn.classList.toggle('active');
+  // Also filter by this chapter
+  document.getElementById('filterChapter').value = num;
+  applyFilters();
+}
+
+function filterByTopic(chNum, topic, btn) {
+  document.querySelectorAll('.lib-topic-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('filterChapter').value = chNum;
+  renderSets(allSets.filter(s =>
+    s.chapters && s.chapters.includes(chNum) &&
+    s.topics && s.topics.includes(topic)
+  ));
+}
+
+async function loadQuestionSets() {
+  try {
+    const snap = await db.collection('bstbaba_question_sets').orderBy('created', 'desc').get();
+    allSets = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    updateCounts();
+    applyFilters();
+  } catch(e) {
+    console.error('Failed to load sets:', e);
+    document.getElementById('libContent').innerHTML = '<div class="lib-empty"><h3>Connect to view</h3><p>Question sets will load when Firebase is connected.</p></div>';
+  }
+}
+
+function updateCounts() {
+  for (const [num, ch] of Object.entries(topicsData)) {
+    const chSets = allSets.filter(s => s.chapters && s.chapters.includes(num));
+    const countEl = document.getElementById('chCount' + num);
+    if (countEl) countEl.textContent = chSets.length;
+    ch.topics.forEach((t, i) => {
+      const tSets = allSets.filter(s => s.topics && s.topics.includes(t));
+      const tEl = document.getElementById(`tCount${num}_${i}`);
+      if (tEl) tEl.textContent = tSets.length;
+    });
+  }
+}
+
+function applyFilters() {
+  const ch = document.getElementById('filterChapter').value;
+  const type = document.getElementById('filterType').value;
+  const marks = document.getElementById('filterMarks').value;
+  const diff = document.getElementById('filterDifficulty').value;
+
+  let filtered = [...allSets];
+  if (ch !== 'all') filtered = filtered.filter(s => s.chapters && s.chapters.includes(ch));
+  if (type !== 'all') filtered = filtered.filter(s => s.type === type);
+  if (marks !== 'all') filtered = filtered.filter(s => s.marks === marks);
+  if (diff !== 'all') filtered = filtered.filter(s => s.difficulty === diff);
+  renderSets(filtered);
+}
+
+function renderSets(sets) {
+  const container = document.getElementById('libContent');
+  if (sets.length === 0) {
+    container.innerHTML = '<div class="lib-empty"><h3>No question sets found</h3><p>Try different filters or ask AKS to generate new sets.</p></div>';
+    return;
+  }
+  container.innerHTML = sets.map(s => {
+    const chNames = (s.chapters || []).map(c => 'Ch ' + c).join(', ');
+    const topicNames = (s.topics || []).join(', ');
+    return `<div class="lib-set-card" id="set-${s.id}">
+      <div class="lib-set-header">
+        <h3>${escapeHtml(s.title || 'Question Set')}</h3>
+        <span style="font-size:0.7rem;color:var(--text-muted)">${s.created ? new Date(s.created).toLocaleDateString() : ''}</span>
+      </div>
+      <div class="lib-set-tags">
+        ${s.type ? `<span>${s.type}</span>` : ''}
+        ${s.difficulty ? `<span class="gold">${s.difficulty}</span>` : ''}
+        ${chNames ? `<span>${chNames}</span>` : ''}
+        ${s.questionCount ? `<span>${s.questionCount} Qs</span>` : ''}
+      </div>
+      ${topicNames ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:8px">Topics: ${topicNames}</div>` : ''}
+      <div class="lib-set-body">${formatQuestions(s.content || '')}</div>
+      <div class="lib-set-actions">
+        <button class="lib-btn primary" onclick="downloadSet('${s.id}')">📥 Download PDF</button>
+        ${isTeacher ? `
+          <button class="lib-btn" onclick="editSet('${s.id}')">✏️ Edit</button>
+          <button class="lib-btn danger" onclick="deleteSet('${s.id}')">🗑️ Delete</button>
+        ` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatQuestions(content) {
+  if (!content) return '<p style="color:var(--text-muted)">No content</p>';
+  const lines = content.split('\n').filter(l => l.trim());
+  return lines.map(l => `<div class="q-item">${l}</div>`).join('');
+}
+
+// Download as PDF with watermark
+function downloadSet(setId) {
+  const set = allSets.find(s => s.id === setId);
+  if (!set) return;
+
+  const printWin = window.open('', '_blank');
+  printWin.document.write(`<!DOCTYPE html><html><head><title>${set.title || 'Question Set'} - BSt Baba AKSpected</title>
+  <style>
+    body { font-family: -apple-system, 'Segoe UI', sans-serif; padding: 40px; color: #1a1a1a; line-height: 1.8; font-size: 14px; position: relative; }
+    h1 { font-size: 20px; margin-bottom: 4px; }
+    .sub { font-size: 12px; color: #666; margin-bottom: 24px; }
+    .q { padding: 8px 0; border-bottom: 1px solid #eee; }
+    .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-35deg); font-family: 'Monotype Corsiva','Apple Chancery','Segoe Script',cursive; font-size: 90px; color: rgba(0,0,0,0.06); z-index: 9999; pointer-events: none; white-space: nowrap; }
+    .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee; padding-top: 12px; }
+    @media print { .watermark { color: rgba(0,0,0,0.06) !important; } }
+  </style></head><body>
+    <div class="watermark">BSt Baba AKSpected</div>
+    <h1>${escapeHtml(set.title || 'Question Set')}</h1>
+    <div class="sub">BSt Baba AKSpected | ${set.type || ''} | ${(set.chapters||[]).map(c=>'Ch '+c).join(', ')} | ${set.created ? new Date(set.created).toLocaleDateString() : ''}</div>
+    ${(set.content || '').split('\n').filter(l=>l.trim()).map(l => '<div class="q">' + l + '</div>').join('')}
+    <div class="footer">BSt Baba - AKSpected | By Aakassh Soral (AKS) | aakasshsoral@gmail.com</div>
+  </body></html>`);
+  printWin.document.close();
+  setTimeout(() => { printWin.print(); }, 500);
+}
+
+// Teacher: Edit set
+function editSet(setId) {
+  const set = allSets.find(s => s.id === setId);
+  if (!set) return;
+  const newContent = prompt('Edit question set content:', set.content);
+  if (newContent === null) return;
+  db.collection('bstbaba_question_sets').doc(setId).update({
+    content: newContent,
+    updated: new Date().toISOString()
+  }).then(() => { loadQuestionSets(); alert('Updated!'); });
+}
+
+// Teacher: Delete set
+function deleteSet(setId) {
+  if (!confirm('Are you sure you want to delete this question set?')) return;
+  db.collection('bstbaba_question_sets').doc(setId).delete()
+    .then(() => { loadQuestionSets(); });
+}
+
+document.addEventListener('DOMContentLoaded', initLibrary);
+</script>
+</body>
+</html>

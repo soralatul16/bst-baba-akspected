@@ -554,38 +554,82 @@ function injectTeacherPanel() {
           <div id="tpFeedbackList" style="font-size:0.83rem;color:var(--text-muted)">Loading feedback...</div>
         </div>
 
-        <!-- Question Generator -->
+        <!-- Question Generator (Multi-Select) -->
         <div class="tp-section">
           <h3>⚡ AI Question Generator <span style="font-size:0.68rem;color:var(--accent-gold);font-weight:700;background:rgba(251,191,36,0.1);padding:2px 8px;border-radius:4px">AKSpected</span></h3>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Generate custom question papers using AI.</p>
-          <div class="tp-qgen-options">
-            <select id="qgenType">
-              <option value="full">Full Paper (80 marks)</option>
-              <option value="chapter">Chapter-wise</option>
-              <option value="topic">Topic-wise</option>
-              <option value="mcq">MCQs Only</option>
-              <option value="case">Case Studies Only</option>
-              <option value="assertion">Assertion-Reason Only</option>
-            </select>
-            <select id="qgenChapter">
-              <option value="all">All Chapters</option>
-              <option value="1">Ch 1: Nature of Management</option>
-              <option value="2">Ch 2: Principles of Management</option>
-              <option value="3">Ch 3: Business Environment</option>
-              <option value="4">Ch 4: Planning</option>
-              <option value="5">Ch 5: Organising</option>
-              <option value="6">Ch 6: Staffing</option>
-              <option value="7">Ch 7: Directing</option>
-              <option value="8">Ch 8: Controlling</option>
-              <option value="9">Ch 9: Financial Management</option>
-              <option value="10">Ch 10: Financial Markets</option>
-              <option value="11">Ch 11: Marketing</option>
-              <option value="12">Ch 12: Consumer Protection</option>
-            </select>
-            <input type="number" id="qgenCount" placeholder="No. of Qs" value="10" min="1" max="50" style="width:90px">
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Generate custom question papers. Select multiple types, chapters, topics, and difficulty.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin-bottom:14px">
+            <div>
+              <label style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px">Question Types (multi)</label>
+              <select id="qgenType" multiple size="5" style="width:100%;padding:6px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.8rem">
+                <option value="full">Full Paper (80 marks)</option>
+                <option value="mcq" selected>MCQs</option>
+                <option value="short">Short Answer (3 marks)</option>
+                <option value="distinguish">Distinguish Between (4 marks)</option>
+                <option value="case">Case Studies (5 marks)</option>
+                <option value="long">Long Answer (6 marks)</option>
+                <option value="assertion">Assertion-Reason</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px">Chapters (multi)</label>
+              <select id="qgenChapter" multiple size="5" style="width:100%;padding:6px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.8rem">
+                <option value="1">Ch 1: Nature of Management</option>
+                <option value="2" selected>Ch 2: Principles of Management</option>
+                <option value="3">Ch 3: Business Environment</option>
+                <option value="4">Ch 4: Planning</option>
+                <option value="5">Ch 5: Organising</option>
+                <option value="6">Ch 6: Staffing</option>
+                <option value="7">Ch 7: Directing</option>
+                <option value="8">Ch 8: Controlling</option>
+                <option value="9">Ch 9: Financial Management</option>
+                <option value="10">Ch 10: Financial Markets</option>
+                <option value="11">Ch 11: Marketing</option>
+                <option value="12">Ch 12: Consumer Protection</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px">Topics (auto-populated)</label>
+              <select id="qgenTopics" multiple size="5" style="width:100%;padding:6px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.8rem" onchange="updateTopicSelection()">
+                <option value="">Select chapters first</option>
+              </select>
+            </div>
           </div>
-          <button class="modal-btn" style="max-width:250px" onclick="generateQuestions()">🤖 Generate with AI →</button>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+            <div>
+              <label style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px">Difficulty</label>
+              <select id="qgenDifficulty" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.8rem">
+                <option value="mixed">Mixed</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px">No. of Questions</label>
+              <input type="number" id="qgenCount" value="10" min="1" max="50" style="width:80px;padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.8rem">
+            </div>
+            <div>
+              <label style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px">Set Title</label>
+              <input type="text" id="qgenTitle" placeholder="e.g. Ch 2 MCQ Practice" style="width:200px;padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.8rem">
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="modal-btn" style="max-width:250px" onclick="generateQuestions()">🤖 Generate with AI →</button>
+            <button class="modal-btn gold" style="max-width:250px;background:var(--accent-gold)" id="saveToLibBtn" onclick="saveToLibrary()" disabled>📚 Save to Library</button>
+          </div>
           <div id="qgenOutput" style="margin-top:16px;font-size:0.83rem;color:var(--text-muted)"></div>
+        </div>
+
+        <!-- LIBRARY PANEL -->
+        <div class="tp-section">
+          <h3>📚 Question Library <span style="font-size:0.68rem;color:var(--accent);font-weight:700;background:var(--accent-light);padding:2px 8px;border-radius:4px">Manager</span></h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">All saved question sets. Edit, delete, or view. Students see these in the <a href="library.html" style="color:var(--accent)">Library page</a>.</p>
+          <div id="tpLibraryList" style="max-height:400px;overflow-y:auto">Loading library...</div>
+          <button class="modal-btn" style="max-width:200px;margin-top:12px" onclick="window.open('library.html','_blank')">Open Full Library →</button>
         </div>
 
         <!-- Broadcast -->
@@ -670,6 +714,10 @@ async function loadTeacherData() {
   } catch(e) {
     console.error('Error loading teacher data:', e);
   }
+
+  // Load library panel and setup topic auto-populate
+  loadLibraryPanel();
+  setupTopicAutoPopulate();
 }
 
 // Teacher panel password gate
@@ -729,50 +777,159 @@ async function saveGrokKey() {
   status.style.display = 'block';
 }
 
-// Question generator placeholder
+// Question generator — multi-select
+let lastGeneratedContent = '';
+let lastGenConfig = {};
+
 async function generateQuestions() {
   const apiKey = await getGrokKey();
-  const type = document.getElementById('qgenType').value;
-  const ch = document.getElementById('qgenChapter').value;
+  const types = Array.from(document.getElementById('qgenType').selectedOptions).map(o => o.value);
+  const chapters = Array.from(document.getElementById('qgenChapter').selectedOptions).map(o => o.value);
+  const topics = Array.from(document.getElementById('qgenTopics').selectedOptions).map(o => o.value).filter(Boolean);
+  const difficulty = document.getElementById('qgenDifficulty').value;
   const count = document.getElementById('qgenCount').value;
+  const title = document.getElementById('qgenTitle').value.trim();
   const output = document.getElementById('qgenOutput');
 
   if (!apiKey) {
-    output.innerHTML = '<div style="padding:16px;background:var(--accent-gold-light);border-radius:8px">⚠️ <strong>API key not set.</strong> Go to the "AI Configuration" section above and paste your Grok API key first.</div>';
+    output.innerHTML = '<div style="padding:16px;background:var(--accent-gold-light);border-radius:8px">⚠️ API key not set. Go to AI Configuration above.</div>';
+    return;
+  }
+  if (chapters.length === 0) {
+    output.innerHTML = '<div style="padding:16px;background:var(--accent-gold-light);border-radius:8px">⚠️ Select at least one chapter.</div>';
     return;
   }
 
-  const typeLabels = {full:'a full 80-mark CBSE board paper',chapter:'chapter-wise questions',topic:'topic-wise questions',mcq:'MCQ questions only',case:'case study questions only',assertion:'assertion-reason questions only'};
-  const chLabel = ch === 'all' ? 'all chapters' : 'Chapter ' + ch;
+  const typeLabels = {full:'full 80-mark board paper',mcq:'MCQ questions',short:'short answer (3 marks)',distinguish:'distinguish between (4 marks)',case:'case study (5 marks)',long:'long answer (6 marks)',assertion:'assertion-reason questions'};
+  const typeStr = types.map(t => typeLabels[t] || t).join(', ');
+  const chStr = chapters.map(c => 'Chapter ' + c).join(', ');
+  const topicStr = topics.length > 0 ? ' Topics: ' + topics.join(', ') + '.' : '';
+  const diffStr = difficulty !== 'mixed' ? ' Difficulty: ' + difficulty + '.' : '';
 
-  output.innerHTML = '<div style="padding:16px;background:var(--accent-light);border-radius:8px">⏳ Generating questions... This may take a few seconds.</div>';
+  output.innerHTML = '<div style="padding:16px;background:var(--accent-light);border-radius:8px">⏳ Generating questions... This may take 10-20 seconds.</div>';
 
-  const prompt = `Generate ${count} ${typeLabels[type] || 'questions'} for CBSE Class 12 Business Studies, ${chLabel}. Follow the exact CBSE board exam pattern. Include marks for each question. For case studies, create realistic business scenarios. For MCQs, include 4 options and mark the correct answer. Format clearly with question numbers.`;
+  const prompt = `Generate ${count} questions for CBSE Class 12 Business Studies. Types: ${typeStr}. Chapters: ${chStr}.${topicStr}${diffStr} Follow exact CBSE board exam pattern 2026-27. Include marks for each question. For MCQs include 4 options and mark correct answer. For case studies create realistic scenarios. For assertion-reason use standard A/R format. Number all questions clearly.`;
 
   const config = getApiConfig(apiKey);
-  fetch(config.url, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
-    body: JSON.stringify({
-      model: config.model,
-      messages: [
-        {role: 'system', content: 'You are an expert CBSE Class 12 Business Studies question paper setter. Generate questions exactly matching the CBSE board exam pattern for 2026-27. Include marks allocation. Be accurate with NCERT content.'},
-        {role: 'user', content: prompt}
-      ]
-    })
-  })
-  .then(r => r.json())
-  .then(data => {
+  try {
+    const res = await fetch(config.url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
+      body: JSON.stringify({
+        model: config.model,
+        messages: [
+          {role: 'system', content: 'You are an expert CBSE Class 12 Business Studies question paper setter. Generate questions matching the CBSE board pattern for 2026-27. Be accurate with NCERT content. Include marks allocation.'},
+          {role: 'user', content: prompt}
+        ]
+      })
+    });
+    const data = await res.json();
     if (data.error) {
-      output.innerHTML = `<div style="padding:16px;background:rgba(248,113,113,0.1);border-radius:8px;color:#f87171">Error: ${data.error.message || JSON.stringify(data.error)}</div>`;
+      output.innerHTML = '<div style="padding:16px;background:rgba(248,113,113,0.1);border-radius:8px;color:#f87171">Error: ' + (data.error.message || JSON.stringify(data.error)) + '</div>';
       return;
     }
-    const reply = data.choices?.[0]?.message?.content || 'Could not generate questions.';
-    output.innerHTML = `<div style="padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;font-size:0.83rem;line-height:1.7;max-height:500px;overflow-y:auto">${reply.replace(/\n/g, '<br>')}</div>
-    <button class="modal-btn" style="max-width:200px;margin-top:12px" onclick="copyQuestions()">📋 Copy to Clipboard</button>`;
-  })
-  .catch(() => {
-    output.innerHTML = '<div style="padding:16px;background:rgba(248,113,113,0.1);border-radius:8px;color:#f87171">Failed to generate. Check your API key and try again.</div>';
+    lastGeneratedContent = data.choices?.[0]?.message?.content || '';
+    lastGenConfig = {types, chapters, topics, difficulty, count: parseInt(count), title: title || 'Question Set ' + new Date().toLocaleDateString()};
+
+    output.innerHTML = '<div style="padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;font-size:0.83rem;line-height:1.7;max-height:500px;overflow-y:auto">' + lastGeneratedContent.replace(/\n/g, '<br>') + '</div>';
+
+    document.getElementById('saveToLibBtn').disabled = false;
+  } catch(e) {
+    output.innerHTML = '<div style="padding:16px;background:rgba(248,113,113,0.1);border-radius:8px;color:#f87171">Failed: ' + e.message + '</div>';
+  }
+}
+
+// Save generated set to Firestore library
+async function saveToLibrary() {
+  if (!lastGeneratedContent) { alert('Generate questions first.'); return; }
+  const btn = document.getElementById('saveToLibBtn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    await db.collection('bstbaba_question_sets').add({
+      title: lastGenConfig.title,
+      content: lastGeneratedContent,
+      type: lastGenConfig.types.join(', '),
+      chapters: lastGenConfig.chapters,
+      topics: lastGenConfig.topics || [],
+      difficulty: lastGenConfig.difficulty,
+      questionCount: lastGenConfig.count,
+      created: new Date().toISOString(),
+      createdBy: 'AKS'
+    });
+    btn.textContent = '✓ Saved to Library!';
+    btn.style.background = 'var(--accent)';
+    loadLibraryPanel();
+    setTimeout(() => {
+      btn.textContent = '📚 Save to Library';
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 2000);
+  } catch(e) {
+    alert('Save failed: ' + e.message);
+    btn.textContent = '📚 Save to Library';
+    btn.disabled = false;
+  }
+}
+
+// Load library list in teacher panel
+async function loadLibraryPanel() {
+  const container = document.getElementById('tpLibraryList');
+  if (!container) return;
+  try {
+    const snap = await db.collection('bstbaba_question_sets').orderBy('created', 'desc').limit(20).get();
+    if (snap.empty) {
+      container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px">No question sets saved yet. Generate and save your first set above.</p>';
+      return;
+    }
+    container.innerHTML = snap.docs.map(doc => {
+      const s = doc.data();
+      return '<div style="padding:12px;background:var(--bg);border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">' +
+          '<strong style="font-size:0.85rem">' + escapeHtml(s.title || 'Untitled') + '</strong>' +
+          '<span style="font-size:0.68rem;color:var(--text-muted)">' + (s.created ? new Date(s.created).toLocaleDateString() : '') + '</span>' +
+        '</div>' +
+        '<div style="font-size:0.72rem;color:var(--text-muted)">' + (s.type || '') + ' | ' + (s.chapters || []).map(c => 'Ch ' + c).join(', ') + ' | ' + (s.questionCount || '?') + ' Qs | ' + (s.difficulty || 'mixed') + '</div>' +
+        '<div style="display:flex;gap:4px;margin-top:6px">' +
+          '<button style="font-size:0.7rem;padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer" onclick="editSet(\'' + doc.id + '\')">Edit</button>' +
+          '<button style="font-size:0.7rem;padding:3px 8px;border-radius:4px;border:1px solid rgba(248,113,113,0.3);background:var(--bg-card);color:#f87171;cursor:pointer" onclick="deleteSetTP(\'' + doc.id + '\')">Delete</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    container.innerHTML = '<p style="color:var(--text-muted)">Could not load library.</p>';
+  }
+}
+
+async function deleteSetTP(id) {
+  if (!confirm('Delete this question set?')) return;
+  await db.collection('bstbaba_question_sets').doc(id).delete();
+  loadLibraryPanel();
+}
+
+// Auto-populate topics when chapters are selected
+function setupTopicAutoPopulate() {
+  const chSelect = document.getElementById('qgenChapter');
+  if (!chSelect) return;
+  chSelect.addEventListener('change', async () => {
+    const selected = Array.from(chSelect.selectedOptions).map(o => o.value);
+    const topicSelect = document.getElementById('qgenTopics');
+    topicSelect.innerHTML = '';
+    try {
+      const res = await fetch('content/topics.json');
+      const data = await res.json();
+      selected.forEach(ch => {
+        if (data[ch]) {
+          data[ch].topics.forEach(t => {
+            topicSelect.innerHTML += '<option value="' + t + '">Ch' + ch + ': ' + t + '</option>';
+          });
+        }
+      });
+      if (topicSelect.options.length === 0) {
+        topicSelect.innerHTML = '<option value="">Select chapters first</option>';
+      }
+    } catch(e) {}
   });
 }
 

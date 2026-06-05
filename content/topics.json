@@ -1,0 +1,50 @@
+{
+  "1": {
+    "title": "Nature and Significance of Management",
+    "topics": ["Meaning of Management", "Effectiveness vs Efficiency", "Characteristics of Management", "Objectives of Management", "Importance of Management", "Management as Art, Science, Profession", "Levels of Management", "Functions of Management", "Coordination"]
+  },
+  "2": {
+    "title": "Principles of Management",
+    "topics": ["Nature of Principles", "Significance of Principles", "Fayol's 14 Principles", "Taylor's Scientific Management", "Techniques of Scientific Management", "Functional Foremanship", "Differential Piece Wage System", "Mental Revolution", "Fayol vs Taylor"]
+  },
+  "3": {
+    "title": "Business Environment",
+    "topics": ["Meaning & Features", "Importance of Business Environment", "Dimensions - Social", "Dimensions - Legal", "Dimensions - Economic", "Dimensions - Political", "Dimensions - Technological", "Demonetisation"]
+  },
+  "4": {
+    "title": "Planning",
+    "topics": ["Meaning & Features", "Importance of Planning", "Limitations of Planning", "Planning Process", "Types of Plans - Standing", "Types of Plans - Single Use", "Planning vs Controlling"]
+  },
+  "5": {
+    "title": "Organising",
+    "topics": ["Meaning & Process", "Functional Structure", "Divisional Structure", "Formal vs Informal Organisation", "Delegation", "Decentralisation", "Delegation vs Decentralisation"]
+  },
+  "6": {
+    "title": "Staffing",
+    "topics": ["Meaning & Importance", "Staffing Process", "Recruitment - Internal Sources", "Recruitment - External Sources", "Selection Process", "Training vs Development", "Training Methods - On the Job", "Training Methods - Off the Job"]
+  },
+  "7": {
+    "title": "Directing",
+    "topics": ["Meaning & Elements", "Motivation - Concept", "Maslow's Hierarchy of Needs", "Financial Incentives", "Non-Financial Incentives", "Leadership Styles", "Communication - Elements & Process", "Formal vs Informal Communication", "Barriers to Communication"]
+  },
+  "8": {
+    "title": "Controlling",
+    "topics": ["Meaning & Importance", "Steps in Control Process", "Planning vs Controlling", "Management by Exception"]
+  },
+  "9": {
+    "title": "Financial Management",
+    "topics": ["Meaning & Objectives", "Investment Decision", "Financing Decision", "Dividend Decision", "Capital Structure", "Financial Planning", "Fixed Capital", "Working Capital"]
+  },
+  "10": {
+    "title": "Financial Markets",
+    "topics": ["Meaning & Types", "Money Market Instruments", "Capital Market", "Primary vs Secondary Market", "Stock Exchange - Functions", "Trading Procedure", "SEBI - Functions"]
+  },
+  "11": {
+    "title": "Marketing Management",
+    "topics": ["Meaning & Functions", "Marketing vs Selling", "Marketing Mix - 4Ps", "Product - Branding", "Product - Labelling", "Product - Packaging", "Price - Factors", "Place - Channels of Distribution", "Promotion - Advertising", "Promotion - Personal Selling", "Promotion - Sales Promotion", "Promotion - Public Relations"]
+  },
+  "12": {
+    "title": "Consumer Protection",
+    "topics": ["Meaning & Importance", "Consumer Rights", "Consumer Responsibilities", "Consumer Protection Act 2019", "Redressal Machinery - 3 Tier", "Role of Consumer Organisations", "Quality Marks (ISI, AGMARK, FPO)"]
+  }
+}
