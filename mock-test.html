@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HYN85DHB3B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HYN85DHB3B");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock Test | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.mt-layout { display: grid; grid-template-columns: minmax(0,1fr) 240px; gap: 24px; }
+.mt-timer-bar { position: sticky; top: var(--nav-height); z-index: 50; background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px clamp(16px,4vw,48px); display: flex; justify-content: space-between; align-items: center; }
+.mt-timer { font-size: 1.4rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.mt-timer.warning { color: var(--accent-gold); }
+.mt-timer.danger { color: #f87171; animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.mt-info { font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 16px; }
+.mt-progress-mini { width: 200px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.mt-progress-mini-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
+
+.mt-start-screen { text-align: center; padding: 60px 20px; }
+.mt-start-screen h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+.mt-start-screen p { color: var(--text-muted); margin-bottom: 6px; font-size: 0.88rem; }
+.mt-rules { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; max-width: 500px; margin: 24px auto; text-align: left; }
+.mt-rules h3 { font-size: 0.88rem; font-weight: 700; margin-bottom: 10px; }
+.mt-rules li { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 4px; }
+
+.mt-q-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+.mt-q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.mt-q-num { font-size: 0.72rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; }
+.mt-q-marks { font-size: 0.68rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--accent-light); color: var(--accent); }
+.mt-q-chapter { font-size: 0.68rem; color: var(--text-muted); }
+.mt-q-text { font-size: 0.92rem; font-weight: 600; line-height: 1.7; margin-bottom: 14px; }
+.mt-options { display: flex; flex-direction: column; gap: 6px; }
+.mt-opt { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 10px; background: var(--bg); }
+.mt-opt:hover { border-color: var(--accent); background: var(--accent-light); }
+.mt-opt.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 600; }
+.mt-opt.correct { border-color: #22c55e; background: rgba(34,197,94,0.08); color: #22c55e; }
+.mt-opt.wrong { border-color: #f87171; background: rgba(248,113,113,0.08); color: #f87171; }
+.mt-opt.disabled { pointer-events: none; }
+.mt-opt-letter { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+.mt-opt.selected .mt-opt-letter { border-color: var(--accent); background: var(--accent); color: #0B0F19; }
+.mt-opt.correct .mt-opt-letter { border-color: #22c55e; background: #22c55e; color: #fff; }
+.mt-opt.wrong .mt-opt-letter { border-color: #f87171; background: #f87171; color: #fff; }
+.mt-textarea { width: 100%; min-height: 100px; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.85rem; font-family: var(--font-body); resize: vertical; }
+.mt-textarea:focus { border-color: var(--accent); outline: none; }
+
+/* Navigator sidebar */
+.mt-nav-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; position: sticky; top: calc(var(--nav-height) + 60px); }
+.mt-nav-panel h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 10px; }
+.mt-nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.mt-nav-btn { width: 100%; aspect-ratio: 1; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+.mt-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.mt-nav-btn.answered { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+.mt-nav-btn.current { background: var(--accent); color: #0B0F19; border-color: var(--accent); }
+.mt-nav-legend { margin-top: 12px; font-size: 0.68rem; color: var(--text-muted); }
+.mt-nav-legend span { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; }
+.mt-nav-legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* Results */
+.mt-results { max-width: 700px; margin: 0 auto; }
+.mt-results-header { text-align: center; margin-bottom: 28px; }
+.mt-score-big { font-size: 3rem; font-weight: 800; color: var(--accent); }
+.mt-grade { font-size: 1.2rem; font-weight: 700; margin-top: 4px; }
+.mt-ch-perf { display: flex; flex-direction: column; gap: 6px; margin-top: 20px; }
+.mt-ch-row { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+.mt-ch-name { flex: 1; }
+.mt-ch-bar { width: 100px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.mt-ch-bar-fill { height: 100%; border-radius: 3px; }
+.mt-ch-pct { width: 40px; text-align: right; font-weight: 700; }
+
+@media (max-width: 768px) {
+  .mt-layout { grid-template-columns: 1fr; }
+  .mt-nav-panel { position: static; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div id="mtTimerBar" class="mt-timer-bar" style="display:none; margin-top:var(--nav-height)">
+  <div style="display:flex;align-items:center;gap:16px">
+    <span class="mt-timer" id="mtTimer">3:00:00</span>
+    <div class="mt-progress-mini"><div class="mt-progress-mini-fill" id="mtProgressFill" style="width:0%"></div></div>
+  </div>
+  <div class="mt-info">
+    <span id="mtAnswered">0/34 answered</span>
+    <span id="mtMarksInfo">80 marks</span>
+    <button onclick="submitTest()" style="padding:5px 14px;border-radius:6px;background:#f87171;color:#fff;border:none;font-size:0.75rem;font-weight:700;cursor:pointer">Submit Test</button>
+  </div>
+</div>
+
+<section class="section" style="margin-top:var(--nav-height)">
+  <!-- START SCREEN -->
+  <div id="mtStartScreen" class="mt-start-screen">
+    <h2>AKSpected Mock Test</h2>
+    <p>Full CBSE Board Paper Simulation — 80 Marks, 3 Hours</p>
+    <p style="font-size:0.78rem;color:var(--accent)">Business Studies Class 12 · Session 2026-27</p>
+
+    <div class="mt-rules">
+      <h3>Test Structure</h3>
+      <ul>
+        <li><strong>20 MCQs</strong> × 1 mark = 20 marks (no choice)</li>
+        <li><strong>4 Short Answers</strong> × 3 marks = 12 marks (answer any 3)</li>
+        <li><strong>6 Application Questions</strong> × 4 marks = 24 marks (answer any 5)</li>
+        <li><strong>4 Long Answers</strong> × 6 marks = 24 marks (answer any 3)</li>
+        <li>Total: <strong>34 questions, 80 marks, 180 minutes</strong></li>
+      </ul>
+      <h3 style="margin-top:14px">Rules</h3>
+      <ul>
+        <li>Timer starts immediately — you get exactly 3 hours</li>
+        <li>MCQs are auto-scored instantly after submission</li>
+        <li>Written answers are self-evaluated — model answers shown after</li>
+        <li>You can navigate between questions freely</li>
+        <li>Test auto-submits when time runs out</li>
+      </ul>
+    </div>
+
+    <button class="modal-btn" style="max-width:280px;margin:20px auto;display:block;font-size:1rem;padding:14px 32px" onclick="startTest()">Start Mock Test →</button>
+  </div>
+
+  <!-- TEST AREA -->
+  <div id="mtTestArea" style="display:none">
+    <div class="mt-layout">
+      <div id="mtQuestions"></div>
+      <div class="mt-nav-panel">
+        <h4>Question Navigator</h4>
+        <div class="mt-nav-grid" id="mtNavGrid"></div>
+        <div class="mt-nav-legend" style="margin-top:10px">
+          <span><span class="dot" style="background:var(--accent)"></span> Answered</span>
+          <span><span class="dot" style="background:var(--border)"></span> Unanswered</span>
+        </div>
+        <button class="modal-btn" style="margin-top:14px;width:100%;font-size:0.82rem" onclick="submitTest()">Submit Test →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="mtResults" style="display:none"></div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+const testQuestions = [
+  // 20 MCQs (1 mark each)
+  {id:1,type:'mcq',marks:1,ch:1,q:"Management is described as:",options:["A technical process","A process of getting things done through others","A scientific experiment","A government policy"],correct:1},
+  {id:2,type:'mcq',marks:1,ch:1,q:"Which is NOT a function of management?",options:["Planning","Cooperating","Controlling","Staffing"],correct:1},
+  {id:3,type:'mcq',marks:1,ch:1,q:"Management is an intangible force means:",options:["It is temporary","It cannot be seen but felt","It is unimportant","It is optional"],correct:1},
+  {id:4,type:'mcq',marks:1,ch:2,q:"Father of Scientific Management is:",options:["Henri Fayol","F.W. Taylor","Peter Drucker","Elton Mayo"],correct:1},
+  {id:5,type:'mcq',marks:1,ch:2,q:"'Gang Plank' allows:",options:["Dismissal of workers","Direct communication bypassing scalar chain","Promotion of workers","Division of work"],correct:1},
+  {id:6,type:'mcq',marks:1,ch:2,q:"Unity of Command means:",options:["One plan for all","One boss per employee","Equal division of work","Team spirit"],correct:1},
+  {id:7,type:'mcq',marks:1,ch:3,q:"SLEPT stands for:",options:["Social Legal Economic Political Technological","Sales Labour Export Production Trade","Social Labour Employment Political Trade","None of these"],correct:0},
+  {id:8,type:'mcq',marks:1,ch:3,q:"Demonetisation primarily aimed to curb:",options:["Inflation","Black money","Unemployment","Poverty"],correct:1},
+  {id:9,type:'mcq',marks:1,ch:4,q:"'No smoking in office' is an example of:",options:["Policy","Procedure","Rule","Strategy"],correct:2},
+  {id:10,type:'mcq',marks:1,ch:4,q:"Planning is called the primary function because:",options:["It is the most expensive","It precedes all other functions","It involves all employees","It is done monthly"],correct:1},
+  {id:11,type:'mcq',marks:1,ch:5,q:"Which element of delegation cannot be delegated?",options:["Authority","Responsibility","Accountability","All of these"],correct:2},
+  {id:12,type:'mcq',marks:1,ch:5,q:"Divisional structure groups activities by:",options:["Functions","Products","Regions","All of these"],correct:1},
+  {id:13,type:'mcq',marks:1,ch:6,q:"Recruitment is a _____ process.",options:["Negative","Positive","Neutral","Selective"],correct:1},
+  {id:14,type:'mcq',marks:1,ch:6,q:"Vestibule training takes place in:",options:["Actual workplace","A simulated work environment","Manager's office","Outside the organisation"],correct:1},
+  {id:15,type:'mcq',marks:1,ch:7,q:"Maslow's highest need is:",options:["Safety","Esteem","Self-actualisation","Social"],correct:2},
+  {id:16,type:'mcq',marks:1,ch:7,q:"Laissez-faire leadership means:",options:["Leader decides alone","Leader consults team","Full freedom to subordinates","No leadership"],correct:2},
+  {id:17,type:'mcq',marks:1,ch:9,q:"Interest on debt being tax-deductible makes debt:",options:["More risky","Cheaper than equity","Same as equity","Illegal"],correct:1},
+  {id:18,type:'mcq',marks:1,ch:10,q:"Treasury Bills are issued by:",options:["Commercial Banks","RBI on behalf of Government","SEBI","Stock Exchange"],correct:1},
+  {id:19,type:'mcq',marks:1,ch:11,q:"Free samples and contests are examples of:",options:["Advertising","Personal Selling","Sales Promotion","Public Relations"],correct:2},
+  {id:20,type:'mcq',marks:1,ch:12,q:"Consumer complaint for goods worth ₹8 crore goes to:",options:["District Commission","State Commission","National Commission","Supreme Court"],correct:1},
+
+  // 4 Short Answers (3 marks each)
+  {id:21,type:'short',marks:3,ch:1,q:"Explain any three characteristics of management.",model:"(i) Goal-Oriented: Management unites individual efforts towards achieving organisational goals.\n(ii) All-Pervasive: Management is needed in all types of organisations — business, social, political.\n(iii) Continuous Process: Planning, organising, staffing, directing, and controlling are performed simultaneously and continuously."},
+  {id:22,type:'short',marks:3,ch:2,q:"State any three principles of management given by Fayol.",model:"(i) Division of Work: Total work divided into small tasks assigned to specialists for efficiency.\n(ii) Unity of Command: Every employee should receive orders from one boss only.\n(iii) Equity: Fair and just treatment of all employees without discrimination."},
+  {id:23,type:'short',marks:3,ch:7,q:"Explain Maslow's hierarchy for any three levels with organisational examples.",model:"(i) Physiological Needs: Basic salary for food, shelter, clothing.\n(ii) Safety Needs: Job security, pension plans, stable income.\n(iii) Esteem Needs: Job titles, recognition, promotions for status and respect."},
+  {id:24,type:'short',marks:3,ch:10,q:"State any three functions of a Stock Exchange.",model:"(i) Provides liquidity: Investors can easily buy/sell securities at any time.\n(ii) Price discovery: Prices determined by demand and supply forces transparently.\n(iii) Economic barometer: Rise/fall in share prices reflects economic health."},
+
+  // 6 Application Questions (4 marks each)
+  {id:25,type:'long',marks:4,ch:2,q:"Distinguish between Fayol and Taylor on any four bases.",model:"(1) Fayol focused on top-level management; Taylor on shop-floor level.\n(2) Fayol used personal experience; Taylor used experiments.\n(3) Fayol's principles are universally applicable; Taylor's mainly for factories.\n(4) Fayol gave 14 general principles; Taylor gave principles + techniques."},
+  {id:26,type:'long',marks:4,ch:5,q:"Distinguish between Delegation and Decentralisation on any four bases.",model:"(1) Delegation is between two individuals; Decentralisation is organisation-wide.\n(2) Delegation has less freedom; Decentralisation gives greater autonomy.\n(3) Delegation is compulsory; Decentralisation is optional.\n(4) In delegation, the delegator is accountable; in decentralisation, departmental heads are accountable."},
+  {id:27,type:'long',marks:4,ch:5,q:"Distinguish between Functional and Divisional structure on any four bases.",model:"(1) Functional groups activities by function; Divisional groups by product.\n(2) Functional has functional specialisation; Divisional has product specialisation.\n(3) Functional: hard to fix product accountability; Divisional: each division is accountable.\n(4) Functional suits single-product firms; Divisional suits multi-product companies."},
+  {id:28,type:'long',marks:4,ch:6,q:"Distinguish between Recruitment and Selection on any four bases.",model:"(1) Recruitment searches for candidates; Selection chooses the best.\n(2) Recruitment is a positive process; Selection is negative (eliminates unfit).\n(3) Recruitment creates a pool; Selection picks from the pool.\n(4) Recruitment precedes selection in the staffing process."},
+  {id:29,type:'long',marks:4,ch:9,q:"Explain any four factors affecting the capital structure of a company.",model:"(1) Cost of Capital: Minimise overall cost by choosing the cheapest mix.\n(2) Risk: Higher debt means higher financial risk.\n(3) Cash Flow: Stable cash flows can support more debt.\n(4) Tax Rate: Higher tax rates make debt more attractive due to interest deductibility."},
+  {id:30,type:'long',marks:4,ch:11,q:"Explain any four factors affecting the price of a product.",model:"(1) Cost: Price must cover production, distribution, and selling costs plus profit.\n(2) Demand: Higher demand supports higher prices; elastic demand limits pricing.\n(3) Competition: Competitor prices influence what can be charged.\n(4) Government Regulation: MRP regulations, tax policies, and price controls."},
+
+  // 4 Long Answers (6 marks each)
+  {id:31,type:'essay',marks:6,ch:1,q:"Explain the importance of management with suitable examples.",model:"(i) Achieves group goals: Gives common direction to individual effort.\n(ii) Increases efficiency: Reduces costs through better planning and controlling.\n(iii) Creates dynamic organisation: Helps adapt to environmental changes.\n(iv) Achieves personal objectives: Motivates individuals while contributing to organisational goals.\n(v) Develops society: Provides quality products, creates employment, adopts technology."},
+  {id:32,type:'essay',marks:6,ch:2,q:"Explain any four principles of Scientific Management given by Taylor.",model:"(i) Science, Not Rule of Thumb: Every task should be based on scientific study, not hit-and-trial.\n(ii) Harmony, Not Discord: Complete harmony between management and workers. Mental Revolution.\n(iii) Cooperation, Not Individualism: Replace individualism with cooperation. Reward suggestions.\n(iv) Development of Each Person: Select scientifically, train rigorously, assign work based on capability."},
+  {id:33,type:'essay',marks:6,ch:7,q:"Explain the elements of directing. State the importance of directing.",model:"Elements: (i) Supervision, (ii) Motivation, (iii) Leadership, (iv) Communication.\nImportance: Initiates action, integrates employee efforts, motivates workforce, facilitates change, maintains balance between individual and organisational goals."},
+  {id:34,type:'essay',marks:6,ch:3,q:"Explain any three dimensions of business environment with examples.",model:"(i) Economic: Interest rates, inflation, disposable income. Example: High inflation reduces consumer spending.\n(ii) Social: Customs, traditions, lifestyle changes. Example: Health awareness increasing demand for organic food.\n(iii) Technological: Scientific innovations, new methods. Example: E-commerce companies using AI chatbots."}
+];
+
+let answers = {};
+let timerInterval;
+let timeLeft = 180 * 60; // 3 hours in seconds
+let testActive = false;
+
+function startTest() {
+  document.getElementById('mtStartScreen').style.display = 'none';
+  document.getElementById('mtTestArea').style.display = 'block';
+  document.getElementById('mtTimerBar').style.display = 'flex';
+  testActive = true;
+  renderAllQuestions();
+  buildNavigator();
+  startTimer();
+  window.scrollTo(0, 0);
+}
+
+function renderAllQuestions() {
+  const container = document.getElementById('mtQuestions');
+  const letters = ['A','B','C','D'];
+  let html = '';
+  let section = '';
+
+  testQuestions.forEach((q, idx) => {
+    let newSection = '';
+    if (idx === 0) newSection = 'Section A — MCQs (1 Mark Each) · No Choice · 20 Marks';
+    else if (idx === 20) newSection = 'Section B — Short Answers (3 Marks Each) · Attempt Any 3 · 9 Marks';
+    else if (idx === 24) newSection = 'Section C — Application Questions (4 Marks Each) · Attempt Any 5 · 20 Marks';
+    else if (idx === 30) newSection = 'Section D — Long Answers (6 Marks Each) · Attempt Any 3 · 18 Marks';
+
+    if (newSection && newSection !== section) {
+      section = newSection;
+      html += `<div style="padding:12px 16px;background:var(--accent-light);border-radius:8px;margin-bottom:14px;font-size:0.82rem;font-weight:700;color:var(--accent)">${section}</div>`;
+    }
+
+    html += `<div class="mt-q-card" id="mtQ${q.id}">
+      <div class="mt-q-header">
+        <span class="mt-q-num">Q${q.id}</span>
+        <span class="mt-q-chapter">Ch ${q.ch}</span>
+        <span class="mt-q-marks">${q.marks} Mark${q.marks>1?'s':''}</span>
+      </div>
+      <div class="mt-q-text">${q.q}</div>`;
+
+    if (q.type === 'mcq') {
+      html += '<div class="mt-options">';
+      q.options.forEach((opt, i) => {
+        html += `<div class="mt-opt" id="mtOpt${q.id}_${i}" onclick="selectMCQ(${q.id},${i})">
+          <span class="mt-opt-letter">${letters[i]}</span>
+          <span>${opt}</span>
+        </div>`;
+      });
+      html += '</div>';
+    } else {
+      html += `<textarea class="mt-textarea" id="mtAns${q.id}" placeholder="Write your answer here..." oninput="saveTextAnswer(${q.id})"></textarea>`;
+    }
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function selectMCQ(qId, optIdx) {
+  if (!testActive) return;
+  const q = testQuestions.find(x => x.id === qId);
+  q.options.forEach((_, i) => {
+    const el = document.getElementById(`mtOpt${qId}_${i}`);
+    el.classList.remove('selected');
+  });
+  document.getElementById(`mtOpt${qId}_${optIdx}`).classList.add('selected');
+  answers[qId] = optIdx;
+  updateNavigator();
+}
+
+function saveTextAnswer(qId) {
+  const val = document.getElementById(`mtAns${qId}`).value.trim();
+  if (val) answers[qId] = val;
+  else delete answers[qId];
+  updateNavigator();
+}
+
+function buildNavigator() {
+  const grid = document.getElementById('mtNavGrid');
+  grid.innerHTML = testQuestions.map(q =>
+    `<button class="mt-nav-btn" id="mtNav${q.id}" onclick="scrollToQ(${q.id})">${q.id}</button>`
+  ).join('');
+}
+
+function updateNavigator() {
+  testQuestions.forEach(q => {
+    const btn = document.getElementById(`mtNav${q.id}`);
+    if (btn) {
+      btn.className = 'mt-nav-btn' + (answers[q.id] !== undefined ? ' answered' : '');
+    }
+  });
+  const answered = Object.keys(answers).length;
+  const el = document.getElementById('mtAnswered');
+  if (el) el.textContent = `${answered}/34 answered`;
+  const fill = document.getElementById('mtProgressFill');
+  if (fill) fill.style.width = (answered / 34 * 100) + '%';
+}
+
+function scrollToQ(qId) {
+  document.getElementById(`mtQ${qId}`).scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); return; }
+    const h = Math.floor(timeLeft / 3600);
+    const m = Math.floor((timeLeft % 3600) / 60);
+    const s = timeLeft % 60;
+    const timerEl = document.getElementById('mtTimer');
+    timerEl.textContent = `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (timeLeft <= 600) timerEl.className = 'mt-timer danger';
+    else if (timeLeft <= 1800) timerEl.className = 'mt-timer warning';
+  }, 1000);
+}
+
+function submitTest() {
+  if (!confirm('Submit your test? You cannot change answers after submission.')) return;
+  clearInterval(timerInterval);
+  testActive = false;
+  document.getElementById('mtTestArea').style.display = 'none';
+  document.getElementById('mtTimerBar').style.display = 'none';
+  showResults();
+}
+
+function showResults() {
+  let mcqScore = 0;
+  let mcqTotal = 20;
+  const chScores = {};
+
+  // Score MCQs
+  testQuestions.filter(q => q.type === 'mcq').forEach(q => {
+    if (answers[q.id] === q.correct) {
+      mcqScore++;
+      chScores[q.ch] = (chScores[q.ch] || 0) + 1;
+    }
+  });
+
+  const timeUsed = 180 * 60 - timeLeft;
+  const mins = Math.floor(timeUsed / 60);
+  const pct = Math.round((mcqScore / mcqTotal) * 100);
+  let grade = pct >= 90 ? 'Excellent!' : pct >= 70 ? 'Good Job!' : pct >= 50 ? 'Keep Practicing' : 'Needs Work';
+
+  const chNames = {1:"Nature of Mgmt",2:"Principles",3:"Business Env",4:"Planning",5:"Organising",6:"Staffing",7:"Directing",8:"Controlling",9:"Financial Mgmt",10:"Financial Mkts",11:"Marketing",12:"Consumer Prot"};
+
+  let html = `<div class="mt-results">
+    <div class="mt-results-header">
+      <div style="font-size:0.75rem;color:var(--accent-gold);font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">AKSpected Mock Test Results</div>
+      <div class="mt-score-big">${mcqScore}/${mcqTotal}</div>
+      <div class="mt-grade" style="color:${pct>=70?'var(--accent)':'var(--accent-gold)'}">${grade}</div>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-top:8px">MCQ Score (auto-graded) · Time used: ${mins} minutes</p>
+    </div>
+
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px">
+      <h3 style="font-size:0.88rem;font-weight:700;margin-bottom:12px">📊 Chapter-wise MCQ Performance</h3>
+      <div class="mt-ch-perf">`;
+
+  const mcqByCh = {};
+  testQuestions.filter(q => q.type === 'mcq').forEach(q => {
+    if (!mcqByCh[q.ch]) mcqByCh[q.ch] = {total: 0, correct: 0};
+    mcqByCh[q.ch].total++;
+    if (answers[q.id] === q.correct) mcqByCh[q.ch].correct++;
+  });
+
+  for (const [ch, data] of Object.entries(mcqByCh)) {
+    const chPct = Math.round((data.correct / data.total) * 100);
+    const color = chPct >= 80 ? '#22c55e' : chPct >= 50 ? 'var(--accent-gold)' : '#f87171';
+    html += `<div class="mt-ch-row">
+      <span style="font-weight:700;color:var(--accent);width:30px">Ch${ch}</span>
+      <span class="mt-ch-name">${chNames[ch] || 'Ch '+ch}</span>
+      <div class="mt-ch-bar"><div class="mt-ch-bar-fill" style="width:${chPct}%;background:${color}"></div></div>
+      <span class="mt-ch-pct" style="color:${color}">${data.correct}/${data.total}</span>
+    </div>`;
+  }
+
+  html += `</div></div>
+
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px">
+      <h3 style="font-size:0.88rem;font-weight:700;margin-bottom:12px">📝 Written Answers — Self Evaluation</h3>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px">Compare your answers with the model answers below. Be honest in self-evaluation.</p>`;
+
+  testQuestions.filter(q => q.type !== 'mcq').forEach(q => {
+    const myAns = answers[q.id] || '<em style="color:var(--text-muted)">Not attempted</em>';
+    html += `<div style="padding:14px;background:var(--bg);border-radius:8px;margin-bottom:10px;border:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="font-weight:700;font-size:0.82rem">Q${q.id} (${q.marks} marks) · Ch ${q.ch}</span>
+      </div>
+      <div style="font-size:0.85rem;font-weight:600;margin-bottom:8px">${q.q}</div>
+      <div style="font-size:0.8rem;margin-bottom:8px"><strong>Your Answer:</strong><br>${typeof myAns === 'string' ? myAns.replace(/\n/g,'<br>') : myAns}</div>
+      <div style="font-size:0.8rem;padding:10px;background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Model Answer:</strong><br>${q.model.replace(/\n/g,'<br>')}</div>
+    </div>`;
+  });
+
+  html += `</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a href="index.html" style="padding:10px 24px;border-radius:8px;font-size:0.85rem;font-weight:600;border:1px solid var(--border);color:var(--text);text-decoration:none">🏠 Home</a>
+      <a href="daily-quiz.html" style="padding:10px 24px;border-radius:8px;font-size:0.85rem;font-weight:600;background:var(--accent);color:#0B0F19;text-decoration:none;border:none">📝 Daily Quiz</a>
+      <a href="progress.html" style="padding:10px 24px;border-radius:8px;font-size:0.85rem;font-weight:600;background:var(--accent-gold);color:#0B0F19;text-decoration:none;border:none">📊 My Progress</a>
+    </div>
+  </div>`;
+
+  document.getElementById('mtResults').innerHTML = html;
+  document.getElementById('mtResults').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
