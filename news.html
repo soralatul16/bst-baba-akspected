@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HYN85DHB3B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HYN85DHB3B");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In the News | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%,300px),1fr)); gap: 16px; }
+.news-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.3s; }
+.news-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.news-img { height: 160px; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+.news-body { padding: 18px; }
+.news-date { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
+.news-body h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+.news-body p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+.news-mapping { display: flex; gap: 5px; flex-wrap: wrap; }
+.news-mapping span { font-size: 0.63rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+.news-mapping .ch-tag { background: var(--accent-light); color: var(--accent); }
+.news-mapping .topic-tag { background: var(--accent-gold-light); color: var(--accent-gold); }
+.news-filter { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+
+/* Teacher add news form */
+.add-news-form { background: var(--bg-card); border: 1px solid var(--accent); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; display: none; }
+.add-news-form h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; color: var(--accent); }
+.add-news-form input, .add-news-form textarea, .add-news-form select { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 0.83rem; margin-bottom: 10px; font-family: var(--font-body); }
+.add-news-form textarea { min-height: 80px; resize: vertical; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="mock-test.html">Mock Test</a>
+    <a href="crack-the-case.html">Crack the Case</a>
+    <a href="revision-planner.html">Planner</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / In the News</div>
+    <h1>BM In the News</h1>
+    <div class="meta-bar">
+      <span>📰 Real business stories</span>
+      <span>📖 Mapped to CBSE chapters</span>
+      <span>🎯 Make BM feel alive</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <!-- Teacher: Add News (hidden, shown via Ctrl+Shift+N) -->
+  <div class="add-news-form" id="addNewsForm">
+    <h3>➕ Add News Story (Teacher Only)</h3>
+    <input type="text" id="newsTitle" placeholder="Headline *">
+    <textarea id="newsDesc" placeholder="Short description (2-3 lines) *"></textarea>
+    <input type="text" id="newsEmoji" placeholder="Emoji icon (e.g. 🏭 📱 💰)" value="📰">
+    <div style="display:flex;gap:8px">
+      <select id="newsCh" style="flex:1"><option value="">Chapter *</option>
+        <option value="1">Ch 1: Nature of Management</option><option value="2">Ch 2: Principles</option>
+        <option value="3">Ch 3: Business Environment</option><option value="4">Ch 4: Planning</option>
+        <option value="5">Ch 5: Organising</option><option value="6">Ch 6: Staffing</option>
+        <option value="7">Ch 7: Directing</option><option value="8">Ch 8: Controlling</option>
+        <option value="9">Ch 9: Financial Management</option><option value="10">Ch 10: Financial Markets</option>
+        <option value="11">Ch 11: Marketing</option><option value="12">Ch 12: Consumer Protection</option>
+      </select>
+      <input type="text" id="newsTopic" placeholder="Topic" style="flex:1">
+    </div>
+    <input type="text" id="newsSource" placeholder="Source (e.g. Economic Times, NDTV)">
+    <div style="display:flex;gap:8px">
+      <button class="modal-btn" style="flex:1" onclick="saveNews()">Save Story →</button>
+      <button class="modal-btn" style="flex:0;background:var(--border);color:var(--text)" onclick="document.getElementById('addNewsForm').style.display='none'">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="news-filter">
+    <button class="q-filter-btn active" onclick="filterNews(this,'all')">All</button>
+    <button class="q-filter-btn" onclick="filterNews(this,'1-2')">Ch 1-2 Management</button>
+    <button class="q-filter-btn" onclick="filterNews(this,'3')">Ch 3 Environment</button>
+    <button class="q-filter-btn" onclick="filterNews(this,'4-8')">Ch 4-8 Functions</button>
+    <button class="q-filter-btn" onclick="filterNews(this,'9-10')">Ch 9-10 Finance</button>
+    <button class="q-filter-btn" onclick="filterNews(this,'11')">Ch 11 Marketing</button>
+    <button class="q-filter-btn" onclick="filterNews(this,'12')">Ch 12 Consumer</button>
+  </div>
+
+  <div class="news-grid" id="newsGrid">Loading news...</div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+// Default news stories (hardcoded for SEO + immediate content)
+const defaultNews = [
+  {emoji:'🏭',title:"Tata Motors Restructures into Separate EV Division",desc:"Tata Motors creates a separate Electric Vehicle division with its own head, budget, and team — a classic example of Divisional Structure in action.",ch:'5',topic:'Divisional Structure',source:'Economic Times',date:'2026-05-15'},
+  {emoji:'📱',title:"Jio's Aggressive Pricing Strategy Disrupts Telecom Market",desc:"Reliance Jio's below-cost pricing forces competitors to cut rates. This illustrates how business environment (economic dimension) affects all players in an industry.",ch:'3',topic:'Economic Environment',source:'Business Standard',date:'2026-04-28'},
+  {emoji:'💰',title:"Zomato's IPO: From Startup to Stock Exchange",desc:"Zomato raised ₹9,375 crore through its IPO on BSE/NSE. A real-world example of primary market, stock exchange listing, and SEBI regulations in action.",ch:'10',topic:'Primary Market & Stock Exchange',source:'Mint',date:'2026-03-10'},
+  {emoji:'🛒',title:"Amul's 'Utterly Butterly' — India's Most Trusted Brand",desc:"Amul's consistent branding, packaging innovation, and cooperative structure make it a textbook case for Marketing Mix and Forms of Business Organisation.",ch:'11',topic:'Branding & Marketing Mix',source:'India Today',date:'2026-02-20'},
+  {emoji:'⚖️',title:"Consumer Court Orders ₹2 Lakh Compensation for Defective Laptop",desc:"A District Consumer Commission ordered a laptop manufacturer to pay ₹2 lakh compensation for selling a defective product. Right to Redressal in practice.",ch:'12',topic:'Consumer Rights & Redressal',source:'Times of India',date:'2026-01-15'},
+  {emoji:'👨‍💼',title:"Infosys CEO's Leadership Style: Democratic Decision-Making",desc:"Infosys CEO involves senior leaders in strategic decisions, conducts regular town halls, and encourages employee feedback — a textbook example of Democratic Leadership.",ch:'7',topic:'Leadership Styles',source:'Business Today',date:'2026-04-05'},
+  {emoji:'🏗️',title:"ITC's Diversification: From Cigarettes to Hotels to FMCG",desc:"ITC's expansion into multiple product lines with separate divisions for each business illustrates Diversification and Divisional Structure at scale.",ch:'5',topic:'Functional vs Divisional',source:'Forbes India',date:'2025-12-18'},
+  {emoji:'📊',title:"RBI Changes Interest Rates — Impact on Business Financing",desc:"RBI's rate cut makes borrowing cheaper for businesses. This affects Financial Management decisions — companies may prefer debt over equity when interest rates are low.",ch:'9',topic:'Financing Decision & Capital Structure',source:'RBI Press Release',date:'2026-05-01'},
+  {emoji:'🌐',title:"Amazon India's Warehouse Automation — Technology Transforms Operations",desc:"Amazon's use of robots and AI in warehouses reduces costs and increases efficiency. A perfect example of how Technological Environment changes business operations.",ch:'3',topic:'Technological Environment',source:'NDTV',date:'2026-03-22'},
+  {emoji:'👥',title:"Flipkart's Campus Recruitment Drive at IIMs",desc:"Flipkart recruits 200+ MBAs directly from IIM campuses — an external source of recruitment. Selected candidates undergo 6-month training programs.",ch:'6',topic:'External Recruitment & Training',source:'Livemint',date:'2026-01-30'}
+];
+
+let allNews = [...defaultNews];
+let teacherMode = false;
+
+// Ctrl+Shift+N to add news (teacher only)
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'N') {
+    e.preventDefault();
+    if (teacherMode) {
+      document.getElementById('addNewsForm').style.display = 'block';
+      return;
+    }
+    const pwd = prompt('Enter Teacher Password:');
+    if (pwd === 'aks1234') {
+      teacherMode = true;
+      document.getElementById('addNewsForm').style.display = 'block';
+    }
+  }
+});
+
+async function loadNews() {
+  // Load from Firestore
+  try {
+    const snap = await db.collection('bstbaba_news').orderBy('date', 'desc').get();
+    const firestoreNews = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    allNews = [...firestoreNews, ...defaultNews];
+  } catch(e) {}
+  renderNews(allNews);
+}
+
+function renderNews(news) {
+  const grid = document.getElementById('newsGrid');
+  if (news.length === 0) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><p>No news stories match this filter.</p></div>';
+    return;
+  }
+  grid.innerHTML = news.map(n => `
+    <div class="news-card" data-ch="${n.ch}">
+      <div class="news-img">${n.emoji || '📰'}</div>
+      <div class="news-body">
+        <div class="news-date">${n.date || ''} · ${n.source || ''}</div>
+        <h3>${escapeHtml(n.title)}</h3>
+        <p>${escapeHtml(n.desc)}</p>
+        <div class="news-mapping">
+          <span class="ch-tag">Ch ${n.ch}</span>
+          ${n.topic ? `<span class="topic-tag">${n.topic}</span>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterNews(btn, range) {
+  document.querySelectorAll('.news-filter .q-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (range === 'all') { renderNews(allNews); return; }
+  const parts = range.split('-');
+  const min = parseInt(parts[0]), max = parseInt(parts[1] || parts[0]);
+  renderNews(allNews.filter(n => parseInt(n.ch) >= min && parseInt(n.ch) <= max));
+}
+
+async function saveNews() {
+  const title = document.getElementById('newsTitle').value.trim();
+  const desc = document.getElementById('newsDesc').value.trim();
+  const emoji = document.getElementById('newsEmoji').value.trim() || '📰';
+  const ch = document.getElementById('newsCh').value;
+  const topic = document.getElementById('newsTopic').value.trim();
+  const source = document.getElementById('newsSource').value.trim();
+  if (!title || !desc || !ch) { alert('Fill title, description, and chapter.'); return; }
+
+  try {
+    await db.collection('bstbaba_news').add({
+      title, desc, emoji, ch, topic, source,
+      date: new Date().toISOString().split('T')[0],
+      createdBy: 'AKS'
+    });
+    document.getElementById('addNewsForm').style.display = 'none';
+    document.getElementById('newsTitle').value = '';
+    document.getElementById('newsDesc').value = '';
+    loadNews();
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+document.addEventListener('DOMContentLoaded', loadNews);
+</script>
+</body>
+</html>

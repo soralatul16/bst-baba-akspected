@@ -22,6 +22,7 @@
     <a href="mock-test.html">Mock Test</a>
     <a href="crack-the-case.html">Crack the Case</a>
     <a href="revision-planner.html">Planner</a>
+    <a href="news.html">News</a>
     <a href="about.html">About</a>
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
     <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
@@ -34,6 +35,29 @@
     <div class="breadcrumb" id="breadcrumb">Loading...</div>
     <h1 id="chapterTitle">Loading chapter...</h1>
     <div class="meta-bar" id="chapterMeta"></div>
+  </div>
+</div>
+
+<!-- YouTube Video (only shown if video exists for this chapter) -->
+<div id="ytVideoSection" style="display:none;max-width:1080px;margin:0 auto;padding:16px clamp(16px,4vw,48px)">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <div style="position:relative;padding-bottom:56.25%;height:0">
+      <iframe id="ytFrame" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen></iframe>
+    </div>
+    <div style="padding:12px 16px;font-size:0.78rem;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center">
+      <span>🎥 Video Explanation by AKS</span>
+      <a id="ytWatchLink" href="#" target="_blank" style="font-size:0.75rem;color:var(--accent)">Watch on YouTube →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Teacher: YouTube Link Editor (hidden, shown via Ctrl+Shift+U) -->
+<div id="ytEditor" style="display:none;max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 16px">
+  <div style="background:var(--bg-card);border:1px solid var(--accent);border-radius:var(--radius);padding:16px;display:flex;gap:8px;align-items:center">
+    <span style="font-size:0.82rem;font-weight:700;color:var(--accent);white-space:nowrap">🎥 YouTube Link:</span>
+    <input type="text" id="ytLinkInput" placeholder="Paste YouTube URL here..." style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.83rem">
+    <button onclick="saveYTLink()" style="padding:8px 16px;border-radius:8px;background:var(--accent);color:#0B0F19;border:none;font-size:0.8rem;font-weight:700;cursor:pointer;white-space:nowrap">Save</button>
+    <button onclick="removeYTLink()" style="padding:8px 16px;border-radius:8px;background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.3);font-size:0.8rem;font-weight:700;cursor:pointer;white-space:nowrap">Remove</button>
   </div>
 </div>
 
@@ -252,7 +276,90 @@
 
   // SIDEBAR
   buildSidebar(data, cls, dashLink);
+
+  // Load YouTube video if exists
+  loadYTVideo(cls, ch);
 })();
+
+// ─── YOUTUBE VIDEO SYSTEM ───
+let ytTeacherMode = false;
+
+function getYTId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+async function loadYTVideo(cls, ch) {
+  try {
+    const doc = await db.collection('bstbaba_videos').doc(cls + '_' + ch).get();
+    if (doc.exists && doc.data().url) {
+      const videoId = getYTId(doc.data().url);
+      if (videoId) {
+        document.getElementById('ytFrame').src = 'https://www.youtube.com/embed/' + videoId;
+        document.getElementById('ytWatchLink').href = doc.data().url;
+        document.getElementById('ytVideoSection').style.display = 'block';
+      }
+    }
+  } catch(e) {}
+}
+
+// Ctrl+Shift+U → Teacher YouTube editor
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'U' || e.key === 'u')) {
+    e.preventDefault();
+    if (ytTeacherMode) {
+      document.getElementById('ytEditor').style.display = document.getElementById('ytEditor').style.display === 'none' ? 'block' : 'none';
+      return;
+    }
+    const pwd = prompt('Enter Teacher Password:');
+    if (pwd === 'aks1234') {
+      ytTeacherMode = true;
+      document.getElementById('ytEditor').style.display = 'block';
+      // Pre-fill existing link
+      const cls = getParam('class') || '12';
+      const ch = getParam('ch') || 'ch02';
+      db.collection('bstbaba_videos').doc(cls + '_' + ch).get().then(doc => {
+        if (doc.exists && doc.data().url) {
+          document.getElementById('ytLinkInput').value = doc.data().url;
+        }
+      }).catch(() => {});
+    }
+  }
+});
+
+async function saveYTLink() {
+  const url = document.getElementById('ytLinkInput').value.trim();
+  if (!url) { alert('Paste a YouTube URL first.'); return; }
+  const videoId = getYTId(url);
+  if (!videoId) { alert('Invalid YouTube URL. Must contain a valid video ID.'); return; }
+
+  const cls = getParam('class') || '12';
+  const ch = getParam('ch') || 'ch02';
+
+  try {
+    await db.collection('bstbaba_videos').doc(cls + '_' + ch).set({
+      url, videoId, chapter: ch, class: cls,
+      updated: new Date().toISOString()
+    });
+    document.getElementById('ytFrame').src = 'https://www.youtube.com/embed/' + videoId;
+    document.getElementById('ytWatchLink').href = url;
+    document.getElementById('ytVideoSection').style.display = 'block';
+    alert('Video saved! Students can now see it on this chapter page.');
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+async function removeYTLink() {
+  if (!confirm('Remove the video from this chapter?')) return;
+  const cls = getParam('class') || '12';
+  const ch = getParam('ch') || 'ch02';
+  try {
+    await db.collection('bstbaba_videos').doc(cls + '_' + ch).delete();
+    document.getElementById('ytVideoSection').style.display = 'none';
+    document.getElementById('ytLinkInput').value = '';
+    alert('Video removed.');
+  } catch(e) { alert('Remove failed: ' + e.message); }
+}
 
 function buildSidebar(data, cls, dashLink) {
   let sHTML = '';
