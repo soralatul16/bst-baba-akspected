@@ -662,16 +662,19 @@ async function loadTeacherData() {
 }
 
 // Teacher panel password gate
-let teacherPanelUnlocked = false;
+let teacherPanelUnlocked = !!localStorage.getItem('bstbaba_tp_unlocked');
 function openTeacherPanel() {
   if (teacherPanelUnlocked) {
     document.getElementById('teacherPanel').classList.remove('hidden');
+    localStorage.setItem('bstbaba_tp_open', 'true');
     loadTeacherData();
     return;
   }
   const pwd = prompt('Enter Teacher Panel Password:');
   if (pwd === 'aks1234') {
     teacherPanelUnlocked = true;
+    localStorage.setItem('bstbaba_tp_unlocked', 'true');
+    localStorage.setItem('bstbaba_tp_open', 'true');
     document.getElementById('teacherPanel').classList.remove('hidden');
     loadTeacherData();
   } else if (pwd !== null) {
@@ -680,6 +683,7 @@ function openTeacherPanel() {
 }
 function closeTeacherPanel() {
   document.getElementById('teacherPanel').classList.add('hidden');
+  localStorage.removeItem('bstbaba_tp_open');
 }
 
 // Save Grok API Key
@@ -816,7 +820,10 @@ document.addEventListener('DOMContentLoaded', () => {
   injectFeedback();
   injectAuthModal();
   injectTeacherPanel();
-  // Content gating is handled by auth.onAuthStateChanged above
-  // Gate immediately, Firebase will unlock if user is authenticated
   gateContent();
+  // Auto-reopen teacher panel if it was open before refresh
+  if (localStorage.getItem('bstbaba_tp_open') && localStorage.getItem('bstbaba_tp_unlocked')) {
+    document.getElementById('teacherPanel').classList.remove('hidden');
+    loadTeacherData();
+  }
 });
