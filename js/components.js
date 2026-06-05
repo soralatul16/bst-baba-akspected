@@ -108,9 +108,9 @@ async function getStudents() {
   }
 }
 
-// ─── API KEY (Always fetch from Firestore, cache locally) ───
+// ─── API KEY (Firestore-backed, cached in localStorage) ───
+// Supports both Groq (gsk_) and xAI (xai-) keys
 async function getGrokKey() {
-  // Always try Firestore first for the latest key
   try {
     const doc = await db.collection('bstbaba_config').doc('grok').get();
     if (doc.exists && doc.data().apiKey) {
@@ -120,10 +120,16 @@ async function getGrokKey() {
   } catch(e) {
     console.log('Firestore key fetch failed:', e.message);
   }
-  // Fall back to localStorage only if Firestore fails
   const cached = localStorage.getItem('bstbaba_grok_key');
   if (cached) return cached;
   return null;
+}
+
+function getApiConfig(apiKey) {
+  if (apiKey.startsWith('gsk_')) {
+    return { url: 'https://api.groq.com/openai/v1/chat/completions', model: 'llama-3.3-70b-versatile' };
+  }
+  return { url: 'https://api.x.ai/v1/chat/completions', model: 'grok-4.3' };
 }
 
 // ─── INJECT FLOATING BUTTONS ───
@@ -193,14 +199,15 @@ async function sendChat() {
   messages.innerHTML += `<div class="chat-msg bot" id="typingIndicator" style="opacity:0.6">Thinking...</div>`;
   messages.scrollTop = messages.scrollHeight;
 
-  fetch('https://api.x.ai/v1/chat/completions', {
+  const config = getApiConfig(apiKey);
+  fetch(config.url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + apiKey
     },
     body: JSON.stringify({
-      model: 'grok-3-mini-fast',
+      model: config.model,
       messages: [
         {role: 'system', content: 'You are BSt Baba, an expert CBSE Class 11 and 12 Business Studies teacher created by Aakassh Soral (AKS). Answer only Business Studies questions. Be concise, accurate, and exam-focused. Use examples from NCERT. Format answers with bullet points where helpful. If the question is not about Business Studies, politely decline and redirect to the subject.'},
         {role: 'user', content: msg}
@@ -517,9 +524,9 @@ function injectTeacherPanel() {
         <!-- API Key Config -->
         <div class="tp-section">
           <h3>🔑 AI Configuration</h3>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Enter your Grok API key here. It's stored only in your browser — never in the code or on GitHub.</p>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Enter your Groq (gsk_) or xAI (xai-) API key. Stored in the cloud — works on all devices.</p>
           <div style="display:flex;gap:8px">
-            <input class="modal-input" type="password" id="grokKeyInput" placeholder="Paste your xai-... key here" style="margin:0;flex:1" value="${localStorage.getItem('bstbaba_grok_key') || ''}">
+            <input class="modal-input" type="password" id="grokKeyInput" placeholder="Paste your gsk_... or xai-... key" style="margin:0;flex:1" value="${localStorage.getItem('bstbaba_grok_key') || ''}">
             <button class="modal-btn" style="max-width:120px;margin:0" onclick="saveGrokKey()">Save Key</button>
           </div>
           <div id="grokKeyStatus" style="font-size:0.78rem;margin-top:6px;display:none"></div>
@@ -694,8 +701,8 @@ function closeTeacherPanel() {
 async function saveGrokKey() {
   const key = document.getElementById('grokKeyInput').value.trim();
   const status = document.getElementById('grokKeyStatus');
-  if (!key || !key.startsWith('xai-')) {
-    status.textContent = '✕ Invalid key. It should start with xai-';
+  if (!key || (!key.startsWith('xai-') && !key.startsWith('gsk_'))) {
+    status.textContent = '✕ Invalid key. Should start with gsk_ (Groq) or xai- (xAI)';
     status.style.color = '#f87171';
     status.style.display = 'block';
     return;
@@ -742,11 +749,12 @@ async function generateQuestions() {
 
   const prompt = `Generate ${count} ${typeLabels[type] || 'questions'} for CBSE Class 12 Business Studies, ${chLabel}. Follow the exact CBSE board exam pattern. Include marks for each question. For case studies, create realistic business scenarios. For MCQs, include 4 options and mark the correct answer. Format clearly with question numbers.`;
 
-  fetch('https://api.x.ai/v1/chat/completions', {
+  const config = getApiConfig(apiKey);
+  fetch(config.url, {
     method: 'POST',
     headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
     body: JSON.stringify({
-      model: 'grok-3-mini-fast',
+      model: config.model,
       messages: [
         {role: 'system', content: 'You are an expert CBSE Class 12 Business Studies question paper setter. Generate questions exactly matching the CBSE board exam pattern for 2026-27. Include marks allocation. Be accurate with NCERT content.'},
         {role: 'user', content: prompt}
