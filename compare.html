@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HYN85DHB3B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HYN85DHB3B");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compare | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.cmp-search { max-width: 600px; margin: 0 auto 32px; position: relative; }
+.cmp-input { width: 100%; padding: 14px 20px 14px 48px; border: 2px solid var(--border); border-radius: 14px; background: var(--bg-card); color: var(--text); font-size: 1rem; font-weight: 500; outline: none; transition: border-color 0.2s; }
+.cmp-input:focus { border-color: var(--accent); }
+.cmp-input::placeholder { color: var(--text-muted); }
+.cmp-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; color: var(--text-muted); }
+.cmp-suggestions { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-top: 6px; overflow: hidden; z-index: 20; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.cmp-suggestions.show { display: block; }
+.cmp-sug-item { padding: 10px 18px; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; display: flex; justify-content: space-between; align-items: center; }
+.cmp-sug-item:hover { background: var(--accent-light); color: var(--accent); }
+.cmp-sug-ch { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; }
+
+.cmp-result { max-width: 800px; margin: 0 auto; }
+.cmp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+.cmp-card-header { padding: 16px 24px; background: linear-gradient(135deg, rgba(34,211,238,0.06), rgba(251,191,36,0.04)); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.cmp-card-header h3 { font-size: 1rem; font-weight: 700; }
+.cmp-card-header .cmp-ch { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); padding: 3px 8px; background: var(--accent-light); border-radius: 4px; color: var(--accent); }
+.cmp-card-body { padding: 0; }
+.cmp-table { width: 100%; border-collapse: collapse; }
+.cmp-table th { background: var(--accent); color: #0B0F19; padding: 10px 16px; text-align: left; font-size: 0.78rem; font-weight: 700; }
+.cmp-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 0.83rem; line-height: 1.5; }
+.cmp-table tr:nth-child(even) td { background: var(--accent-light); }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-tip { padding: 12px 24px; background: var(--accent-gold-light); border-top: 1px solid rgba(251,191,36,0.1); font-size: 0.78rem; color: var(--accent-gold); }
+
+.cmp-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px; }
+.cmp-tag { padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; background: var(--bg-card); color: var(--text-muted); transition: all 0.15s; }
+.cmp-tag:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.cmp-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.cmp-empty h3 { color: var(--text); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="mock-test.html">Mock Test</a>
+    <a href="crack-the-case.html">Crack the Case</a>
+    <a href="revision-planner.html">Planner</a>
+    <a href="news.html">News</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Compare</div>
+    <h1>Instant Comparison Tables</h1>
+    <div class="meta-bar">
+      <span>⚡ Search any "distinguish between"</span>
+      <span>📊 Board-ready tables</span>
+      <span>🎯 All chapters covered</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="cmp-search">
+    <span class="cmp-icon">🔍</span>
+    <input type="text" class="cmp-input" id="cmpInput" placeholder="Type to search... e.g. Fayol vs Taylor" oninput="searchCompare()" onfocus="searchCompare()">
+    <div class="cmp-suggestions" id="cmpSuggestions"></div>
+  </div>
+
+  <div class="cmp-tags" id="cmpTags"></div>
+
+  <div class="cmp-result" id="cmpResult">
+    <div class="cmp-empty">
+      <h3>Search or click a topic above</h3>
+      <p>Type any two concepts to find their comparison table instantly.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+const tables = [
+  {id:'fayol-taylor', title:'Fayol vs Taylor', ch:2, tip:'Guaranteed 4-mark question. Appeared 8 out of 10 years.', keywords:['fayol','taylor','scientific','general management','father'],
+    headers:['Basis','Henri Fayol','F.W. Taylor'],
+    rows:[['Known as','Father of General Management','Father of Scientific Management'],['Basis','Personal experience','Observation & experimentation'],['Focus','Overall management efficiency','Worker-level productivity'],['Applicability','Universal (all organisations)','Mainly factories & production'],['Perspective','Top-level management','Shop-floor / operative level'],['Contribution','14 Principles of Management','Principles + Techniques'],['Unity of Command','Staunch proponent','Not important (Functional Foremanship)']]},
+  {id:'uoc-uod', title:'Unity of Command vs Unity of Direction', ch:2, tip:'Very common. Know all 4 differences.', keywords:['unity','command','direction','fayol'],
+    headers:['Basis','Unity of Command','Unity of Direction'],
+    rows:[['Meaning','One employee, one superior only','One head and one plan for a group of activities'],['Purpose','Prevents overlapping orders & confusion','Prevents repetition of activities'],['Relates to','Functioning of people (superior-subordinate)','Activities of the organisation'],['Outcome','Effective individual functioning','Unity of action and coordination'],['Importance','Fixes responsibility of each person','Efficient functioning of group activities']]},
+  {id:'effectiveness-efficiency', title:'Effectiveness vs Efficiency', ch:1, tip:'Very common 1-mark or 3-mark question.', keywords:['effectiveness','efficiency','effective','efficient','doing right'],
+    headers:['Basis','Effectiveness','Efficiency'],
+    rows:[['Meaning','Completing the job on time','Completing the job at minimum cost'],['Objective','Achieve end result on time','Cost-benefit analysis'],['Focus','Doing the right things','Doing things right'],['Concern','Time','Cost'],['Example','Producing 10,000 units (target met)','Producing at ₹150/unit (within budget)']]},
+  {id:'functional-divisional', title:'Functional vs Divisional Structure', ch:5, tip:'Very common 4-mark question.', keywords:['functional','divisional','structure','organisation','product'],
+    headers:['Basis','Functional Structure','Divisional Structure'],
+    rows:[['Grouping','By functions (Production, Marketing)','By products (Garments, Shoes)'],['Specialisation','Functional specialisation','Product specialisation'],['Accountability','Hard to fix for specific product','Easy — each division is accountable'],['Suitability','Single product line, large firms','Multi-product companies'],['Cost','Lower — no duplication','Higher — duplication of resources'],['Coordination','Easy within department, hard across','Easy within division']]},
+  {id:'formal-informal', title:'Formal vs Informal Organisation', ch:5, tip:'Common 3-4 mark question.', keywords:['formal','informal','organisation','grapevine','social'],
+    headers:['Basis','Formal Organisation','Informal Organisation'],
+    rows:[['Origin','Deliberately created by management','Arises spontaneously from social interaction'],['Structure','Well-defined hierarchy, rules','No fixed structure or rules'],['Purpose','Achieve organisational goals','Satisfy social and personal needs'],['Communication','Official channels','Grapevine (informal channels)'],['Nature','Rigid','Flexible'],['Authority','Based on position','Based on personal relationships']]},
+  {id:'delegation-decentralisation', title:'Delegation vs Decentralisation', ch:5, tip:'Another guaranteed 4-mark question.', keywords:['delegation','decentralisation','authority','accountability'],
+    headers:['Basis','Delegation','Decentralisation'],
+    rows:[['Meaning','Manager shares authority with subordinate','Systematic delegation across all levels'],['Scope','Between two individuals','Organisation-wide policy'],['Nature','Compulsory — manager must delegate','Optional — depends on philosophy'],['Freedom','Less freedom to subordinate','Greater autonomy at all levels'],['Accountability','Delegator remains accountable','Departmental heads accountable'],['Control','Manager retains final control','Control distributed']]},
+  {id:'recruitment-selection', title:'Recruitment vs Selection', ch:6, tip:'Very common board question.', keywords:['recruitment','selection','hiring','positive','negative'],
+    headers:['Basis','Recruitment','Selection'],
+    rows:[['Meaning','Searching for and attracting candidates','Choosing the best candidate'],['Nature','Positive process (invites people)','Negative process (rejects unfit)'],['Purpose','Create a pool of applicants','Pick the most suitable from pool'],['Sequence','Comes first','Follows recruitment'],['Outcome','Many applicants','One selected candidate']]},
+  {id:'training-development', title:'Training vs Development', ch:6, tip:'Common 3-mark question.', keywords:['training','development','skill','career','learning'],
+    headers:['Basis','Training','Development'],
+    rows:[['Purpose','Improve skills for current job','Prepare for future roles'],['Duration','Short-term','Long-term'],['Focus','Specific, job-oriented','General, career-oriented'],['Initiated by','Organisation','Individual + Organisation'],['Scope','Narrow — specific task','Broad — overall growth']]},
+  {id:'money-capital', title:'Money Market vs Capital Market', ch:10, tip:'Very common 4-mark question.', keywords:['money market','capital market','short term','long term','treasury'],
+    headers:['Basis','Money Market','Capital Market'],
+    rows:[['Duration','Short-term (up to 1 year)','Long-term (more than 1 year)'],['Instruments','T-Bills, Commercial Paper, Call Money','Shares, Debentures, Bonds'],['Risk','Low','Higher'],['Liquidity','High','Comparatively lower'],['Participants','RBI, Banks, Financial Institutions','Individual investors, companies'],['Returns','Lower','Higher (with risk)']]},
+  {id:'primary-secondary', title:'Primary Market vs Secondary Market', ch:10, tip:'Another guaranteed 4-mark question.', keywords:['primary','secondary','market','ipo','stock exchange','new issue'],
+    headers:['Basis','Primary Market','Secondary Market'],
+    rows:[['Securities','New securities issued for first time','Existing securities traded'],['Funds flow to','The issuing company','The selling investor'],['Price','Fixed by company (face value/premium)','Determined by demand and supply'],['Location','No fixed geographical location','Fixed location (BSE, NSE)'],['Also called','New Issue Market','Stock Exchange'],['Intermediary','Underwriters','Brokers']]},
+  {id:'advertising-personal', title:'Advertising vs Personal Selling', ch:11, tip:'Common 4-mark question.', keywords:['advertising','personal selling','promotion','mass','face to face'],
+    headers:['Basis','Advertising','Personal Selling'],
+    rows:[['Nature','Non-personal, mass communication','Personal, face-to-face'],['Cost','High total cost, low per person','Low total cost, high per contact'],['Reach','Wide — millions at once','Limited — one at a time'],['Feedback','Delayed and hard to measure','Immediate and direct'],['Suitability','Consumer goods (FMCG)','Industrial/high-value products'],['Flexibility','Standardised message','Customised per customer']]},
+  {id:'marketing-selling', title:'Marketing vs Selling', ch:11, tip:'Classic board question.', keywords:['marketing','selling','customer','product','need'],
+    headers:['Basis','Marketing','Selling'],
+    rows:[['Focus','Customer needs','Existing products'],['Start point','Before production (research)','After production'],['Goal','Customer satisfaction → profit','Maximum sales → profit'],['Approach','Outside-in (market to product)','Inside-out (product to market)'],['Duration','Long-term relationship','Short-term transaction'],['Scope','Wider — research, pricing, distribution','Narrower — just selling']]},
+  {id:'planning-controlling', title:'Planning vs Controlling', ch:8, tip:'Common 4-mark board question.', keywords:['planning','controlling','inseparable','twins','standards'],
+    headers:['Basis','Planning','Controlling'],
+    rows:[['Meaning','Deciding what to do in advance','Ensuring things are done as planned'],['Order','First function of management','Last function of management'],['Focus','Looking ahead (future)','Looking back (past performance)'],['Nature','Prescriptive — sets goals','Evaluative — measures results'],['Purpose','Sets the path','Keeps on the path']]},
+  {id:'debt-equity', title:'Debt vs Equity', ch:9, tip:'Fundamental for financing decisions.', keywords:['debt','equity','borrowed','owner','finance','interest','dividend'],
+    headers:['Basis','Debt (Borrowed Funds)','Equity (Owner\'s Funds)'],
+    rows:[['Cost','Cheaper — interest is tax-deductible','Costlier — dividends from after-tax profit'],['Risk','Higher — fixed interest obligation','Lower — no fixed obligation'],['Control','No dilution of ownership','Dilutes ownership and control'],['Obligation','Must repay principal + interest','No repayment obligation'],['Suitability','When cash flows are stable','When risk is high or market bullish']]}
+];
+
+// Build quick-access tags
+function buildTags() {
+  const tags = document.getElementById('cmpTags');
+  tags.innerHTML = tables.map(t =>
+    `<button class="cmp-tag" onclick="showTable('${t.id}')">${t.title}</button>`
+  ).join('');
+}
+
+function searchCompare() {
+  const query = document.getElementById('cmpInput').value.toLowerCase().trim();
+  const sugBox = document.getElementById('cmpSuggestions');
+
+  if (!query) { sugBox.classList.remove('show'); return; }
+
+  const matches = tables.filter(t => {
+    const searchStr = (t.title + ' ' + t.keywords.join(' ')).toLowerCase();
+    return query.split(' ').some(word => word.length > 1 && searchStr.includes(word));
+  });
+
+  if (matches.length === 0) {
+    sugBox.innerHTML = '<div class="cmp-sug-item" style="color:var(--text-muted)">No matching tables found</div>';
+    sugBox.classList.add('show');
+    return;
+  }
+
+  sugBox.innerHTML = matches.map(t =>
+    `<div class="cmp-sug-item" onclick="showTable('${t.id}')">
+      <span>${t.title}</span>
+      <span class="cmp-sug-ch">Ch ${t.ch}</span>
+    </div>`
+  ).join('');
+  sugBox.classList.add('show');
+}
+
+function showTable(id) {
+  document.getElementById('cmpSuggestions').classList.remove('show');
+  const t = tables.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById('cmpInput').value = t.title;
+
+  const container = document.getElementById('cmpResult');
+  container.innerHTML = `<div class="cmp-card">
+    <div class="cmp-card-header">
+      <h3>${t.title}</h3>
+      <span class="cmp-ch">Chapter ${t.ch}</span>
+    </div>
+    <div class="cmp-card-body">
+      <table class="cmp-table">
+        <thead><tr>${t.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>
+    </div>
+    ${t.tip ? `<div class="cmp-tip">💡 <strong>Exam Tip:</strong> ${t.tip}</div>` : ''}
+  </div>`;
+
+  container.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Show all tables on load
+function showAllTables() {
+  const container = document.getElementById('cmpResult');
+  container.innerHTML = tables.map(t => `<div class="cmp-card">
+    <div class="cmp-card-header">
+      <h3>${t.title}</h3>
+      <span class="cmp-ch">Chapter ${t.ch}</span>
+    </div>
+    <div class="cmp-card-body">
+      <table class="cmp-table">
+        <thead><tr>${t.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>
+    </div>
+    ${t.tip ? `<div class="cmp-tip">💡 <strong>Exam Tip:</strong> ${t.tip}</div>` : ''}
+  </div>`).join('');
+}
+
+// Close suggestions on click outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.cmp-search')) document.getElementById('cmpSuggestions').classList.remove('show');
+});
+
+document.addEventListener('DOMContentLoaded', () => { buildTags(); showAllTables(); });
+</script>
+</body>
+</html>
