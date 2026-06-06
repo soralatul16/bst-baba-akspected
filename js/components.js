@@ -191,7 +191,7 @@ async function sendChat() {
 
   const apiKey = await getGrokKey();
   if (!apiKey) {
-    messages.innerHTML += `<div class="chat-msg bot">AI is not configured. The API key was not found in the cloud storage. Teacher (AKS) needs to open the Teacher Panel and save the API key again.</div>`;
+    messages.innerHTML += `<div class="chat-msg bot">The AI assistant is temporarily unavailable. Please try again later, or contact AKS directly on <a href="https://wa.me/919887440789" target="_blank" style="color:var(--accent)">WhatsApp</a> for help with your doubt.</div>`;
       messages.scrollTop = messages.scrollHeight;
     return;
   }

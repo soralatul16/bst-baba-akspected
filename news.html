@@ -184,7 +184,7 @@ async function loadNews() {
   allNews = [...teacherNews, ...aiNews];
 
   if (allNews.length === 0) {
-    grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><h3 style="color:var(--text);margin-bottom:8px">No news yet</h3><p>News will appear once the AI API key is configured in the Teacher Panel, or when AKS adds stories manually (Ctrl+Shift+N).</p></div>';
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1"><h3 style="color:var(--text);margin-bottom:8px">No news yet</h3><p>Business news stories will appear here soon. Check back later!</p></div>';
     return;
   }
 
