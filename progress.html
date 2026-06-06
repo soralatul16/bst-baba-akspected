@@ -123,7 +123,7 @@
     <!-- Quick Links -->
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
       <a href="revision-planner.html" style="padding:10px 20px;border-radius:8px;background:var(--accent);color:#0B0F19;font-size:0.85rem;font-weight:600;text-decoration:none">📅 Revision Planner</a>
-      <a href="daily-quiz.html" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;text-decoration:none">📝 Daily Quiz</a>
+      <a href="topic-quiz.html" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;text-decoration:none">📝 Topic Quiz</a>
       <a href="crack-the-case.html" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;text-decoration:none">🕵️ Crack the Case</a>
     </div>
 
@@ -183,63 +183,74 @@ async function initProgress() {
     try {
       const snap = await db.collection('bstbaba_quiz_scores')
         .where('uid', '==', user.uid)
-        .orderBy('timestamp', 'desc')
         .get();
 
-      const scores = snap.docs.map(d => d.data());
+      const scores = snap.docs.map(d => d.data()).sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
       const totalQuizzes = scores.length;
-      const totalScore = scores.reduce((a, s) => a + s.score, 0);
-      const totalPossible = scores.reduce((a, s) => a + s.total, 0);
+      const totalScore = scores.reduce((a, s) => a + (s.score||0), 0);
+      const totalPossible = scores.reduce((a, s) => a + (s.total||0), 0);
       const avg = totalPossible > 0 ? Math.round((totalScore / totalPossible) * 100) : 0;
-      const streak = scores.length > 0 ? (scores[0].streak || 0) : 0;
 
       document.getElementById('progQuizzes').textContent = totalQuizzes;
       document.getElementById('progAvg').textContent = avg + '%';
-      document.getElementById('progStreak').textContent = streak;
+      document.getElementById('progStreak').textContent = totalQuizzes > 0 ? '🔥' : '0';
 
       // Readiness = based on quizzes taken + average score
       const readiness = Math.min(100, Math.round((totalQuizzes / 30) * 50 + (avg / 100) * 50));
       document.getElementById('readinessFill').style.width = readiness + '%';
       document.getElementById('readinessPercent').textContent = readiness + '%';
 
-      // Chapter-wise (from user profile)
-      const userDoc = await db.collection('bstbaba_users').doc(user.uid).get();
-      const userData = userDoc.exists ? userDoc.data() : {};
-      const chaptersAttempted = userData.chaptersVisited || [];
+      // Chapter-wise from quiz scores
+      const chapterData = {};
+      scores.forEach(s => {
+        const ch = s.chapter || 0;
+        if (!chapterData[ch]) chapterData[ch] = {correct:0, total:0, count:0};
+        chapterData[ch].correct += s.score || 0;
+        chapterData[ch].total += s.total || 0;
+        chapterData[ch].count++;
+      });
 
-      document.getElementById('progChapters').textContent = chaptersAttempted.length + '/12';
+      const chaptersAttempted = Object.keys(chapterData).filter(c => c !== '0').length;
+      document.getElementById('progChapters').textContent = chaptersAttempted + '/12';
 
       // Chapter list
       let chHtml = '';
       for (let i = 1; i <= 12; i++) {
-        const attempted = chaptersAttempted.includes(String(i));
-        const chScores = scores.filter(s => s.chapters && s.chapters.includes(String(i)));
-        const chAvg = chScores.length > 0 ? Math.round(chScores.reduce((a, s) => a + s.score, 0) / chScores.length * 20) : 0;
+        const cd = chapterData[i];
+        const chAvg = cd && cd.total > 0 ? Math.round(cd.correct / cd.total * 100) : 0;
+        const quizCount = cd ? cd.count : 0;
+        const col = chAvg >= 70 ? '#22c55e' : chAvg >= 50 ? 'var(--accent-gold)' : chAvg > 0 ? '#f87171' : 'var(--text-muted)';
 
-        chHtml += `<div class="prog-ch-row">
-          <div class="prog-ch-num">${String(i).padStart(2, '0')}</div>
-          <div class="prog-ch-info">
-            <div class="prog-ch-title">${chapterNames[i]}</div>
-            <div class="prog-ch-meta">${chapterMarks[i]} marks · ${chScores.length} quiz${chScores.length !== 1 ? 'zes' : ''}</div>
-          </div>
-          <div class="prog-ch-bar"><div class="prog-ch-bar-track"><div class="prog-ch-bar-fill" style="width:${chAvg}%"></div></div></div>
-          <div class="prog-ch-score">${chAvg}%</div>
-          <div class="prog-ch-status">${chAvg >= 80 ? '✅' : chAvg > 0 ? '📝' : '⬜'}</div>
-        </div>`;
+        chHtml += '<div class="prog-ch-row">' +
+          '<div class="prog-ch-num">' + String(i).padStart(2,'0') + '</div>' +
+          '<div class="prog-ch-info">' +
+            '<div class="prog-ch-title">' + chapterNames[i] + '</div>' +
+            '<div class="prog-ch-meta">~' + chapterMarks[i] + ' marks · ' + quizCount + ' quiz' + (quizCount !== 1 ? 'zes' : '') + '</div>' +
+          '</div>' +
+          '<div class="prog-ch-bar"><div class="prog-ch-bar-track"><div class="prog-ch-bar-fill" style="width:' + chAvg + '%;background:' + col + '"></div></div></div>' +
+          '<div class="prog-ch-score" style="color:' + col + '">' + chAvg + '%</div>' +
+          '<div class="prog-ch-status">' + (chAvg >= 80 ? '✅' : chAvg > 0 ? '📝' : '⬜') + '</div>' +
+        '</div>';
       }
       document.getElementById('progChapterList').innerHTML = chHtml;
 
       // Badges
-      renderBadges(totalQuizzes, avg, streak, chaptersAttempted.length);
+      renderBadges(totalQuizzes, avg, 0, chaptersAttempted);
 
       // Quiz history
-      const historyHtml = scores.slice(0, 15).map(s => `
-        <div class="prog-quiz-row">
-          <span>${s.date || ''}</span>
-          <span style="font-weight:600;color:${s.score >= 4 ? 'var(--accent)' : s.score >= 3 ? 'var(--accent-gold)' : '#f87171'}">${s.score}/${s.total}</span>
-          <span style="color:var(--text-muted)">🔥${s.streak || 0}</span>
-        </div>`).join('');
-      document.getElementById('progQuizHistory').innerHTML = historyHtml || '<p style="color:var(--text-muted);text-align:center">No quizzes taken yet. <a href="daily-quiz.html" style="color:var(--accent)">Take today\'s quiz →</a></p>';
+      let historyHtml = '';
+      scores.slice(0, 20).forEach(function(s) {
+        const pct = s.total > 0 ? Math.round(s.score / s.total * 100) : 0;
+        const col = pct >= 70 ? 'var(--accent)' : pct >= 50 ? 'var(--accent-gold)' : '#f87171';
+        const label = 'Ch ' + (s.chapter || '?') + (s.topic ? ' — ' + s.topic : '') + (s.type ? ' (' + s.type + ')' : '');
+        const date = s.timestamp ? new Date(s.timestamp).toLocaleDateString() : '';
+        historyHtml += '<div class="prog-quiz-row">' +
+          '<span style="flex:1;font-size:.78rem">' + label + '</span>' +
+          '<span style="font-weight:700;color:' + col + ';font-size:.82rem">' + s.score + '/' + s.total + ' (' + pct + '%)</span>' +
+          '<span style="color:var(--text-muted);font-size:.7rem;min-width:70px;text-align:right">' + date + '</span>' +
+        '</div>';
+      });
+      document.getElementById('progQuizHistory').innerHTML = historyHtml || '<p style="color:var(--text-muted);text-align:center">No quizzes taken yet. <a href="topic-quiz.html" style="color:var(--accent)">Start a topic quiz →</a></p>';
 
     } catch(e) {
       console.error('Progress load error:', e);

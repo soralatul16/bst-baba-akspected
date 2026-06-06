@@ -1196,13 +1196,13 @@ async function showStudentAnalytics(uid, name) {
   }
 
   try {
-    var snap = await db.collection('bstbaba_quiz_scores').where('uid', '==', uid).orderBy('timestamp', 'desc').limit(50).get();
+    var snap = await db.collection('bstbaba_quiz_scores').where('uid', '==', uid).limit(50).get();
     if (snap.empty) {
       content.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)"><h3 style="color:var(--text);margin-bottom:6px">No quiz data yet</h3><p>This student hasn\'t attempted any quizzes.</p></div>';
       return;
     }
 
-    var scores = snap.docs.map(function(d) { return d.data(); });
+    var scores = snap.docs.map(function(d) { return d.data(); }).sort(function(a,b){ return (b.timestamp||'').localeCompare(a.timestamp||''); });
     var totalQuizzes = scores.length;
     var totalCorrect = 0, totalQs = 0, totalTime = 0;
     var chapterData = {};
@@ -1279,8 +1279,8 @@ async function showOverallAnalytics() {
   }
 
   try {
-    var snap = await db.collection('bstbaba_quiz_scores').orderBy('timestamp', 'desc').limit(200).get();
-    var scores = snap.docs.map(function(d) { return d.data(); });
+    var snap = await db.collection('bstbaba_quiz_scores').limit(200).get();
+    var scores = snap.docs.map(function(d) { return d.data(); }).sort(function(a,b){ return (b.timestamp||'').localeCompare(a.timestamp||''); });
     var students = smStudents.length;
     var uniqueUsers = new Set();
     var chapterStats = {};
