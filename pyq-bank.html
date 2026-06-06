@@ -18,6 +18,8 @@
     <a href="class11-dashboard.html">Class 11</a>
     <a href="class12-dashboard.html">Class 12</a>
     <a href="flashcards.html" class="active">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="mock-test.html">Mock Test</a>
     <a href="about.html">About</a>
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
     <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
@@ -43,22 +45,41 @@
     <p>CBSE repeats question patterns every year. A question that appeared in 2023 will appear again in 2026 — maybe with different company names, but the same concept. Solve all PYQs and you've essentially seen the exam before walking in.</p>
   </div>
 
+  <!-- Stats -->
+  <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+    <div style="background:var(--accent-light);border:1px solid rgba(34,211,238,0.15);border-radius:10px;padding:12px 20px;text-align:center;flex:1;min-width:120px">
+      <div style="font-size:1.4rem;font-weight:800;color:var(--accent)" id="totalCount">0</div>
+      <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">Total PYQs</div>
+    </div>
+    <div style="background:var(--accent-gold-light);border:1px solid rgba(251,191,36,0.15);border-radius:10px;padding:12px 20px;text-align:center;flex:1;min-width:120px">
+      <div style="font-size:1.4rem;font-weight:800;color:var(--accent-gold)" id="chapterCount">0</div>
+      <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">Chapters Covered</div>
+    </div>
+    <div style="background:var(--accent-light);border:1px solid rgba(34,211,238,0.15);border-radius:10px;padding:12px 20px;text-align:center;flex:1;min-width:120px">
+      <div style="font-size:1.4rem;font-weight:800;color:var(--accent)" id="showingCount">0</div>
+      <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">Showing Now</div>
+    </div>
+  </div>
+
   <!-- Filters -->
   <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
     <select id="pyqChFilter" onchange="filterPYQs()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:0.85rem">
       <option value="all">All Chapters</option>
-      <option value="ch02" selected>Ch 2: Principles of Management</option>
-      <option value="ch01">Ch 1: Nature of Management</option>
-      <option value="ch03">Ch 3: Business Environment</option>
-      <option value="ch04">Ch 4: Planning</option>
-      <option value="ch05">Ch 5: Organising</option>
-      <option value="ch06">Ch 6: Staffing</option>
-      <option value="ch07">Ch 7: Directing</option>
-      <option value="ch08">Ch 8: Controlling</option>
-      <option value="ch09">Ch 9: Financial Management</option>
-      <option value="ch10">Ch 10: Financial Markets</option>
-      <option value="ch11">Ch 11: Marketing</option>
-      <option value="ch12">Ch 12: Consumer Protection</option>
+      <option value="1">Ch 1: Nature of Management</option>
+      <option value="2">Ch 2: Principles of Management</option>
+      <option value="3">Ch 3: Business Environment</option>
+      <option value="4">Ch 4: Planning</option>
+      <option value="5">Ch 5: Organising</option>
+      <option value="6">Ch 6: Staffing</option>
+      <option value="7">Ch 7: Directing</option>
+      <option value="8">Ch 8: Controlling</option>
+      <option value="9">Ch 9: Financial Management</option>
+      <option value="10">Ch 10: Financial Markets</option>
+      <option value="11">Ch 11: Marketing</option>
+      <option value="12">Ch 12: Consumer Protection</option>
+    </select>
+    <select id="pyqYearFilter" onchange="filterPYQs()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:0.85rem">
+      <option value="all">All Years</option>
     </select>
     <div class="question-filter" style="margin:0">
       <button class="q-filter-btn active" onclick="filterPYQMarks(this,'all')">All</button>
@@ -66,52 +87,12 @@
       <button class="q-filter-btn" onclick="filterPYQMarks(this,'3')">3 Marks</button>
       <button class="q-filter-btn" onclick="filterPYQMarks(this,'4')">4 Marks</button>
       <button class="q-filter-btn" onclick="filterPYQMarks(this,'5')">5 Marks</button>
+      <button class="q-filter-btn" onclick="filterPYQMarks(this,'6')">6 Marks</button>
     </div>
   </div>
 
   <div id="pyqList">
-    <!-- Ch 2 PYQs loaded from data -->
-    <div class="question-item" data-marks="3" data-chapter="ch02">
-      <div class="q-header"><span class="q-type">2025 Board</span><span class="q-marks">3 Marks</span></div>
-      <div class="q-text">State any three characteristics of Principles of Management.</div>
-      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
-      <div class="q-answer">(i) <strong>Universal applicability</strong> — Apply to all types of organisations.<br>(ii) <strong>Flexible</strong> — Can be modified as per situation.<br>(iii) <strong>Cause & Effect</strong> — Establish relationship between cause and effect.</div>
-    </div>
-
-    <div class="question-item" data-marks="5" data-chapter="ch02">
-      <div class="q-header"><span class="q-type">2025 Board</span><span class="q-marks">5 Marks</span></div>
-      <div class="q-text">'A company manufacturing garments has its own fabric division, stitching division and finishing division. Each division has a separate head who is responsible for planning and executing activities of his own division.' Identify the principle of management followed here and explain it.</div>
-      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
-      <div class="q-answer"><strong>Unity of Direction</strong> — Each division has one head and one plan for its group of activities. This principle states that activities with the same objective should have one head and one plan, ensuring coordinated and focused effort.</div>
-    </div>
-
-    <div class="question-item" data-marks="4" data-chapter="ch02">
-      <div class="q-header"><span class="q-type">2024 Board</span><span class="q-marks">4 Marks</span></div>
-      <div class="q-text">Distinguish between 'Unity of Command' and 'Unity of Direction'.</div>
-      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
-      <div class="q-answer">(1) Meaning: One employee, one superior vs One head, one plan for activities.<br>(2) Purpose: Prevents confusion vs Prevents repetition.<br>(3) Relates to: People vs Activities.<br>(4) Outcome: Individual effectiveness vs Group coordination.</div>
-    </div>
-
-    <div class="question-item" data-marks="1" data-chapter="ch02">
-      <div class="q-header"><span class="q-type">2024 Board</span><span class="q-marks">1 Mark</span></div>
-      <div class="q-text">Fayol's principle that suggests maintaining a chain of superiors from the highest to the lowest is called:</div>
-      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
-      <div class="q-answer"><strong>Scalar Chain.</strong></div>
-    </div>
-
-    <div class="question-item" data-marks="5" data-chapter="ch02">
-      <div class="q-header"><span class="q-type">2023 Board</span><span class="q-marks">5 Marks</span></div>
-      <div class="q-text">'In a factory, weights of different articles are measured, movement of workers is studied, and exact time to complete a task is determined.' Identify the techniques of Scientific Management.</div>
-      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
-      <div class="q-answer"><strong>1. Standardisation</strong> — Measuring weights to set consistent standards.<br><strong>2. Motion Study</strong> — Studying movement to eliminate wasteful motions.<br><strong>3. Time Study</strong> — Determining exact time for efficiency planning.</div>
-    </div>
-
-    <div class="question-item" data-marks="3" data-chapter="ch02">
-      <div class="q-header"><span class="q-type">2023 Board</span><span class="q-marks">3 Marks</span></div>
-      <div class="q-text">State the principle of management that requires a manager to be kind, fair and just to the subordinates.</div>
-      <button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>
-      <div class="q-answer"><strong>Equity.</strong> This principle states that management should treat employees with fairness and justice, without discrimination or favouritism.</div>
-    </div>
+    <div style="text-align:center;padding:40px;color:var(--text-muted)">Loading PYQs from all chapters...</div>
   </div>
 
   <div class="teacher-tip" style="margin-top:24px">
@@ -134,16 +115,135 @@
 <script src="js/components.js"></script>
 <script src="js/seo.js"></script>
 <script>
-function filterPYQs() {
-  // Future: load different chapter PYQs
-}
-function filterPYQMarks(btn, marks) {
-  btn.closest('.question-filter').querySelectorAll('.q-filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.question-item').forEach(q => {
-    q.style.display = (marks === 'all' || q.dataset.marks === marks) ? 'block' : 'none';
+var allPYQs = [];
+var currentMarksFilter = 'all';
+
+var CH_NAMES = {
+  1:'Nature of Management', 2:'Principles of Management', 3:'Business Environment',
+  4:'Planning', 5:'Organising', 6:'Staffing', 7:'Directing', 8:'Controlling',
+  9:'Financial Management', 10:'Financial Markets', 11:'Marketing Management', 12:'Consumer Protection'
+};
+
+async function loadAllPYQs() {
+  allPYQs = [];
+  var promises = [];
+  for (var i = 1; i <= 12; i++) {
+    (function(chNum) {
+      var slug = 'ch' + (chNum < 10 ? '0' + chNum : chNum);
+      var p = fetch('content/class12/' + slug + '.json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.pyqs && data.pyqs.length > 0) {
+            data.pyqs.forEach(function(q) {
+              allPYQs.push({
+                chapter: chNum,
+                chName: CH_NAMES[chNum],
+                year: q.year,
+                marks: q.marks,
+                text: q.text,
+                answer: q.answer
+              });
+            });
+          }
+          if (data.questions && data.questions.length > 0) {
+            data.questions.forEach(function(q) {
+              allPYQs.push({
+                chapter: chNum,
+                chName: CH_NAMES[chNum],
+                year: 'Practice',
+                marks: q.marks,
+                text: q.text,
+                answer: q.answer,
+                type: q.type
+              });
+            });
+          }
+        })
+        .catch(function() {});
+      promises.push(p);
+    })(i);
+  }
+  await Promise.all(promises);
+
+  allPYQs.sort(function(a, b) {
+    if (a.year === 'Practice' && b.year !== 'Practice') return 1;
+    if (b.year === 'Practice' && a.year !== 'Practice') return -1;
+    if (a.year !== b.year) return b.year - a.year;
+    return a.chapter - b.chapter;
   });
+
+  // Populate year filter
+  var years = [];
+  allPYQs.forEach(function(q) {
+    if (q.year !== 'Practice' && years.indexOf(q.year) === -1) years.push(q.year);
+  });
+  years.sort(function(a, b) { return b - a; });
+  var yearSel = document.getElementById('pyqYearFilter');
+  years.forEach(function(y) {
+    yearSel.innerHTML += '<option value="' + y + '">' + y + ' Board</option>';
+  });
+  yearSel.innerHTML += '<option value="Practice">Practice Questions</option>';
+
+  // Stats
+  var chaptersWithPYQs = [];
+  allPYQs.forEach(function(q) {
+    if (chaptersWithPYQs.indexOf(q.chapter) === -1) chaptersWithPYQs.push(q.chapter);
+  });
+  document.getElementById('totalCount').textContent = allPYQs.length;
+  document.getElementById('chapterCount').textContent = chaptersWithPYQs.length;
+
+  filterPYQs();
 }
+
+function filterPYQs() {
+  var ch = document.getElementById('pyqChFilter').value;
+  var year = document.getElementById('pyqYearFilter').value;
+  var filtered = allPYQs.filter(function(q) {
+    if (ch !== 'all' && q.chapter !== parseInt(ch)) return false;
+    if (year !== 'all') {
+      if (year === 'Practice') { if (q.year !== 'Practice') return false; }
+      else { if (q.year !== parseInt(year)) return false; }
+    }
+    if (currentMarksFilter !== 'all' && q.marks !== parseInt(currentMarksFilter)) return false;
+    return true;
+  });
+  renderPYQs(filtered);
+}
+
+function filterPYQMarks(btn, marks) {
+  currentMarksFilter = marks;
+  btn.closest('.question-filter').querySelectorAll('.q-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  filterPYQs();
+}
+
+function renderPYQs(list) {
+  var container = document.getElementById('pyqList');
+  document.getElementById('showingCount').textContent = list.length;
+
+  if (list.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)"><h3 style="color:var(--text);margin-bottom:8px">No questions match these filters</h3><p>Try changing the chapter, year, or marks filter.</p></div>';
+    return;
+  }
+
+  container.innerHTML = list.map(function(q) {
+    var yearLabel = q.year === 'Practice' ? (q.type || 'Practice') : q.year + ' Board';
+    return '<div class="question-item">' +
+      '<div class="q-header">' +
+        '<span class="q-type">' + yearLabel + '</span>' +
+        '<div style="display:flex;gap:6px;align-items:center">' +
+          '<span style="font-size:0.65rem;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--accent-light);color:var(--accent)">Ch ' + q.chapter + '</span>' +
+          '<span class="q-marks">' + q.marks + ' Mark' + (q.marks > 1 ? 's' : '') + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="q-text">' + q.text + '</div>' +
+      '<button class="q-toggle" onclick="toggleAnswer(this)">Show Answer ▼</button>' +
+      '<div class="q-answer">' + q.answer + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', loadAllPYQs);
 </script>
 </body>
 </html>
