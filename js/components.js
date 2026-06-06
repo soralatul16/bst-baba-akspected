@@ -43,8 +43,25 @@ if (typeof auth !== 'undefined') {
             currentUserData.verified = true;
           }
           localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
+        } else {
+          // User doc missing (registration failed earlier) — create it now
+          currentUserData = {
+            uid: user.uid,
+            name: user.displayName || user.email.split('@')[0],
+            email: user.email,
+            registered: new Date().toISOString(),
+            verified: true
+          };
+          await db.collection('bstbaba_users').doc(user.uid).set(currentUserData);
+          localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
         }
-      } catch(e) {}
+      } catch(e) {
+        // Firestore failed — use Firebase Auth info directly
+        currentUserData = {
+          name: user.displayName || user.email.split('@')[0],
+          email: user.email
+        };
+      }
       document.querySelectorAll('.content-locked').forEach(el => {
         el.classList.remove('content-locked');
         el.style.maxHeight = '';
@@ -69,6 +86,7 @@ async function registerUser(name, email, password, phone, cls, city, country) {
   }
   try {
     const cred = await auth.createUserWithEmailAndPassword(email, password);
+    await cred.user.updateProfile({displayName: name});
     await cred.user.sendEmailVerification();
     const userData = {
       uid: cred.user.uid,
