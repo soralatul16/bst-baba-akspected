@@ -1,0 +1,52 @@
+{
+  "chapter": 1, "class": 12, "title": "Nature and Significance of Management",
+  "cards": {
+    "definitions": [
+      {"term": "Management", "definition": "The process of designing and maintaining an environment in which individuals, working together in groups, efficiently accomplish selected aims. It involves Planning, Organising, Staffing, Directing, and Controlling."},
+      {"term": "Effectiveness", "definition": "Completing the task on time — doing the right things. Concerned with the end result."},
+      {"term": "Efficiency", "definition": "Completing the task at minimum cost — doing things right. Concerned with optimum use of resources."},
+      {"term": "Coordination", "definition": "The process of integrating efforts of different individuals to secure unity of action in the pursuit of common goals. It is the essence of management."},
+      {"term": "Intangible Force", "definition": "Management cannot be seen physically but its presence is felt when targets are met, employees are satisfied, and there is orderliness instead of chaos."},
+      {"term": "All-Pervasive", "definition": "Management activities are common to all organisations — economic, social, or political. A petrol pump needs to be managed as much as a hospital or a cricket team."},
+      {"term": "Multi-Dimensional", "definition": "Management involves three dimensions simultaneously — management of Work, People, and Operations."},
+      {"term": "Organisational Objectives", "definition": "Survival (earn enough revenue to cover costs), Profit (earn reasonable profit after covering costs and risks), Growth (increase sales, employees, products, and market share)."},
+      {"term": "Social Objectives", "definition": "Obligations towards society — providing quality products, pollution control, employment generation, opening schools and healthcare centres."},
+      {"term": "Personal Objectives", "definition": "Helping employees achieve their individual goals — good salaries, perks, working conditions, training, and career development opportunities."},
+      {"term": "Top Level Management", "definition": "Chairman, CEO, COO — they lay down policies and objectives, formulate strategies, and are responsible for the welfare and survival of the organisation."},
+      {"term": "Middle Level Management", "definition": "Departmental heads, Plant Superintendents — they carry out plans as per top-level policies, organise divisional activities, and link top and lower levels."},
+      {"term": "Lower Level Management", "definition": "Foremen, Supervisors — they allocate tasks to workers, ensure quality and quantity of output, and communicate worker grievances upward."}
+    ],
+    "distinctions": [
+      {
+        "between": "Effectiveness vs Efficiency",
+        "points": [
+          {"basis": "Meaning", "a": "Completing the job on time", "b": "Completing the job at minimum cost"},
+          {"basis": "Focus", "a": "Doing the right things", "b": "Doing things right"},
+          {"basis": "Main Concern", "a": "Time — achieving the end result", "b": "Cost — optimum use of resources"},
+          {"basis": "Outcome", "a": "May or may not be efficient", "b": "May or may not be effective"}
+        ]
+      },
+      {
+        "between": "Management as Art vs Science",
+        "points": [
+          {"basis": "Knowledge", "a": "Theoretical knowledge exists", "b": "Systematised body of knowledge"},
+          {"basis": "Application", "a": "Personalised — varies by individual", "b": "Principles tested by experimentation"},
+          {"basis": "Practice", "a": "Based on creativity and practice", "b": "Universal validity (but inexact)"},
+          {"basis": "Verdict", "a": "Yes, management is an art", "b": "Yes, but an inexact/social science"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A production manager produces 10,000 shirts by the deadline but spends ₹160/shirt instead of the budgeted ₹150/shirt.", "answer": "Effective but Not Efficient", "principle": "Completed on time (effective) but exceeded cost (not efficient)"},
+      {"scenario": "A factory produces goods at very low cost, but the order is delivered a week late.", "answer": "Efficient but Not Effective", "principle": "Minimum cost (efficient) but missed deadline (not effective)"},
+      {"scenario": "Targets are met, employees are happy, and there is orderliness instead of chaos — but no one can point to management physically.", "answer": "Management is an Intangible Force", "principle": "Cannot be seen but its presence is felt through results"},
+      {"scenario": "A hospital, a cricket team, and a factory all need someone to plan, organise, and coordinate activities.", "answer": "Management is All-Pervasive", "principle": "Needed in every type of organisation — business, social, or sports"},
+      {"scenario": "The CEO of a company formulates long-term strategies and interacts with government officials about new regulations.", "answer": "Top Level Management", "principle": "Lay down policies, formulate strategies, interact with external environment"},
+      {"scenario": "A foreman at a steel plant assigns tasks to workers, checks quality of output, and reports worker issues to the manager above.", "answer": "Lower/Supervisory Level Management", "principle": "Allocate tasks, ensure quality, communicate grievances upward"},
+      {"scenario": "The marketing, production, and finance departments work in silos with conflicting goals, leading to delays and confusion.", "answer": "Lack of Coordination", "principle": "Coordination integrates group efforts and ensures unity of action"},
+      {"scenario": "A company generates employment, uses eco-friendly packaging, and donates to education — beyond profit-making.", "answer": "Social Objectives of Management", "principle": "Obligations towards society beyond just earning profit"},
+      {"scenario": "An MBA graduate runs a company successfully without any mandatory license or registration from a professional body.", "answer": "Management is NOT a full-fledged Profession", "principle": "No mandatory degree, no compulsory registration, no statutory code of conduct"},
+      {"scenario": "McDonald's changed its menu for the Indian market, removing beef and introducing McAloo Tikki.", "answer": "Management is a Dynamic Function", "principle": "Must adapt to changing social, economic, and cultural environment"}
+    ]
+  }
+}

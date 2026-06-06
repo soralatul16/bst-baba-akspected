@@ -1,0 +1,50 @@
+{
+  "chapter": 9, "class": 12, "title": "Financial Management",
+  "cards": {
+    "definitions": [
+      {"term": "Financial Management", "definition": "Concerned with planning, raising, controlling, and administering funds used in a business."},
+      {"term": "Investment Decision", "definition": "Determining where to invest long-term funds. Also called Capital Budgeting. Considers cash flow, rate of return, and risk."},
+      {"term": "Financing Decision", "definition": "Determining the best mix of debt and equity to fund the business. Debt is cheaper but riskier; Equity is safer but dilutes control."},
+      {"term": "Dividend Decision", "definition": "How much of the net profit to distribute as dividends vs retain for reinvestment. Depends on earnings stability, cash flow, growth opportunities."},
+      {"term": "Capital Structure", "definition": "The mix of debt (borrowed funds) and equity (owner's funds) used to finance a firm. The ideal mix minimises cost and risk."},
+      {"term": "Financial Planning", "definition": "The process of estimating the fund requirements of a business and determining the sources of funds. Ensures adequate funds, avoids idle surplus."},
+      {"term": "Fixed Capital", "definition": "Investment in long-term assets like land, building, machinery, equipment. Not easily converted to cash."},
+      {"term": "Working Capital", "definition": "Funds needed for day-to-day operations — raw materials, wages, bills, inventory. Shorter operating cycle = less working capital needed."},
+      {"term": "Operating Cycle", "definition": "Cash → Raw Material → Work-in-Progress → Finished Goods → Sales → Receivables → Cash. Shorter cycle means less working capital needed."},
+      {"term": "Trading on Equity", "definition": "Using debt to increase return on equity. When rate of return exceeds interest rate, extra profit belongs to equity shareholders."}
+    ],
+    "distinctions": [
+      {
+        "between": "Debt vs Equity",
+        "points": [
+          {"basis": "Cost", "a": "Cheaper — interest is tax-deductible", "b": "Costlier — dividends from after-tax profit"},
+          {"basis": "Risk", "a": "Higher — fixed interest obligation", "b": "Lower — no fixed obligation"},
+          {"basis": "Control", "a": "No dilution of ownership", "b": "Dilutes ownership and control"},
+          {"basis": "Obligation", "a": "Must repay principal + interest", "b": "No repayment obligation"},
+          {"basis": "Suitability", "a": "Stable cash flows", "b": "High risk or bullish market"}
+        ]
+      },
+      {
+        "between": "Fixed Capital vs Working Capital",
+        "points": [
+          {"basis": "Nature", "a": "Long-term assets (land, machinery)", "b": "Short-term assets (inventory, cash, receivables)"},
+          {"basis": "Purpose", "a": "Build productive capacity", "b": "Fund day-to-day operations"},
+          {"basis": "Duration", "a": "Invested for years", "b": "Revolves within the operating cycle"},
+          {"basis": "Convertibility", "a": "Not easily converted to cash", "b": "Easily converted or used up"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A company evaluates whether to invest ₹50 crore in a new factory by analysing expected cash flows and rate of return.", "answer": "Investment Decision (Capital Budgeting)", "principle": "Determining where to invest long-term funds"},
+      {"scenario": "The CFO decides to raise 60% funds through debentures and 40% through equity shares.", "answer": "Financing Decision / Capital Structure", "principle": "Deciding the debt-equity mix"},
+      {"scenario": "The board announces a dividend of ₹5 per share and retains the remaining profits for expansion.", "answer": "Dividend Decision", "principle": "How much profit to distribute vs retain"},
+      {"scenario": "A seasonal ice cream business needs more funds in summer for production and inventory.", "answer": "Working Capital — Seasonal Factor", "principle": "Seasonal businesses need variable working capital"},
+      {"scenario": "A hydroelectric power plant requires massive investment in land, dams, and turbines before it can generate revenue.", "answer": "High Fixed Capital Requirement", "principle": "Nature of business determines fixed capital needs"},
+      {"scenario": "A company with stable monthly revenue of ₹10 crore takes a large bank loan knowing it can pay the EMI regularly.", "answer": "Cash Flow supports more Debt", "principle": "Steady cash flows can support higher debt in capital structure"},
+      {"scenario": "During a bullish stock market, the company issues equity shares to raise funds instead of taking loans.", "answer": "Stock Market Conditions affecting Financing Decision", "principle": "Bullish market favours equity; Bearish favours debt"},
+      {"scenario": "A trading firm needs more working capital than a consulting firm because it holds large inventories.", "answer": "Nature of Business affects Working Capital", "principle": "Trading firms need more WC than service firms"},
+      {"scenario": "The company earns 15% return on investment but pays only 10% interest on debt — the extra 5% goes to equity shareholders.", "answer": "Trading on Equity", "principle": "Using debt to increase return on equity"},
+      {"scenario": "A firm's production cycle from raw material to finished goods takes 6 months, locking up large amounts of cash.", "answer": "Long Production Cycle increases Working Capital", "principle": "Longer cycle = more funds locked in WIP"}
+    ]
+  }
+}

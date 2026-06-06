@@ -1,0 +1,54 @@
+{
+  "chapter": 11, "class": 12, "title": "Marketing Management",
+  "cards": {
+    "definitions": [
+      {"term": "Marketing", "definition": "A social process by which individuals and groups obtain what they need through creating, offering, and freely exchanging products and services of value with others."},
+      {"term": "Marketing Mix (4Ps)", "definition": "The set of controllable variables a firm blends to produce the desired response: Product, Price, Place, Promotion."},
+      {"term": "Product", "definition": "Anything offered to a market for attention, acquisition, use, or consumption that might satisfy a need or want."},
+      {"term": "Branding", "definition": "Giving a distinct name, symbol, or design to identify and differentiate a product from competitors. Components: Brand Name, Brand Mark, Trademark."},
+      {"term": "Brand Name", "definition": "The spoken part of a brand — the word or phrase. Examples: Nike, Amul, Apple."},
+      {"term": "Brand Mark", "definition": "The visual symbol or design of a brand that cannot be spoken. Example: Nike's swoosh, Apple's apple logo."},
+      {"term": "Trademark", "definition": "Legal protection of a brand under law, indicated by ™ or ®. Prevents others from using the same brand identity."},
+      {"term": "Labelling", "definition": "All written information on the product or package — brand name, ingredients, MRP, manufacturing/expiry date, nutritional info, statutory warnings."},
+      {"term": "Packaging (3 Levels)", "definition": "Primary (immediate container — toothpaste tube), Secondary (additional protection — cardboard box), Transportation (for shipping — cartons)."},
+      {"term": "Advertising", "definition": "Paid, non-personal communication through mass media (TV, newspaper, online) to reach a large audience. Wide reach but impersonal."},
+      {"term": "Personal Selling", "definition": "Face-to-face interaction between seller and buyer. Most effective for high-value, complex products. Immediate feedback."},
+      {"term": "Sales Promotion", "definition": "Short-term incentives to boost sales — free samples, discounts, contests, lucky draws, cashbacks, buy-one-get-one."},
+      {"term": "Public Relations", "definition": "Building goodwill and positive image through press conferences, sponsorships, special events, community programmes. Not paid advertising — earned media."}
+    ],
+    "distinctions": [
+      {
+        "between": "Marketing vs Selling",
+        "points": [
+          {"basis": "Focus", "a": "Customer needs", "b": "Existing products"},
+          {"basis": "Start point", "a": "Before production (research)", "b": "After production"},
+          {"basis": "Goal", "a": "Customer satisfaction → profit", "b": "Maximum sales → profit"},
+          {"basis": "Approach", "a": "Outside-in (market to product)", "b": "Inside-out (product to market)"},
+          {"basis": "Duration", "a": "Long-term relationship", "b": "Short-term transaction"}
+        ]
+      },
+      {
+        "between": "Advertising vs Personal Selling",
+        "points": [
+          {"basis": "Nature", "a": "Non-personal, mass communication", "b": "Personal, face-to-face"},
+          {"basis": "Cost", "a": "High total, low per person", "b": "Low total, high per contact"},
+          {"basis": "Reach", "a": "Wide — millions at once", "b": "Limited — one at a time"},
+          {"basis": "Feedback", "a": "Delayed and hard to measure", "b": "Immediate and direct"},
+          {"basis": "Suitability", "a": "Consumer goods (FMCG)", "b": "Industrial/high-value products"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A company offers free samples at shopping malls and runs a 'Buy 2 Get 1 Free' offer.", "answer": "Sales Promotion", "principle": "Short-term incentives to boost immediate sales"},
+      {"scenario": "A pharma company sends medical representatives to visit doctors and explain new drugs.", "answer": "Personal Selling", "principle": "Face-to-face interaction for complex, high-value products"},
+      {"scenario": "Coca-Cola runs a 30-second TV commercial during the IPL cricket match.", "answer": "Advertising", "principle": "Paid, non-personal communication through mass media"},
+      {"scenario": "A company sponsors a marathon and holds a press conference about its CSR initiatives.", "answer": "Public Relations", "principle": "Building goodwill through earned media, not paid ads"},
+      {"scenario": "A health drink is priced low to capture maximum market share quickly.", "answer": "Penetration Pricing", "principle": "Low price strategy to gain market share"},
+      {"scenario": "Products move from Producer → Wholesaler → Retailer → Consumer for consumer goods.", "answer": "Two-Level Distribution Channel", "principle": "Most common channel with 2 intermediaries"},
+      {"scenario": "Dell sells laptops directly to consumers through its website — no middlemen.", "answer": "Direct Channel of Distribution", "principle": "Producer → Consumer with no intermediaries"},
+      {"scenario": "A toothpaste has the tube (primary), cardboard box (secondary), and shipping carton (transportation).", "answer": "Three Levels of Packaging", "principle": "Primary, Secondary, and Transportation packaging"},
+      {"scenario": "A company researches customer needs first, then designs a product to satisfy those needs.", "answer": "Marketing Concept", "principle": "Starts before production — customer needs drive product design"},
+      {"scenario": "A salesperson pushes existing inventory to customers regardless of what they actually need.", "answer": "Selling Concept (NOT Marketing)", "principle": "Focus on existing products, not customer needs"}
+    ]
+  }
+}

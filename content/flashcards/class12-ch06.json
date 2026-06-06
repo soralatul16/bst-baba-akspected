@@ -1,0 +1,61 @@
+{
+  "chapter": 6, "class": 12, "title": "Staffing",
+  "cards": {
+    "definitions": [
+      {"term": "Staffing", "definition": "The management function of finding the right person for the right job, with the right qualifications, at the right time."},
+      {"term": "Recruitment", "definition": "Searching for and attracting potential candidates to apply for job vacancies. It is a positive process — it invites people."},
+      {"term": "Selection", "definition": "Choosing the most suitable candidate from the pool of applicants. It is a negative process — it eliminates unfit candidates."},
+      {"term": "Transfer", "definition": "Moving an employee from one job, department, or location to another at the same level. An internal source of recruitment."},
+      {"term": "Promotion", "definition": "Moving an employee to a higher position with more responsibility and pay. An internal source of recruitment that motivates employees."},
+      {"term": "Campus Placement", "definition": "Companies visit educational institutions to recruit fresh graduates directly. An external source of recruitment."},
+      {"term": "Employment Exchange", "definition": "Government agencies maintaining lists of job seekers, connecting them with employers. Compulsory for certain vacancies under law."},
+      {"term": "Vestibule Training", "definition": "Training in a simulated work environment with the same equipment as the actual factory — learning without disrupting production."},
+      {"term": "Apprenticeship", "definition": "Learning under the guidance of a master craftsman for a prescribed period. Used in trades like plumbing, electrician, carpentry."},
+      {"term": "Job Rotation", "definition": "Moving employees through different jobs systematically to broaden their understanding of the organisation."},
+      {"term": "Training", "definition": "Process of improving specific skills and knowledge for the current job. Short-term, specific, and job-oriented."},
+      {"term": "Development", "definition": "Process of overall growth preparing employees for future roles. Long-term, general, and career-oriented."}
+    ],
+    "distinctions": [
+      {
+        "between": "Recruitment vs Selection",
+        "points": [
+          {"basis": "Meaning", "a": "Searching for and attracting candidates", "b": "Choosing the best candidate"},
+          {"basis": "Nature", "a": "Positive process (invites people)", "b": "Negative process (rejects unfit)"},
+          {"basis": "Purpose", "a": "Create a pool of applicants", "b": "Pick the most suitable from the pool"},
+          {"basis": "Sequence", "a": "Comes first", "b": "Follows recruitment"},
+          {"basis": "Outcome", "a": "Many applicants", "b": "One selected candidate"}
+        ]
+      },
+      {
+        "between": "Training vs Development",
+        "points": [
+          {"basis": "Purpose", "a": "Improve skills for current job", "b": "Prepare for future roles"},
+          {"basis": "Duration", "a": "Short-term", "b": "Long-term"},
+          {"basis": "Focus", "a": "Specific and job-oriented", "b": "General and career-oriented"},
+          {"basis": "Initiated by", "a": "Organisation", "b": "Individual + Organisation"}
+        ]
+      },
+      {
+        "between": "Internal vs External Sources of Recruitment",
+        "points": [
+          {"basis": "Meaning", "a": "Filling vacancies from within the organisation", "b": "Hiring from outside the organisation"},
+          {"basis": "Examples", "a": "Transfers, Promotions", "b": "Advertisements, Campus Placement, Employment Exchanges"},
+          {"basis": "Cost", "a": "Low — no advertising needed", "b": "High — involves advertising and screening"},
+          {"basis": "Motivation", "a": "Motivates existing employees", "b": "Brings fresh talent and new ideas"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A company posts a 'WE ARE HIRING' notice at the factory gate for temporary positions.", "answer": "Direct Recruitment (External Source)", "principle": "Notice at factory gate for casual vacancies"},
+      {"scenario": "Workers operate machines in a separate training room that replicates the factory floor.", "answer": "Vestibule Training", "principle": "Simulated work environment — learn without disrupting production"},
+      {"scenario": "A young graduate joins a printing press to learn under a master printer for 2 years before being employed.", "answer": "Apprenticeship Training", "principle": "Learning under a master craftsman for a prescribed period"},
+      {"scenario": "An employee is moved from the Delhi branch to the Mumbai branch at the same position and salary.", "answer": "Transfer (Internal Source)", "principle": "Moving to another location/department at the same level"},
+      {"scenario": "Companies visit IIMs and IITs to hire fresh MBA and engineering graduates.", "answer": "Campus Placement (External Source)", "principle": "Recruiting directly from educational institutions"},
+      {"scenario": "A candidate clears aptitude tests, a personality assessment, and a face-to-face interview before being offered the job.", "answer": "Selection Process", "principle": "Tests + Interview = choosing the best candidate"},
+      {"scenario": "A new employee is moved through marketing, finance, and production departments during their first year.", "answer": "Job Rotation", "principle": "Broadens understanding of the entire organisation"},
+      {"scenario": "A company estimates it will need 50 new engineers and 20 managers next year and plans accordingly.", "answer": "Manpower Planning", "principle": "Estimating the number and type of people needed"},
+      {"scenario": "A manager attends an executive development programme to prepare for becoming a Vice President.", "answer": "Development", "principle": "Overall growth for future higher roles — long-term, career-oriented"},
+      {"scenario": "After clearing all tests and interviews, the selected candidate undergoes a medical examination before receiving the appointment letter.", "answer": "Selection Process: Medical Exam → Job Offer", "principle": "Final steps of the selection process"}
+    ]
+  }
+}

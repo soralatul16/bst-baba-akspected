@@ -1,0 +1,53 @@
+{
+  "chapter": 10, "class": 12, "title": "Financial Markets",
+  "cards": {
+    "definitions": [
+      {"term": "Financial Market", "definition": "A market that facilitates the transfer of funds from those who have surplus (households) to those who need them (businesses), through various financial instruments."},
+      {"term": "Money Market", "definition": "Market for short-term funds with maturity up to 1 year. Deals in near-cash instruments. Low risk, high liquidity."},
+      {"term": "Capital Market", "definition": "Market for long-term funds with maturity more than 1 year. Deals in shares, debentures, bonds. Higher risk than money market."},
+      {"term": "Primary Market", "definition": "Company issues new securities directly to investors (IPO/FPO). Funds go to the company. Price fixed by the company."},
+      {"term": "Secondary Market", "definition": "Investors buy and sell existing securities among themselves through stock exchanges. Funds go to the selling investor, not the company."},
+      {"term": "Treasury Bills", "definition": "Short-term government borrowing instrument issued by RBI. Available in 91, 182, and 364 day maturities. Sold at discount, redeemed at par."},
+      {"term": "Commercial Paper", "definition": "Unsecured promissory note issued by large creditworthy companies for short-term borrowing. Maturity: 15 days to 1 year."},
+      {"term": "Call Money", "definition": "Short-term loans between banks that can be recalled at any time (1 to 15 days). The interest rate is called 'call rate'."},
+      {"term": "Stock Exchange", "definition": "An organised market for buying and selling existing securities. Provides liquidity, price discovery, safety, and acts as an economic barometer."},
+      {"term": "Demat Account", "definition": "Dematerialised account that holds securities in electronic form. Required for trading in the stock exchange."},
+      {"term": "SEBI", "definition": "Securities and Exchange Board of India. Established 1988, statutory powers 1992. Protects investors, regulates intermediaries, develops the securities market."},
+      {"term": "IPO", "definition": "Initial Public Offering — when a company offers its shares to the public for the first time to raise capital."}
+    ],
+    "distinctions": [
+      {
+        "between": "Money Market vs Capital Market",
+        "points": [
+          {"basis": "Duration", "a": "Short-term (up to 1 year)", "b": "Long-term (more than 1 year)"},
+          {"basis": "Instruments", "a": "T-Bills, Commercial Paper, Call Money", "b": "Shares, Debentures, Bonds"},
+          {"basis": "Risk", "a": "Low", "b": "Higher — depends on instrument"},
+          {"basis": "Liquidity", "a": "High", "b": "Comparatively lower"},
+          {"basis": "Participants", "a": "RBI, Banks, Financial Institutions", "b": "Individuals, Companies, Institutions"}
+        ]
+      },
+      {
+        "between": "Primary Market vs Secondary Market",
+        "points": [
+          {"basis": "Securities", "a": "New securities issued for first time", "b": "Existing securities traded"},
+          {"basis": "Funds flow to", "a": "The issuing company", "b": "The selling investor"},
+          {"basis": "Price", "a": "Fixed by company", "b": "Determined by demand and supply"},
+          {"basis": "Location", "a": "No fixed location", "b": "Fixed location (BSE, NSE)"},
+          {"basis": "Also called", "a": "New Issue Market", "b": "Stock Exchange"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "RBI issues 91-day bills at a discount to manage short-term government borrowing.", "answer": "Treasury Bills", "principle": "Short-term money market instrument issued by government"},
+      {"scenario": "Tata Motors announces an IPO, offering 10 crore new shares to the public at ₹500 each.", "answer": "Primary Market", "principle": "Company issues new securities — funds go to the company"},
+      {"scenario": "An investor sells 100 Reliance shares to another investor through BSE at the current market price.", "answer": "Secondary Market (Stock Exchange)", "principle": "Existing securities traded — funds go to the seller, not the company"},
+      {"scenario": "A large company issues an unsecured promissory note to borrow funds for 90 days.", "answer": "Commercial Paper", "principle": "Short-term borrowing by creditworthy companies"},
+      {"scenario": "SBI lends ₹500 crore to HDFC Bank overnight, which HDFC repays the next morning.", "answer": "Call Money", "principle": "Very short-term loans between banks — can be recalled anytime"},
+      {"scenario": "SEBI bans a company director from trading after discovering he bought shares using confidential earnings data.", "answer": "SEBI Protective Function: Prohibiting Insider Trading", "principle": "Preventing unfair profit from confidential information"},
+      {"scenario": "Share prices on BSE and NSE crash after negative GDP growth data is released.", "answer": "Stock Exchange as Economic Barometer", "principle": "Rise/fall in prices reflects economic health"},
+      {"scenario": "An investor opens a Demat account, selects a broker, places a buy order online, and receives shares in T+1 settlement.", "answer": "Stock Exchange Trading Procedure", "principle": "Modern electronic trading and settlement process"},
+      {"scenario": "SEBI allows internet trading and promotes training of intermediaries to develop the market.", "answer": "SEBI Developmental Function", "principle": "Promoting market growth and modernisation"},
+      {"scenario": "A bank issues negotiable short-term deposits to corporate investors at competitive interest rates.", "answer": "Certificate of Deposit", "principle": "Money market instrument issued by banks"}
+    ]
+  }
+}

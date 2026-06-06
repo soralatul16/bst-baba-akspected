@@ -1,0 +1,45 @@
+{
+  "chapter": 12, "class": 12, "title": "Consumer Protection",
+  "cards": {
+    "definitions": [
+      {"term": "Consumer Protection", "definition": "Safeguarding the interests and rights of consumers against unethical and unfair trade practices by sellers."},
+      {"term": "Consumer", "definition": "A person who buys goods or hires services for personal use, not for resale or commercial purpose. Defined under Consumer Protection Act 2019."},
+      {"term": "Right to Safety", "definition": "Protection against goods hazardous to life and property. Consumers should buy ISI-marked and quality-certified products."},
+      {"term": "Right to be Informed", "definition": "Right to complete information about quality, quantity, price, ingredients, manufacturing and expiry dates on the product label."},
+      {"term": "Right to Choose", "definition": "Freedom to select from a variety of goods and services at competitive prices without any pressure."},
+      {"term": "Right to be Heard", "definition": "Consumer's interests will receive due consideration in appropriate forums, consumer councils, and government policies."},
+      {"term": "Right to Seek Redressal", "definition": "Right to fair settlement of genuine grievances — replacement, removal of defect, or compensation through consumer courts."},
+      {"term": "Right to Consumer Education", "definition": "Right to know about consumer rights, responsibilities, and remedies available. Includes awareness campaigns."},
+      {"term": "District Commission", "definition": "First tier of consumer redressal. Handles complaints up to ₹1 crore. Headed by President at District Judge level."},
+      {"term": "State Commission", "definition": "Second tier. Handles complaints from ₹1 crore to ₹10 crore. Also hears appeals against District Commission orders."},
+      {"term": "National Commission", "definition": "Highest tier. Handles complaints above ₹10 crore. Hears appeals against State Commission. Located in New Delhi."},
+      {"term": "ISI Mark", "definition": "Indian Standards Institute (BIS) certification for industrial products like electrical appliances, cement, LPG cylinders."},
+      {"term": "AGMARK", "definition": "Agricultural Marketing certification for agricultural products like spices, honey, ghee, and pulses."},
+      {"term": "FPO Mark", "definition": "Fruit Products Order certification for processed fruit products like jams, juices, squashes, and pickles."},
+      {"term": "Hallmark", "definition": "BIS certification for gold and jewellery products, ensuring purity and quality."}
+    ],
+    "distinctions": [
+      {
+        "between": "District Commission vs State Commission vs National Commission",
+        "points": [
+          {"basis": "Complaint Value", "a": "Up to ₹1 crore / ₹1-10 crore", "b": "Above ₹10 crore"},
+          {"basis": "Appeal Goes To", "a": "State Commission / National Commission", "b": "Supreme Court"},
+          {"basis": "Headed By", "a": "District Judge level / High Court Judge level", "b": "Supreme Court Judge level"},
+          {"basis": "Location", "a": "Every district / Every state capital", "b": "New Delhi"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "An electric heater with ISI mark causes a short circuit and damages furniture within a week of purchase.", "answer": "Right to Safety violated", "principle": "Product hazardous to life and property despite quality mark"},
+      {"scenario": "A medicine bottle has no expiry date, no ingredients list, and no dosage information.", "answer": "Right to be Informed violated", "principle": "Consumer entitled to complete product information on label"},
+      {"scenario": "A shopkeeper forces a customer to buy a specific brand of flour and refuses to sell any other brand.", "answer": "Right to Choose violated", "principle": "Freedom to select from a variety without pressure"},
+      {"scenario": "Ramesh buys a defective laptop worth ₹80,000 and wants to file a complaint.", "answer": "District Commission (value under ₹1 crore)", "principle": "First tier handles complaints up to ₹1 crore"},
+      {"scenario": "A builder sells a flat worth ₹5 crore with construction defects. The buyer files a complaint.", "answer": "State Commission (₹1-10 crore)", "principle": "Second tier handles complaints from ₹1 to ₹10 crore"},
+      {"scenario": "An airline delays a flight causing ₹15 crore loss to a business group.", "answer": "National Commission (above ₹10 crore)", "principle": "Highest tier for complaints above ₹10 crore"},
+      {"scenario": "A consumer buys gold earrings but later discovers the purity is less than what was claimed.", "answer": "Look for Hallmark certification", "principle": "BIS Hallmark ensures gold purity and quality"},
+      {"scenario": "A company runs misleading advertisements claiming its product cures diabetes.", "answer": "Unfair Trade Practice — ground for complaint", "principle": "Misleading ads violate consumer rights"},
+      {"scenario": "A consumer awareness group files a complaint on behalf of thousands of affected consumers.", "answer": "Consumer Organisation filing complaint", "principle": "Recognised consumer associations can file on behalf of consumers"},
+      {"scenario": "The government runs 'JAGO GRAHAK JAGO' advertisements on TV and radio to educate consumers.", "answer": "Right to Consumer Education", "principle": "Government campaign spreading awareness about consumer rights"}
+    ]
+  }
+}

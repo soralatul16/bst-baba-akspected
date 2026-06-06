@@ -1,0 +1,48 @@
+{
+  "chapter": 4, "class": 12, "title": "Planning",
+  "cards": {
+    "definitions": [
+      {"term": "Planning", "definition": "Deciding in advance what to do, how to do it, when to do it, and who is to do it. It bridges the gap from where we are to where we want to go."},
+      {"term": "Objectives", "definition": "The end points that management seeks to achieve. They must be measurable and provide direction for all managerial activities."},
+      {"term": "Strategy", "definition": "A comprehensive plan to achieve organisational objectives, considering the competitive environment and available resources."},
+      {"term": "Policy", "definition": "A general statement that guides decision-making. Allows some flexibility. Example: 'We promote from within.'"},
+      {"term": "Procedure", "definition": "A series of routine steps to carry out activities in chronological order. More detailed than policy, less flexible."},
+      {"term": "Method", "definition": "A prescribed way of performing a specific task. Even more detailed than procedure — deals with one step only."},
+      {"term": "Rule", "definition": "A specific statement that tells what must or must not be done. No flexibility or discretion. Example: 'No smoking in the office.'"},
+      {"term": "Programme", "definition": "A detailed plan for a specific project — includes objectives, policies, procedures, rules, budgets, and time schedule."},
+      {"term": "Budget", "definition": "A plan expressed in numerical terms showing expected results — revenue, expenditure, units to be produced."}
+    ],
+    "distinctions": [
+      {
+        "between": "Standing Plans vs Single-Use Plans",
+        "points": [
+          {"basis": "Duration", "a": "Ongoing — used repeatedly", "b": "One-time — for specific purpose"},
+          {"basis": "Examples", "a": "Objectives, Strategy, Policy, Procedure, Method, Rule", "b": "Programme, Budget"},
+          {"basis": "Flexibility", "a": "Relatively stable", "b": "Disposed after use"},
+          {"basis": "Scope", "a": "Broad guidelines for recurring situations", "b": "Specific actions for unique situations"}
+        ]
+      },
+      {
+        "between": "Policy vs Rule",
+        "points": [
+          {"basis": "Nature", "a": "General guideline", "b": "Specific statement"},
+          {"basis": "Flexibility", "a": "Allows some discretion", "b": "No flexibility — must be followed exactly"},
+          {"basis": "Example", "a": "We promote from within", "b": "No smoking in the office"},
+          {"basis": "Purpose", "a": "Guides thinking and decision-making", "b": "Demands a specific action or restriction"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A company decides to increase its market share by 20% in the next fiscal year.", "answer": "Objective", "principle": "End point that management seeks to achieve"},
+      {"scenario": "A firm announces 'We will not sell to retailers who also stock competitor products.'", "answer": "Policy", "principle": "General guideline that allows some discretion in interpretation"},
+      {"scenario": "A sign in the factory says 'Helmets must be worn in the production area at all times.'", "answer": "Rule", "principle": "Specific statement — no flexibility or discretion"},
+      {"scenario": "To process a customer refund: Step 1 → Verify receipt. Step 2 → Check return window. Step 3 → Approve and credit.", "answer": "Procedure", "principle": "Routine steps carried out in chronological order"},
+      {"scenario": "A company plans to launch a new product — setting objectives, allocating budget, hiring team, fixing deadlines.", "answer": "Programme", "principle": "Detailed plan for a specific project with multiple components"},
+      {"scenario": "The sales department prepares a forecast: expected revenue ₹50 lakh, expenses ₹30 lakh, profit ₹20 lakh.", "answer": "Budget", "principle": "Plan expressed in numerical terms"},
+      {"scenario": "Despite having a solid plan, the company fails because the market changed due to sudden government policy.", "answer": "Limitation: Plans may not work in a dynamic environment", "principle": "Future is uncertain — even the best plans may fail"},
+      {"scenario": "Junior managers feel demotivated because they must strictly follow plans made by top management with no room for their own ideas.", "answer": "Limitation: Planning reduces creativity", "principle": "Middle and lower levels just follow — no scope for own thinking"},
+      {"scenario": "A firm spends months collecting data and analysing alternatives before finalising its expansion plan.", "answer": "Limitation: Planning is time-consuming and costly", "principle": "Scientific planning involves research, forecasting, and expertise"},
+      {"scenario": "Planning sets the target of producing 5,000 units. Controlling measures actual output and finds only 4,200 were produced.", "answer": "Planning and Controlling are inseparable twins", "principle": "Planning sets standards; Controlling measures performance against them"}
+    ]
+  }
+}

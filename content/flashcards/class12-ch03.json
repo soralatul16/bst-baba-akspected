@@ -1,0 +1,40 @@
+{
+  "chapter": 3, "class": 12, "title": "Business Environment",
+  "cards": {
+    "definitions": [
+      {"term": "Business Environment", "definition": "The sum of all external factors — individuals, institutions, and forces — that are beyond a business's control but may affect its performance."},
+      {"term": "Specific (Micro) Forces", "definition": "Forces that affect individual enterprises directly — investors, customers, competitors, suppliers."},
+      {"term": "General (Macro) Forces", "definition": "Forces that affect all businesses indirectly — Social, Legal, Economic, Political, Technological (SLEPT)."},
+      {"term": "Social Environment", "definition": "Customs, traditions, values, social trends, life expectancy, literacy, consumption habits, workforce expectations, and presence of women in the workforce."},
+      {"term": "Legal Environment", "definition": "Legislations, administrative orders, court judgments, and government commissions. Examples: Companies Act 2013, FEMA, Imports & Exports Act."},
+      {"term": "Economic Environment", "definition": "Interest rates, inflation, disposable income, stock market indices, rupee value, GNP, savings & investment rates, imports/exports, money supply."},
+      {"term": "Political Environment", "definition": "Political stability, government attitudes towards business, political ideology, and extent of government intervention. Stability builds investor confidence."},
+      {"term": "Technological Environment", "definition": "Scientific improvements, innovations, new ways of producing goods, new methods of operating business. Example: E-commerce, digital payments."},
+      {"term": "First Mover Advantage", "definition": "The benefit gained by a firm that identifies and exploits an opportunity before competitors. Example: Maruti recognised the need for small cars before others."},
+      {"term": "Demonetisation", "definition": "On 8 Nov 2016, Government of India ceased ₹500 and ₹1000 notes as legal tender. Aim: curb corruption, counterfeiting, black money. Led to a less-cash economy."}
+    ],
+    "distinctions": [
+      {
+        "between": "Specific (Micro) vs General (Macro) Forces",
+        "points": [
+          {"basis": "Meaning", "a": "Affect individual enterprises directly", "b": "Affect all businesses indirectly"},
+          {"basis": "Examples", "a": "Investors, Customers, Competitors", "b": "Social, Political, Legal, Economic, Technological"},
+          {"basis": "Impact", "a": "Day-to-day working of the firm", "b": "Overall business performance"},
+          {"basis": "Scope", "a": "Narrow — firm-specific", "b": "Broad — industry/economy-wide"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "Maruti identified the need for fuel-efficient small cars due to rising fuel prices and a large middle class, and became the market leader.", "answer": "Identifying Opportunities (First Mover Advantage)", "principle": "Importance of understanding business environment"},
+      {"scenario": "An Indian firm prepares for competition when a foreign MNC announces plans to enter India with cheaper substitute products.", "answer": "Identifying Threats (Early Warning)", "principle": "Environmental awareness helps spot threats on time"},
+      {"scenario": "Demand for sarees is high in India but almost non-existent in France.", "answer": "Relativity of Business Environment", "principle": "Environment differs from country to country and region to region"},
+      {"scenario": "Increased health awareness leads to demand for fat-free cooking oil, which changes lifestyle choices.", "answer": "Inter-relatedness of Environment", "principle": "Change in one factor leads to changes in others"},
+      {"scenario": "The government passes a new act requiring all companies to spend 2% of profit on CSR activities.", "answer": "Legal Environment", "principle": "Legislations and government orders affecting business"},
+      {"scenario": "RBI increases interest rates, making loans expensive and reducing consumer spending.", "answer": "Economic Environment", "principle": "Interest rates and monetary policy affect business"},
+      {"scenario": "A new e-commerce platform uses AI chatbots and drone delivery to disrupt traditional retail.", "answer": "Technological Environment", "principle": "Innovation and new methods changing how business operates"},
+      {"scenario": "After demonetisation, bank deposits increased, digital payments grew, and real estate prices fell.", "answer": "Impact of Demonetisation", "principle": "Political/economic decision affecting multiple business dimensions"},
+      {"scenario": "A change in government leads to policy uncertainty, causing foreign investors to withdraw.", "answer": "Political Environment", "principle": "Political instability shakes investor confidence"},
+      {"scenario": "Many working women in cities can't cook due to long hours, creating demand for home-cooked food delivery services.", "answer": "Social Environment", "principle": "Changing lifestyles and workforce composition create new opportunities"}
+    ]
+  }
+}

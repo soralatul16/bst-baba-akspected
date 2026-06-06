@@ -1,0 +1,37 @@
+{
+  "chapter": 8, "class": 12, "title": "Controlling",
+  "cards": {
+    "definitions": [
+      {"term": "Controlling", "definition": "The management function of monitoring organisational performance towards the attainment of goals, and taking corrective action when deviations occur."},
+      {"term": "Setting Standards", "definition": "First step of controlling — establishing benchmarks against which actual performance is measured. Standards should be measurable (units, revenue, etc.)."},
+      {"term": "Deviation", "definition": "The difference between actual performance and planned standards. Can be positive (exceeded target) or negative (fell short)."},
+      {"term": "Management by Exception", "definition": "Focusing only on significant deviations from standards rather than every minor one. Saves time and attention for critical issues."},
+      {"term": "Critical Point Control", "definition": "Focusing on key areas that matter most to the organisation's success. Not all deviations are equally important — control the critical ones."},
+      {"term": "Corrective Action", "definition": "Last step of controlling — if deviations are significant, revise processes, retrain employees, or adjust the standards themselves."}
+    ],
+    "distinctions": [
+      {
+        "between": "Planning vs Controlling",
+        "points": [
+          {"basis": "Meaning", "a": "Deciding what to do in advance", "b": "Ensuring things are done as planned"},
+          {"basis": "Order", "a": "First function of management", "b": "Last function of management"},
+          {"basis": "Focus", "a": "Looking ahead (future)", "b": "Looking back (past performance)"},
+          {"basis": "Nature", "a": "Prescriptive — sets goals", "b": "Evaluative — measures results"},
+          {"basis": "Purpose", "a": "Sets the path", "b": "Keeps on the path"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A manager sets a target of producing 5,000 units per month. At month-end, only 4,200 were produced.", "answer": "Negative Deviation (–800 units)", "principle": "Comparing actual with standard and finding the gap"},
+      {"scenario": "Instead of reviewing every small variance, the CEO only looks at departments that missed targets by more than 10%.", "answer": "Management by Exception", "principle": "Focus on significant deviations, not every minor one"},
+      {"scenario": "After finding low sales, the company retrains its sales team and revises the marketing strategy.", "answer": "Taking Corrective Action", "principle": "Last step of controlling — fix the cause of deviation"},
+      {"scenario": "A quality inspector checks the weight, purity, and packaging of every batch before dispatch.", "answer": "Measuring Actual Performance", "principle": "Step 2 of controlling — using observation and records to assess output"},
+      {"scenario": "The HR department compares the actual employee turnover rate against the planned retention target.", "answer": "Comparing Actual vs Standard", "principle": "Step 3 of controlling — identifying deviations"},
+      {"scenario": "Planning set a revenue target of ₹10 crore. Controlling found actual revenue was ₹12 crore. No corrective action needed.", "answer": "Positive Deviation", "principle": "Exceeded the standard — deviation can be positive too"},
+      {"scenario": "Planning without controlling is meaningless — targets were set but no one checked if they were achieved.", "answer": "Planning and Controlling are inseparable twins", "principle": "Planning sets standards; Controlling ensures they are met"},
+      {"scenario": "A company focuses its control efforts on the production quality and delivery timeline rather than minor office supply expenses.", "answer": "Critical Point Control", "principle": "Focus on key areas that matter most to success"},
+      {"scenario": "After analysing deviations, the manager realises the original target was unrealistic and revises the standards downward.", "answer": "Corrective Action: Revise Standards", "principle": "Sometimes the standard needs adjustment, not the process"},
+      {"scenario": "Controlling reveals that raw material wastage increased due to untrained workers. The feedback helps planning to include a training budget next year.", "answer": "Controlling feeds back into Planning", "principle": "Controlling provides feedback that improves future plans"}
+    ]
+  }
+}

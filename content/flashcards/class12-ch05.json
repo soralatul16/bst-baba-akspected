@@ -1,0 +1,62 @@
+{
+  "chapter": 5, "class": 12, "title": "Organising",
+  "cards": {
+    "definitions": [
+      {"term": "Organising", "definition": "The process of identifying and grouping the work to be performed, defining and delegating authority and responsibility, and establishing relationships for enabling people to work most effectively together."},
+      {"term": "Functional Structure", "definition": "Activities grouped by functions — Production, Marketing, Finance, HR. Each department headed by a specialist. Suitable for single product line companies."},
+      {"term": "Divisional Structure", "definition": "Activities grouped by products, regions, or customer types. Each division operates as a semi-autonomous unit. Suitable for multi-product companies."},
+      {"term": "Formal Organisation", "definition": "Deliberately created by management with well-defined authority, rules, and procedures. Rigid structure focused on achieving organisational goals."},
+      {"term": "Informal Organisation", "definition": "Arises spontaneously from social interactions. No fixed rules. Flexible. Satisfies social and personal needs. Uses grapevine communication."},
+      {"term": "Delegation", "definition": "Entrusting part of the work and authority to a subordinate while retaining overall responsibility. Elements: Authority, Responsibility, Accountability."},
+      {"term": "Authority", "definition": "The right to give orders and make decisions. Flows downward from superior to subordinate."},
+      {"term": "Responsibility", "definition": "The obligation to perform the assigned task. Flows downward — accepted by the subordinate."},
+      {"term": "Accountability", "definition": "The answerability for the outcome of the delegated task. Always flows upward. Cannot be delegated — the manager remains ultimately accountable."},
+      {"term": "Decentralisation", "definition": "Systematic delegation of authority to all levels of management throughout the organisation. Extends delegation to the entire organisational level."},
+      {"term": "Departmentalisation", "definition": "Grouping similar activities together into departments or divisions to ensure specialisation and efficiency."},
+      {"term": "Grapevine", "definition": "Informal communication channel that arises from social interactions. Faster than formal channels but may carry rumours. Cannot be eliminated."}
+    ],
+    "distinctions": [
+      {
+        "between": "Functional vs Divisional Structure",
+        "points": [
+          {"basis": "Grouping", "a": "By functions (Production, Marketing)", "b": "By products (Garments, Shoes)"},
+          {"basis": "Specialisation", "a": "Functional specialisation", "b": "Product specialisation"},
+          {"basis": "Accountability", "a": "Difficult to fix for specific product", "b": "Easy — each division is accountable"},
+          {"basis": "Cost", "a": "Lower — no duplication", "b": "Higher — duplication of resources"},
+          {"basis": "Suitability", "a": "Single product line", "b": "Multi-product companies"}
+        ]
+      },
+      {
+        "between": "Delegation vs Decentralisation",
+        "points": [
+          {"basis": "Meaning", "a": "Manager shares authority with subordinate", "b": "Systematic delegation across all levels"},
+          {"basis": "Scope", "a": "Between two individuals", "b": "Organisation-wide policy"},
+          {"basis": "Nature", "a": "Compulsory — manager must delegate", "b": "Optional — depends on management philosophy"},
+          {"basis": "Freedom", "a": "Less freedom to subordinate", "b": "Greater autonomy at all levels"}
+        ]
+      },
+      {
+        "between": "Formal vs Informal Organisation",
+        "points": [
+          {"basis": "Origin", "a": "Deliberately created by management", "b": "Arises spontaneously from social interaction"},
+          {"basis": "Structure", "a": "Well-defined hierarchy, rules", "b": "No fixed structure or rules"},
+          {"basis": "Purpose", "a": "Achieve organisational goals", "b": "Satisfy social and personal needs"},
+          {"basis": "Communication", "a": "Official channels", "b": "Grapevine (informal channels)"},
+          {"basis": "Nature", "a": "Rigid", "b": "Flexible"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A subordinate is assigned a project but told he cannot make any decisions without asking the manager first.", "answer": "Authority not delegated properly", "principle": "Authority must accompany responsibility for effective delegation"},
+      {"scenario": "A company manufacturing motorcycles and cars has two separate divisions, each with its own production, marketing, and finance departments.", "answer": "Divisional Structure", "principle": "Grouped by products — each division operates semi-autonomously"},
+      {"scenario": "All marketing activities are handled by one department, all production by another, and all finance by a third.", "answer": "Functional Structure", "principle": "Grouped by functions — specialists lead each department"},
+      {"scenario": "A lunch group of employees from different departments shares gossip and information informally.", "answer": "Informal Organisation", "principle": "Arises spontaneously from social interactions"},
+      {"scenario": "A manager delegates a task to a subordinate, but when the task fails, the manager is held responsible by the CEO.", "answer": "Accountability cannot be delegated", "principle": "Accountability always flows upward — delegator remains ultimately answerable"},
+      {"scenario": "The Panchayati Raj system gives local bodies the power to make decisions about their own areas.", "answer": "Decentralisation", "principle": "Systematic delegation of authority to lower levels throughout the organisation"},
+      {"scenario": "A company has 5 levels of hierarchy — information gets distorted by the time it reaches the bottom.", "answer": "Limitation of Formal Organisation", "principle": "Too many levels distort communication and slow decision-making"},
+      {"scenario": "Branch managers of a bank can approve loans up to ₹10 lakh without referring to the head office.", "answer": "Decentralisation", "principle": "Greater autonomy at lower levels — quick decisions"},
+      {"scenario": "In a textile company, the same Marketing, Finance, and HR departments exist in both the Garments division and the Shoes division.", "answer": "Limitation of Divisional Structure: Duplication of resources", "principle": "Each division replicates functional departments — higher cost"},
+      {"scenario": "A supervisor assigns 5 workers to different machines, gives them authority to adjust settings, and will review their output at end of shift.", "answer": "Delegation: Authority + Responsibility + Accountability", "principle": "All three elements are present in effective delegation"}
+    ]
+  }
+}

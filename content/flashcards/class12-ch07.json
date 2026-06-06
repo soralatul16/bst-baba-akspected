@@ -1,0 +1,64 @@
+{
+  "chapter": 7, "class": 12, "title": "Directing",
+  "cards": {
+    "definitions": [
+      {"term": "Directing", "definition": "The process of instructing, guiding, counselling, motivating, and leading people in the organisation to achieve its objectives. It is the heart of management."},
+      {"term": "Supervision", "definition": "Overseeing the work of subordinates to ensure tasks are performed as planned. The supervisor is the link between workers and management."},
+      {"term": "Motivation", "definition": "The process of stimulating people to act willingly towards organisational goals by satisfying their needs and wants."},
+      {"term": "Leadership", "definition": "The ability to influence others to work willingly toward group objectives. A leader guides, inspires, and directs."},
+      {"term": "Communication", "definition": "The process of exchanging information, ideas, and understanding between a sender and receiver through a chosen channel."},
+      {"term": "Maslow's Hierarchy", "definition": "Five levels of human needs: Physiological → Safety → Social → Esteem → Self-Actualisation. A satisfied need no longer motivates."},
+      {"term": "Physiological Needs", "definition": "Basic survival needs — food, shelter, clothing. In organisation: basic salary and wages."},
+      {"term": "Safety Needs", "definition": "Protection from danger and stability. In organisation: job security, pension plan, insurance."},
+      {"term": "Social Needs", "definition": "Friendship, acceptance, belonging. In organisation: cordial relations with colleagues, team activities."},
+      {"term": "Esteem Needs", "definition": "Status, recognition, respect, self-confidence. In organisation: job title, promotions, awards."},
+      {"term": "Self-Actualisation Needs", "definition": "Realising full potential, personal growth, achieving the impossible. In organisation: challenging work, creative opportunities."},
+      {"term": "Autocratic Leadership", "definition": "Leader takes all decisions without consulting subordinates. Centralised authority. Quick but leads to low morale."},
+      {"term": "Democratic Leadership", "definition": "Leader consults subordinates before making decisions. Shared authority. Higher morale and commitment."},
+      {"term": "Laissez-faire Leadership", "definition": "Leader gives full freedom to subordinates to make decisions. Minimal supervision. Works only with highly skilled teams."},
+      {"term": "Grapevine", "definition": "Informal communication network arising from social interactions. Faster than formal channels but may carry rumours."},
+      {"term": "Semantic Barriers", "definition": "Communication barriers caused by words interpreted differently, technical jargon, or body language mismatch."}
+    ],
+    "distinctions": [
+      {
+        "between": "Autocratic vs Democratic vs Laissez-faire Leadership",
+        "points": [
+          {"basis": "Authority", "a": "Centralised with leader", "b": "Shared with team / Fully with subordinates"},
+          {"basis": "Decision-making", "a": "Leader alone", "b": "Leader + subordinates / Subordinates alone"},
+          {"basis": "Morale", "a": "Low — no participation", "b": "High — team feels valued"},
+          {"basis": "Best for", "a": "Crisis, unskilled workers", "b": "Most situations / Expert teams"}
+        ]
+      },
+      {
+        "between": "Formal vs Informal Communication",
+        "points": [
+          {"basis": "Origin", "a": "Official organisational structure", "b": "Social interactions"},
+          {"basis": "Speed", "a": "Slow — follows chain of command", "b": "Fast — no fixed path"},
+          {"basis": "Reliability", "a": "Accurate and documented", "b": "May carry rumours"},
+          {"basis": "Control", "a": "Management can control", "b": "Cannot be controlled"}
+        ]
+      },
+      {
+        "between": "Financial vs Non-Financial Incentives",
+        "points": [
+          {"basis": "Nature", "a": "Monetary rewards", "b": "Non-monetary rewards"},
+          {"basis": "Examples", "a": "Bonus, Profit-sharing, Stock options", "b": "Recognition, Job security, Career growth"},
+          {"basis": "Satisfies", "a": "Lower-level needs (Physiological, Safety)", "b": "Higher-level needs (Social, Esteem, Self-actualisation)"},
+          {"basis": "Measurement", "a": "Can be measured in money", "b": "Cannot be measured in money"}
+        ]
+      }
+    ],
+    "scenarios": [
+      {"scenario": "A manager gives full freedom to team leaders to plan and execute their projects independently without any interference.", "answer": "Laissez-faire Leadership", "principle": "Full autonomy to capable subordinates"},
+      {"scenario": "Before making a decision about the new product launch, the CEO holds a meeting with all department heads to hear their views.", "answer": "Democratic Leadership", "principle": "Leader consults subordinates before deciding"},
+      {"scenario": "During a factory fire, the plant manager immediately takes charge and gives orders without consulting anyone.", "answer": "Autocratic Leadership", "principle": "Leader decides alone — suitable for emergencies"},
+      {"scenario": "An employee receives a basic salary to meet food, shelter, and clothing needs.", "answer": "Physiological Needs (Maslow)", "principle": "Basic survival needs — lowest level of hierarchy"},
+      {"scenario": "A company offers pension plans and job security to its employees.", "answer": "Safety/Security Needs (Maslow)", "principle": "Protection from danger and stability"},
+      {"scenario": "The company organises team lunches and recreational activities for employees.", "answer": "Social/Belongingness Needs (Maslow)", "principle": "Friendship, acceptance, and belonging"},
+      {"scenario": "A manager is given a prestigious job title and publicly recognised for outstanding performance.", "answer": "Esteem Needs (Maslow)", "principle": "Status, recognition, and respect"},
+      {"scenario": "An engineer is given a challenging R&D project with full creative freedom to innovate.", "answer": "Self-Actualisation Needs (Maslow)", "principle": "Realising full potential through challenging, creative work"},
+      {"scenario": "A technical report uses complex jargon that the production workers cannot understand.", "answer": "Semantic Barrier to Communication", "principle": "Words and language interpreted differently"},
+      {"scenario": "A company offers its employees stock options and profit-sharing bonuses.", "answer": "Financial Incentives", "principle": "Monetary rewards to motivate employees"}
+    ]
+  }
+}
