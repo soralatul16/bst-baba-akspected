@@ -592,19 +592,70 @@ function injectTeacherPanel() {
           ${localStorage.getItem('bstbaba_grok_key') ? '<p style="font-size:0.75rem;color:var(--accent);margin-top:6px">✓ API key is saved and active</p>' : ''}
         </div>
 
-        <!-- Student List -->
+        <!-- Student List — now a button that opens full view -->
         <div class="tp-section">
-          <h3>👥 Registered Students</h3>
-          <div style="overflow-x:auto">
-            <table class="tp-table">
-              <thead>
-                <tr><th>Name</th><th>Email</th><th>Phone</th><th>Class</th><th>City</th><th>Verified</th><th>Registered</th><th>Actions</th></tr>
-              </thead>
-              <tbody id="tpStudentBody">
-                <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:20px">Loading students from Firebase...</td></tr>
-              </tbody>
-            </table>
+          <h3>👥 Students & Analytics</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Manage students, view analytics, send messages.</p>
+          <button class="modal-btn" style="max-width:250px" onclick="openStudentManager()">Open Student Manager →</button>
+        </div>
+
+        <!-- STUDENT MANAGER (hidden, opened via button) -->
+        <div class="tp-section" id="tpStudentManager" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-size:1rem;font-weight:800">👥 Student Manager</h3>
+            <div style="display:flex;gap:6px">
+              <button onclick="closeStudentManager()" style="padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">← Back</button>
+              <button onclick="closeTeacherPanel()" style="padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">🏠 Home</button>
+              <button onclick="showOverallAnalytics()" style="padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-light);color:var(--accent);cursor:pointer">📊 Overall Analytics</button>
+            </div>
           </div>
+
+          <!-- Search & Select -->
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+            <input type="text" id="smSearch" placeholder="Search by name, email, city..." oninput="filterStudentList()" style="flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:.82rem">
+            <label style="font-size:.72rem;font-weight:600;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:4px">
+              <input type="checkbox" id="smSelectAll" onchange="toggleSelectAll()"> Select All
+            </label>
+          </div>
+
+          <!-- Student Cards -->
+          <div id="smStudentList" style="max-height:500px;overflow-y:auto"></div>
+
+          <!-- Broadcast Bar (shown when students selected) -->
+          <div id="smBroadcastBar" style="display:none;position:sticky;bottom:0;background:var(--bg-card);border:1px solid var(--accent);border-radius:10px;padding:14px;margin-top:14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="font-size:.78rem;font-weight:700;color:var(--accent)" id="smSelectedCount">0 selected</span>
+            </div>
+            <textarea id="smBroadcastMsg" placeholder="Type your message..." style="width:100%;min-height:50px;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:.82rem;resize:vertical;font-family:inherit;margin-bottom:8px"></textarea>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button onclick="smBroadcastWA()" style="padding:6px 14px;border-radius:6px;background:#25D366;color:#fff;border:none;font-size:.75rem;font-weight:700;cursor:pointer">💬 WhatsApp Selected</button>
+              <button onclick="smBroadcastEmail()" style="padding:6px 14px;border-radius:6px;background:var(--accent);color:#0B0F19;border:none;font-size:.75rem;font-weight:700;cursor:pointer">✉ Email Selected</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- INDIVIDUAL STUDENT ANALYTICS (hidden) -->
+        <div class="tp-section" id="tpStudentAnalytics" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-size:1rem;font-weight:800" id="saStudentName">Student Analytics</h3>
+            <div style="display:flex;gap:6px">
+              <button onclick="backToStudentManager()" style="padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">← Back to Students</button>
+              <button onclick="closeTeacherPanel()" style="padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">🏠 Home</button>
+            </div>
+          </div>
+          <div id="saContent">Loading analytics...</div>
+        </div>
+
+        <!-- OVERALL ANALYTICS (hidden) -->
+        <div class="tp-section" id="tpOverallAnalytics" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-size:1rem;font-weight:800">📊 Overall Analytics</h3>
+            <div style="display:flex;gap:6px">
+              <button onclick="backToStudentManager()" style="padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">← Back to Students</button>
+              <button onclick="closeTeacherPanel()" style="padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">🏠 Home</button>
+            </div>
+          </div>
+          <div id="oaContent">Loading overall analytics...</div>
         </div>
 
         <!-- Feedback Messages -->
@@ -729,25 +780,6 @@ function injectTeacherPanel() {
           </div>
         </div>
 
-        <!-- Broadcast -->
-        <div class="tp-section">
-          <h3>📢 Broadcast Message</h3>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Send a message to all registered students.</p>
-          <textarea class="tp-broadcast" id="broadcastMsg" placeholder="Type your message here..."></textarea>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="modal-btn" style="max-width:200px;background:#25D366" onclick="broadcastWhatsApp()">💬 WhatsApp All</button>
-            <button class="modal-btn" style="max-width:200px" onclick="broadcastEmail()">✉ Email All</button>
-          </div>
-        </div>
-
-        <!-- Analytics -->
-        <div class="tp-section">
-          <h3>📊 Student Analytics</h3>
-          <div id="tpAnalytics" style="font-size:0.82rem;color:var(--text-muted)">
-            <p>Basic stats are shown above. For detailed analytics (quiz scores, chapter-wise performance, time tracking), integrate Firebase Analytics in the console:</p>
-            <p style="margin-top:8px"><a href="https://console.firebase.google.com" target="_blank" style="color:var(--accent)">Open Firebase Console →</a></p>
-          </div>
-        </div>
       </div>
     </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
@@ -1037,6 +1069,269 @@ function copyQuestions() {
   navigator.clipboard.writeText(text).then(() => {
     alert('Questions copied to clipboard!');
   });
+}
+
+// ─── STUDENT MANAGER ───
+let smStudents = [];
+let smSelected = new Set();
+
+function openStudentManager() {
+  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(function(el) {
+    if (el.id !== 'tpStudentManager') el.style.display = 'none';
+  });
+  document.getElementById('tpStudentManager').style.display = 'block';
+  loadStudentManager();
+}
+
+function closeStudentManager() {
+  document.getElementById('tpStudentManager').style.display = 'none';
+  document.getElementById('tpStudentAnalytics').style.display = 'none';
+  document.getElementById('tpOverallAnalytics').style.display = 'none';
+  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(function(el) {
+    if (el.id !== 'tpStudentManager' && el.id !== 'tpStudentAnalytics' && el.id !== 'tpOverallAnalytics' && el.id !== 'tpLibraryFullView') el.style.display = '';
+  });
+}
+
+function backToStudentManager() {
+  document.getElementById('tpStudentAnalytics').style.display = 'none';
+  document.getElementById('tpOverallAnalytics').style.display = 'none';
+  document.getElementById('tpStudentManager').style.display = 'block';
+}
+
+async function loadStudentManager() {
+  smStudents = await getStudents();
+  smSelected = new Set();
+  renderStudentCards(smStudents);
+}
+
+function filterStudentList() {
+  var q = document.getElementById('smSearch').value.toLowerCase();
+  var filtered = smStudents.filter(function(s) {
+    return (s.name || '').toLowerCase().includes(q) || (s.email || '').toLowerCase().includes(q) || (s.city || '').toLowerCase().includes(q) || (s.phone || '').includes(q);
+  });
+  renderStudentCards(filtered);
+}
+
+function renderStudentCards(students) {
+  var container = document.getElementById('smStudentList');
+  if (students.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)">No students found.</div>';
+    return;
+  }
+  container.innerHTML = students.map(function(s, i) {
+    var phone = (s.phone || '').replace(/[^0-9]/g, '');
+    var checked = smSelected.has(s.uid || s.email) ? 'checked' : '';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:8px;margin-bottom:6px;border:1px solid var(--border)">' +
+      '<input type="checkbox" ' + checked + ' onchange="toggleStudentSelect(\'' + (s.uid || s.email) + '\')" style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer">' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+          '<strong style="font-size:.85rem">' + escapeHtml(s.name || 'Unknown') + '</strong>' +
+          '<span style="font-size:.65rem;color:' + (s.verified ? 'var(--accent)' : 'var(--accent-gold)') + ';font-weight:600">' + (s.verified ? '✓ Verified' : '⏳ Pending') + '</span>' +
+        '</div>' +
+        '<div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">' + escapeHtml(s.email || '') + ' · ' + escapeHtml(s.phone || '') + ' · Class ' + (s.class || '-') + ' · ' + escapeHtml(s.city || '') + '</div>' +
+        '<div style="font-size:.65rem;color:var(--text-muted);margin-top:2px">Registered: ' + (s.registered ? new Date(s.registered).toLocaleDateString() : '-') + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:4px;flex-shrink:0">' +
+        (phone ? '<button onclick="window.open(\'https://api.whatsapp.com/send?phone=' + phone + '&text=Hi%20' + encodeURIComponent(s.name ? s.name.split(' ')[0] : '') + '\',\'_blank\')" style="padding:4px 8px;border-radius:4px;background:#25D366;color:#fff;border:none;font-size:.65rem;font-weight:700;cursor:pointer">WA</button>' : '') +
+        '<button onclick="window.open(\'mailto:' + (s.email || '') + '\',\'_blank\')" style="padding:4px 8px;border-radius:4px;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent);font-size:.65rem;font-weight:700;cursor:pointer">Mail</button>' +
+        '<button onclick="showStudentAnalytics(\'' + (s.uid || '') + '\',\'' + escapeHtml(s.name || 'Student') + '\')" style="padding:4px 8px;border-radius:4px;background:var(--accent-gold-light);color:var(--accent-gold);border:1px solid rgba(251,191,36,.3);font-size:.65rem;font-weight:700;cursor:pointer">📊</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  updateBroadcastBar();
+}
+
+function toggleStudentSelect(id) {
+  if (smSelected.has(id)) smSelected.delete(id); else smSelected.add(id);
+  updateBroadcastBar();
+}
+
+function toggleSelectAll() {
+  var checked = document.getElementById('smSelectAll').checked;
+  smSelected = new Set();
+  if (checked) smStudents.forEach(function(s) { smSelected.add(s.uid || s.email); });
+  renderStudentCards(smStudents);
+}
+
+function updateBroadcastBar() {
+  var bar = document.getElementById('smBroadcastBar');
+  var count = smSelected.size;
+  document.getElementById('smSelectedCount').textContent = count + ' student' + (count !== 1 ? 's' : '') + ' selected';
+  bar.style.display = count > 0 ? 'block' : 'none';
+}
+
+function smBroadcastWA() {
+  var msg = document.getElementById('smBroadcastMsg').value.trim();
+  if (!msg) { alert('Type a message first.'); return; }
+  var encoded = encodeURIComponent(msg);
+  smStudents.forEach(function(s) {
+    if (!smSelected.has(s.uid || s.email)) return;
+    var phone = (s.phone || '').replace(/[^0-9]/g, '');
+    if (phone) window.open('https://api.whatsapp.com/send?phone=' + phone + '&text=' + encoded, '_blank');
+  });
+}
+
+function smBroadcastEmail() {
+  var msg = document.getElementById('smBroadcastMsg').value.trim();
+  if (!msg) { alert('Type a message first.'); return; }
+  var emails = [];
+  smStudents.forEach(function(s) {
+    if (smSelected.has(s.uid || s.email) && s.email) emails.push(s.email);
+  });
+  if (emails.length === 0) { alert('No emails found for selected students.'); return; }
+  window.open('mailto:' + emails.join(',') + '?subject=' + encodeURIComponent('BSt Baba - AKSpected Update') + '&body=' + encodeURIComponent(msg), '_blank');
+}
+
+// ─── INDIVIDUAL STUDENT ANALYTICS ───
+async function showStudentAnalytics(uid, name) {
+  document.getElementById('tpStudentManager').style.display = 'none';
+  document.getElementById('tpStudentAnalytics').style.display = 'block';
+  document.getElementById('saStudentName').textContent = '📊 ' + name + ' — Analytics';
+  var content = document.getElementById('saContent');
+  content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">Loading analytics...</div>';
+
+  if (!uid || typeof db === 'undefined') {
+    content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">No analytics data available for this student.</div>';
+    return;
+  }
+
+  try {
+    var snap = await db.collection('bstbaba_quiz_scores').where('uid', '==', uid).orderBy('timestamp', 'desc').limit(50).get();
+    if (snap.empty) {
+      content.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)"><h3 style="color:var(--text);margin-bottom:6px">No quiz data yet</h3><p>This student hasn\'t attempted any quizzes.</p></div>';
+      return;
+    }
+
+    var scores = snap.docs.map(function(d) { return d.data(); });
+    var totalQuizzes = scores.length;
+    var totalCorrect = 0, totalQs = 0, totalTime = 0;
+    var chapterData = {};
+
+    scores.forEach(function(s) {
+      totalCorrect += s.score || 0;
+      totalQs += s.total || 0;
+      totalTime += s.timeTaken || 0;
+      var ch = s.chapter || 0;
+      if (!chapterData[ch]) chapterData[ch] = { correct: 0, total: 0, attempts: 0 };
+      chapterData[ch].correct += s.score || 0;
+      chapterData[ch].total += s.total || 0;
+      chapterData[ch].attempts++;
+    });
+
+    var avgPct = totalQs > 0 ? Math.round(totalCorrect / totalQs * 100) : 0;
+    var avgTime = totalQuizzes > 0 ? Math.round(totalTime / totalQuizzes) : 0;
+    var avgMins = Math.floor(avgTime / 60);
+    var avgSecs = avgTime % 60;
+
+    var html = '';
+    html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">';
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800;color:var(--accent)">' + totalQuizzes + '</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Quizzes</div></div>';
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800;color:' + (avgPct >= 70 ? '#22c55e' : avgPct >= 50 ? 'var(--accent-gold)' : '#f87171') + '">' + avgPct + '%</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Avg Score</div></div>';
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800">' + totalCorrect + '/' + totalQs + '</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Correct/Total</div></div>';
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800">' + avgMins + 'm ' + avgSecs + 's</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Avg Time</div></div>';
+    html += '</div>';
+
+    // Chapter-wise breakdown
+    html += '<h4 style="font-size:.82rem;font-weight:700;margin-bottom:10px">Chapter-wise Performance</h4>';
+    var CH = {1:'Nature of Management',2:'Principles',3:'Business Environment',4:'Planning',5:'Organising',6:'Staffing',7:'Directing',8:'Controlling',9:'Financial Management',10:'Financial Markets',11:'Marketing',12:'Consumer Protection'};
+    for (var c = 1; c <= 12; c++) {
+      var cd = chapterData[c];
+      if (!cd) continue;
+      var pct = cd.total > 0 ? Math.round(cd.correct / cd.total * 100) : 0;
+      var col = pct >= 70 ? '#22c55e' : pct >= 50 ? 'var(--accent-gold)' : '#f87171';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:6px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">';
+      html += '<span style="font-size:.75rem;font-weight:600;min-width:140px">Ch ' + c + ': ' + (CH[c] || '') + '</span>';
+      html += '<div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:3px"></div></div>';
+      html += '<span style="font-size:.72rem;font-weight:700;min-width:35px;text-align:right;color:' + col + '">' + pct + '%</span>';
+      html += '<span style="font-size:.65rem;color:var(--text-muted)">' + cd.attempts + ' quiz' + (cd.attempts > 1 ? 'zes' : '') + '</span>';
+      html += '</div>';
+    }
+
+    // Recent quizzes
+    html += '<h4 style="font-size:.82rem;font-weight:700;margin:16px 0 10px">Recent Quizzes</h4>';
+    scores.slice(0, 15).forEach(function(s) {
+      var pct = s.total > 0 ? Math.round(s.score / s.total * 100) : 0;
+      var col = pct >= 70 ? '#22c55e' : pct >= 50 ? 'var(--accent-gold)' : '#f87171';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg);border-radius:6px;margin-bottom:4px;border:1px solid var(--border);font-size:.75rem">';
+      html += '<span>Ch ' + (s.chapter || '?') + ' — ' + (s.topic || s.type || 'Quiz') + '</span>';
+      html += '<div style="display:flex;gap:8px;align-items:center">';
+      html += '<span style="font-weight:700;color:' + col + '">' + s.score + '/' + s.total + ' (' + pct + '%)</span>';
+      html += '<span style="color:var(--text-muted);font-size:.65rem">' + (s.timestamp ? new Date(s.timestamp).toLocaleDateString() : '') + '</span>';
+      html += '</div></div>';
+    });
+
+    content.innerHTML = html;
+  } catch (e) {
+    content.innerHTML = '<div style="text-align:center;padding:20px;color:#f87171">Error loading analytics: ' + e.message + '</div>';
+  }
+}
+
+// ─── OVERALL ANALYTICS ───
+async function showOverallAnalytics() {
+  document.getElementById('tpStudentManager').style.display = 'none';
+  document.getElementById('tpOverallAnalytics').style.display = 'block';
+  var content = document.getElementById('oaContent');
+  content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">Loading overall analytics...</div>';
+
+  if (typeof db === 'undefined') {
+    content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">Firebase not connected.</div>';
+    return;
+  }
+
+  try {
+    var snap = await db.collection('bstbaba_quiz_scores').orderBy('timestamp', 'desc').limit(200).get();
+    var scores = snap.docs.map(function(d) { return d.data(); });
+    var students = smStudents.length;
+    var uniqueUsers = new Set();
+    var chapterStats = {};
+    var totalQuizzes = scores.length;
+
+    scores.forEach(function(s) {
+      uniqueUsers.add(s.uid);
+      var ch = s.chapter || 0;
+      if (!chapterStats[ch]) chapterStats[ch] = { correct: 0, total: 0, attempts: 0, users: new Set() };
+      chapterStats[ch].correct += s.score || 0;
+      chapterStats[ch].total += s.total || 0;
+      chapterStats[ch].attempts++;
+      chapterStats[ch].users.add(s.uid);
+    });
+
+    var CH = {1:'Nature of Management',2:'Principles',3:'Business Environment',4:'Planning',5:'Organising',6:'Staffing',7:'Directing',8:'Controlling',9:'Financial Management',10:'Financial Markets',11:'Marketing',12:'Consumer Protection'};
+
+    var html = '';
+    html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">';
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800;color:var(--accent)">' + students + '</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Total Students</div></div>';
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800;color:var(--accent-gold)">' + uniqueUsers.size + '</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Active Quizzers</div></div>';
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800">' + totalQuizzes + '</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Total Quizzes Taken</div></div>';
+    var overallPct = 0, overallTotal = 0, overallCorrect = 0;
+    scores.forEach(function(s) { overallCorrect += s.score || 0; overallTotal += s.total || 0; });
+    overallPct = overallTotal > 0 ? Math.round(overallCorrect / overallTotal * 100) : 0;
+    html += '<div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.3rem;font-weight:800;color:' + (overallPct >= 70 ? '#22c55e' : 'var(--accent-gold)') + '">' + overallPct + '%</div><div style="font-size:.65rem;color:var(--text-muted);font-weight:600">Avg Score</div></div>';
+    html += '</div>';
+
+    html += '<h4 style="font-size:.82rem;font-weight:700;margin-bottom:10px">Chapter-wise Class Performance</h4>';
+    for (var c = 1; c <= 12; c++) {
+      var cd = chapterStats[c];
+      if (!cd) {
+        html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:6px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">';
+        html += '<span style="font-size:.75rem;font-weight:600;min-width:140px">Ch ' + c + ': ' + (CH[c] || '') + '</span>';
+        html += '<span style="font-size:.72rem;color:var(--text-muted)">No data yet</span></div>';
+        continue;
+      }
+      var pct = cd.total > 0 ? Math.round(cd.correct / cd.total * 100) : 0;
+      var col = pct >= 70 ? '#22c55e' : pct >= 50 ? 'var(--accent-gold)' : '#f87171';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:6px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">';
+      html += '<span style="font-size:.75rem;font-weight:600;min-width:140px">Ch ' + c + ': ' + (CH[c] || '') + '</span>';
+      html += '<div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:3px"></div></div>';
+      html += '<span style="font-size:.72rem;font-weight:700;min-width:35px;text-align:right;color:' + col + '">' + pct + '%</span>';
+      html += '<span style="font-size:.65rem;color:var(--text-muted)">' + cd.users.size + ' students · ' + cd.attempts + ' attempts</span>';
+      html += '</div>';
+    }
+
+    content.innerHTML = html;
+  } catch (e) {
+    content.innerHTML = '<div style="text-align:center;padding:20px;color:#f87171">Error: ' + e.message + '</div>';
+  }
 }
 
 // Broadcast
