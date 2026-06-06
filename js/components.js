@@ -604,7 +604,19 @@ function injectTeacherPanel() {
         </div>
         <button class="tp-close" onclick="closeTeacherPanel()">✕ Close Panel</button>
       </div>
+
+      <!-- TAB BAR -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--border);background:var(--bg-card);padding:0 20px;overflow-x:auto" id="tpTabBar">
+        <button class="tp-tab active" onclick="switchTPTab('dashboard',this)">📊 Dashboard</button>
+        <button class="tp-tab" onclick="switchTPTab('students',this)">👥 Students</button>
+        <button class="tp-tab" onclick="switchTPTab('feedback',this)">💬 Feedback <span id="tpFbBadge" style="display:none;background:var(--accent);color:#0B0F19;font-size:0.6rem;font-weight:800;padding:1px 5px;border-radius:8px;margin-left:4px"></span></button>
+        <button class="tp-tab" onclick="switchTPTab('generator',this)">⚡ Generator</button>
+        <button class="tp-tab" onclick="switchTPTab('library',this)">📚 Library</button>
+      </div>
+
       <div class="tp-body">
+        <!-- ═══ DASHBOARD TAB ═══ -->
+        <div class="tp-tab-content" id="tpTab-dashboard">
         <!-- Stats -->
         <div class="tp-grid">
           <div class="tp-stat-card">
@@ -632,8 +644,12 @@ function injectTeacherPanel() {
           <div id="grokKeyStatus" style="font-size:0.78rem;margin-top:6px;display:none"></div>
           ${localStorage.getItem('bstbaba_grok_key') ? '<p style="font-size:0.75rem;color:var(--accent);margin-top:6px">✓ API key is saved and active</p>' : ''}
         </div>
+        </div><!-- /tpTab-dashboard -->
 
-        <!-- Student List — now a button that opens full view -->
+        <!-- ═══ STUDENTS TAB ═══ -->
+        <div class="tp-tab-content" id="tpTab-students" style="display:none">
+
+        <!-- Student List -->
         <div class="tp-section">
           <h3>👥 Students & Analytics</h3>
           <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px">Manage students, view analytics, send messages.</p>
@@ -698,13 +714,19 @@ function injectTeacherPanel() {
           </div>
           <div id="oaContent">Loading overall analytics...</div>
         </div>
+        </div><!-- /tpTab-students -->
 
+        <!-- ═══ FEEDBACK TAB ═══ -->
+        <div class="tp-tab-content" id="tpTab-feedback" style="display:none">
         <!-- Feedback Messages -->
         <div class="tp-section">
           <h3>💬 Feedback Messages</h3>
           <div id="tpFeedbackList" style="font-size:0.83rem;color:var(--text-muted)">Loading feedback...</div>
         </div>
+        </div><!-- /tpTab-feedback -->
 
+        <!-- ═══ GENERATOR TAB ═══ -->
+        <div class="tp-tab-content" id="tpTab-generator" style="display:none">
         <!-- Question Generator (Multi-Select) -->
         <div class="tp-section">
           <h3>⚡ AI Question Generator <span style="font-size:0.68rem;color:var(--accent-gold);font-weight:700;background:rgba(251,191,36,0.1);padding:2px 8px;border-radius:4px">AKSpected</span></h3>
@@ -774,7 +796,10 @@ function injectTeacherPanel() {
           </div>
           <div id="qgenOutput" style="margin-top:16px;font-size:0.83rem;color:var(--text-muted)"></div>
         </div>
+        </div><!-- /tpTab-generator -->
 
+        <!-- ═══ LIBRARY TAB ═══ -->
+        <div class="tp-tab-content" id="tpTab-library" style="display:none">
         <!-- LIBRARY PANEL -->
         <div class="tp-section">
           <h3>📚 Question Library <span style="font-size:0.68rem;color:var(--accent);font-weight:700;background:var(--accent-light);padding:2px 8px;border-radius:4px">Manager</span></h3>
@@ -820,10 +845,33 @@ function injectTeacherPanel() {
             <div id="tpLibSetsView" style="max-height:500px;overflow-y:auto">Loading...</div>
           </div>
         </div>
+        </div><!-- /tpTab-library -->
 
       </div>
     </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
+}
+
+// ─── TAB SWITCHING ───
+function switchTPTab(tabName, btn) {
+  document.querySelectorAll('.tp-tab-content').forEach(function(el) { el.style.display = 'none'; });
+  document.querySelectorAll('.tp-tab').forEach(function(el) { el.classList.remove('active'); });
+  var target = document.getElementById('tpTab-' + tabName);
+  if (target) target.style.display = 'block';
+  if (btn) btn.classList.add('active');
+
+  if (tabName === 'students') {
+    var sm = document.getElementById('tpStudentManager');
+    var sa = document.getElementById('tpStudentAnalytics');
+    var oa = document.getElementById('tpOverallAnalytics');
+    if (sm) sm.style.display = 'none';
+    if (sa) sa.style.display = 'none';
+    if (oa) oa.style.display = 'none';
+  }
+  if (tabName === 'library') {
+    var lv = document.getElementById('tpLibraryFullView');
+    if (lv) lv.style.display = 'none';
+  }
 }
 
 // Load students into teacher panel from Firestore
@@ -865,6 +913,11 @@ async function loadTeacherData() {
     const fbCountEl = document.getElementById('tpFeedbackCount');
     var unreadCount = fbDocs.filter(function(f){ return !f.data.read; }).length;
     if (fbCountEl) fbCountEl.textContent = fbDocs.length + (unreadCount > 0 ? ' (' + unreadCount + ' new)' : '');
+    var fbBadge = document.getElementById('tpFbBadge');
+    if (fbBadge) {
+      if (unreadCount > 0) { fbBadge.textContent = unreadCount; fbBadge.style.display = 'inline'; }
+      else { fbBadge.style.display = 'none'; }
+    }
 
     if (fbList) {
       if (fbDocs.length === 0) {
@@ -1139,8 +1192,9 @@ let smStudents = [];
 let smSelected = new Set();
 
 function openStudentManager() {
-  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(function(el) {
-    if (el.id !== 'tpStudentManager') el.style.display = 'none';
+  var tab = document.getElementById('tpTab-students');
+  tab.querySelectorAll('.tp-section').forEach(function(el) {
+    el.style.display = el.id === 'tpStudentManager' ? 'block' : 'none';
   });
   document.getElementById('tpStudentManager').style.display = 'block';
   loadStudentManager();
@@ -1150,8 +1204,9 @@ function closeStudentManager() {
   document.getElementById('tpStudentManager').style.display = 'none';
   document.getElementById('tpStudentAnalytics').style.display = 'none';
   document.getElementById('tpOverallAnalytics').style.display = 'none';
-  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(function(el) {
-    if (el.id !== 'tpStudentManager' && el.id !== 'tpStudentAnalytics' && el.id !== 'tpOverallAnalytics' && el.id !== 'tpLibraryFullView') el.style.display = '';
+  var tab = document.getElementById('tpTab-students');
+  tab.querySelectorAll('.tp-section').forEach(function(el) {
+    if (el.id !== 'tpStudentManager' && el.id !== 'tpStudentAnalytics' && el.id !== 'tpOverallAnalytics') el.style.display = '';
   });
 }
 
@@ -1423,9 +1478,9 @@ let tpLibSets = [];
 let tpTopicsData = {};
 
 function openLibraryView() {
-  // Hide all other tp-sections, show only the library full view
-  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(el => {
-    if (el.id !== 'tpLibraryFullView') el.style.display = 'none';
+  var tab = document.getElementById('tpTab-library');
+  tab.querySelectorAll('.tp-section').forEach(function(el) {
+    el.style.display = el.id === 'tpLibraryFullView' ? 'block' : 'none';
   });
   document.getElementById('tpLibraryFullView').style.display = 'block';
   loadTPLibraryFull();
@@ -1433,7 +1488,8 @@ function openLibraryView() {
 
 function closeLibraryView() {
   document.getElementById('tpLibraryFullView').style.display = 'none';
-  document.querySelectorAll('.tp-body > .tp-grid, .tp-body > .tp-section').forEach(el => {
+  var tab = document.getElementById('tpTab-library');
+  tab.querySelectorAll('.tp-section').forEach(function(el) {
     if (el.id !== 'tpLibraryFullView') el.style.display = '';
   });
 }
