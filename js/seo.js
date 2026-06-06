@@ -61,7 +61,7 @@ function injectWhatsAppShare() {
   };
 
   const msg = messages[page] || 'Check out BSt Baba - AKSpected for CBSE Business Studies! 📚';
-  const waUrl = 'https://wa.me/?text=' + encodeURIComponent(msg + '\n' + url);
+  const waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg + '\n' + url);
 
   const btn = document.createElement('a');
   btn.href = waUrl;

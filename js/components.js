@@ -226,7 +226,7 @@ async function sendChat() {
 
   const apiKey = await getGrokKey();
   if (!apiKey) {
-    messages.innerHTML += `<div class="chat-msg bot">The AI assistant is temporarily unavailable. Please try again later, or contact AKS directly on <a href="https://wa.me/919887440789" target="_blank" style="color:var(--accent)">WhatsApp</a> for help with your doubt.</div>`;
+    messages.innerHTML += `<div class="chat-msg bot">The AI assistant is temporarily unavailable. Please try again later, or contact AKS directly on <a href="https://api.whatsapp.com/send?phone=919887440789" target="_blank" style="color:var(--accent)">WhatsApp</a> for help with your doubt.</div>`;
       messages.scrollTop = messages.scrollHeight;
     return;
   }
@@ -1048,7 +1048,7 @@ async function broadcastWhatsApp() {
   const encoded = encodeURIComponent(msg);
   students.forEach(s => {
     const phone = (s.phone || '').replace(/[^0-9]/g, '');
-    if (phone) window.open('https://wa.me/' + phone + '?text=' + encoded, '_blank');
+    if (phone) window.open('https://api.whatsapp.com/send?phone=' + phone + '&text=' + encoded, '_blank');
   });
 }
 async function broadcastEmail() {
