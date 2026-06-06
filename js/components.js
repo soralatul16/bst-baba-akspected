@@ -45,6 +45,7 @@ if (typeof auth !== 'undefined') {
       localStorage.removeItem('bstbaba_user');
       localStorage.removeItem('bstbaba_firebase_uid');
       gateContent();
+      injectUserBar();
     }
   });
 }
@@ -435,7 +436,6 @@ async function handleForgotPassword() {
 function gateContent() {
   if (document.querySelector('.lock-prompt')) return;
   if (typeof auth !== 'undefined' && auth.currentUser) return;
-  if (localStorage.getItem('bstbaba_firebase_uid')) return;
 
   // Gate everything after hero/first section on ALL pages
   const allSections = document.querySelectorAll('.section, .chapter-body');
@@ -443,10 +443,9 @@ function gateContent() {
 
   if (allSections.length === 0) return;
 
-  const startIndex = heroExists ? 0 : 0;
   let gated = false;
 
-  for (let i = startIndex; i < allSections.length; i++) {
+  for (let i = 0; i < allSections.length; i++) {
     if (i === 0 && document.querySelector('.hero')) continue;
     allSections[i].classList.add('content-locked');
     allSections[i].style.maxHeight = '250px';
@@ -476,26 +475,46 @@ function gateContent() {
   });
 }
 
-// ─── USER BAR (logged-in state) ───
+// ─── USER BAR (Login/Logout in nav) ───
 function injectUserBar() {
-  if (!isLoggedIn()) return;
-  const user = getUser();
   const nav = document.querySelector('nav');
   if (!nav) return;
   const bookBtn = nav.querySelector('.btn-book');
-  if (bookBtn) {
+  if (!bookBtn) return;
+
+  // Remove any previously injected auth elements
+  nav.querySelectorAll('.auth-injected').forEach(el => el.remove());
+
+  if (isLoggedIn()) {
+    const user = getUser();
+    const userName = user && user.name ? user.name.split(' ')[0] : 'User';
+
     const progressLink = document.createElement('a');
     progressLink.href = 'progress.html';
+    progressLink.className = 'auth-injected';
     progressLink.style.cssText = 'font-size:0.75rem;color:var(--accent-gold);font-weight:600;margin-right:8px;text-decoration:none';
     progressLink.textContent = '📊 My Progress';
     bookBtn.parentNode.insertBefore(progressLink, bookBtn);
 
     const userBadge = document.createElement('span');
-    userBadge.style.cssText = 'font-size:0.75rem;color:var(--accent);font-weight:600;margin-right:4px;cursor:pointer';
-    userBadge.textContent = `Hi, ${user.name.split(' ')[0]}`;
-    userBadge.title = 'Click to logout';
-    userBadge.onclick = () => { if(confirm('Logout?')) logoutUser(); };
+    userBadge.className = 'auth-injected';
+    userBadge.style.cssText = 'font-size:0.75rem;color:var(--accent);font-weight:600;margin-right:4px';
+    userBadge.textContent = 'Hi, ' + userName;
     bookBtn.parentNode.insertBefore(userBadge, bookBtn);
+
+    const logoutBtn = document.createElement('button');
+    logoutBtn.className = 'auth-injected';
+    logoutBtn.style.cssText = 'font-size:0.72rem;padding:4px 12px;border-radius:6px;border:1px solid rgba(248,113,113,0.4);background:rgba(248,113,113,0.08);color:#f87171;cursor:pointer;font-weight:600;margin-right:8px';
+    logoutBtn.textContent = 'Logout';
+    logoutBtn.onclick = function() { if(confirm('Logout?')) logoutUser(); };
+    bookBtn.parentNode.insertBefore(logoutBtn, bookBtn);
+  } else {
+    const loginBtn = document.createElement('button');
+    loginBtn.className = 'auth-injected';
+    loginBtn.style.cssText = 'font-size:0.78rem;padding:6px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent-light);color:var(--accent);cursor:pointer;font-weight:700;margin-right:8px';
+    loginBtn.textContent = 'Login / Register';
+    loginBtn.onclick = function() { showAuthModal(); };
+    bookBtn.parentNode.insertBefore(loginBtn, bookBtn);
   }
 }
 
@@ -1183,6 +1202,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectAuthModal();
   injectTeacherPanel();
   gateContent();
+  injectUserBar();
   // Auto-reopen teacher panel if it was open before refresh
   if (localStorage.getItem('bstbaba_tp_open') && localStorage.getItem('bstbaba_tp_unlocked')) {
     document.getElementById('teacherPanel').classList.remove('hidden');
