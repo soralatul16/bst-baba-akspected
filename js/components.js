@@ -271,50 +271,77 @@ async function sendChat() {
 
 // ─── FEEDBACK ───
 function injectFeedback() {
-  const html = `
-    <div class="feedback-panel hidden" id="feedbackPanel">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <h3>Send Feedback</h3>
-        <button onclick="toggleFeedback()" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer">✕</button>
-      </div>
-      <p class="fb-sub">Share your thoughts, suggestions, or report issues directly to AKS.</p>
-      <input class="modal-input" type="text" id="fbName" placeholder="Your Name">
-      <input class="modal-input" type="email" id="fbEmail" placeholder="Your Email">
-      <textarea id="fbMessage" placeholder="Your feedback or message..."></textarea>
-      <button class="modal-btn gold" style="margin-top:12px" onclick="submitFeedback()">Send to AKS →</button>
-      <div id="fbStatus" style="font-size:0.78rem;margin-top:8px;color:var(--accent);display:none"></div>
-    </div>`;
+  var html = '<div class="feedback-panel hidden" id="feedbackPanel">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">' +
+      '<h3>Send Feedback</h3>' +
+      '<button onclick="toggleFeedback()" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer">✕</button>' +
+    '</div>' +
+    '<div id="fbUserInfo" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px"></div>' +
+    '<textarea id="fbMessage" placeholder="Your feedback, suggestions, or issues..." style="min-height:80px"></textarea>' +
+    '<button class="modal-btn gold" style="margin-top:12px" onclick="submitFeedback()">Send to AKS →</button>' +
+    '<div id="fbStatus" style="font-size:0.78rem;margin-top:8px;color:var(--accent);display:none"></div>' +
+  '</div>';
   document.body.insertAdjacentHTML('beforeend', html);
 }
 
 function toggleFeedback() {
-  const panel = document.getElementById('feedbackPanel');
-  const cbPanel = document.getElementById('chatbotPanel');
+  var panel = document.getElementById('feedbackPanel');
+  var cbPanel = document.getElementById('chatbotPanel');
   if (cbPanel) cbPanel.classList.add('hidden');
+
+  if (!isLoggedIn()) {
+    openAuthModal();
+    return;
+  }
+
+  var info = document.getElementById('fbUserInfo');
+  if (info) {
+    var user = auth.currentUser;
+    var ud = getUser() || {};
+    var name = ud.name || user.displayName || 'Student';
+    var email = user.email || '';
+    info.innerHTML = '<strong>' + escapeHtml(name) + '</strong> &middot; ' + escapeHtml(email);
+  }
+
   panel.classList.toggle('hidden');
 }
 
 function submitFeedback() {
-  const name = document.getElementById('fbName').value.trim();
-  const email = document.getElementById('fbEmail').value.trim();
-  const message = document.getElementById('fbMessage').value.trim();
-  if (!message) return;
-  const status = document.getElementById('fbStatus');
+  if (!isLoggedIn()) { openAuthModal(); return; }
+
+  var message = document.getElementById('fbMessage').value.trim();
+  if (!message) {
+    var status = document.getElementById('fbStatus');
+    status.textContent = 'Please write your feedback first.';
+    status.style.color = '#ef4444';
+    status.style.display = 'block';
+    setTimeout(function(){ status.style.display = 'none'; }, 3000);
+    return;
+  }
+
+  var user = auth.currentUser;
+  var ud = getUser() || {};
+  var name = ud.name || user.displayName || 'Student';
+  var email = user.email || '';
+  var status = document.getElementById('fbStatus');
 
   db.collection('bstbaba_feedback').add({
-    name: name || 'Anonymous',
-    email: email || '',
-    message,
+    uid: user.uid,
+    name: name,
+    email: email,
+    message: message,
     timestamp: new Date().toISOString(),
-    read: false
-  }).then(() => {
+    read: false,
+    page: location.pathname.split('/').pop() || 'index.html'
+  }).then(function() {
     status.textContent = 'Feedback sent successfully! Thank you.';
+    status.style.color = 'var(--accent)';
     status.style.display = 'block';
     document.getElementById('fbMessage').value = '';
-    setTimeout(() => { status.style.display = 'none'; }, 4000);
-  }).catch(() => {
-    const subject = encodeURIComponent('BSt Baba Feedback from ' + (name || 'Anonymous'));
-    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
+    setTimeout(function(){ status.style.display = 'none'; }, 4000);
+  }).catch(function() {
+    var subject = encodeURIComponent('BSt Baba Feedback from ' + name);
+    var body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
     window.open('mailto:aakasshsoral@gmail.com?subject=' + subject + '&body=' + body, '_blank');
     status.textContent = 'Opening email client as fallback...';
     status.style.display = 'block';
@@ -810,7 +837,7 @@ async function loadTeacherData() {
           <td>${s.verified ? '<span style="color:var(--accent)">✓ Yes</span>' : '<span style="color:var(--accent-gold)">Pending</span>'}</td>
           <td>${s.registered ? new Date(s.registered).toLocaleDateString() : '-'}</td>
           <td>
-            <button class="tp-action-btn wa" onclick="window.open('https://wa.me/${(s.phone||'').replace(/[^0-9]/g,'')}','_blank')">WA</button>
+            <button class="tp-action-btn wa" onclick="window.open('https://api.whatsapp.com/send?phone=${(s.phone||'').replace(/[^0-9]/g,'')}','_blank')">WA</button>
             <button class="tp-action-btn email" onclick="window.open('mailto:${s.email}','_blank')">Mail</button>
           </td>
         </tr>`).join('');
@@ -818,25 +845,34 @@ async function loadTeacherData() {
     }
 
     // Load feedback
-    const fbSnap = await db.collection('bstbaba_feedback').orderBy('timestamp', 'desc').limit(20).get();
+    const fbSnap = await db.collection('bstbaba_feedback').limit(50).get();
+    const fbDocs = fbSnap.docs.map(function(doc){ return {id: doc.id, data: doc.data()}; }).sort(function(a,b){ return (b.data.timestamp||'').localeCompare(a.data.timestamp||''); });
     const fbList = document.getElementById('tpFeedbackList');
     const fbCountEl = document.getElementById('tpFeedbackCount');
-    if (fbCountEl) fbCountEl.textContent = fbSnap.size;
+    var unreadCount = fbDocs.filter(function(f){ return !f.data.read; }).length;
+    if (fbCountEl) fbCountEl.textContent = fbDocs.length + (unreadCount > 0 ? ' (' + unreadCount + ' new)' : '');
 
     if (fbList) {
-      if (fbSnap.empty) {
+      if (fbDocs.length === 0) {
         fbList.innerHTML = '<p>No feedback yet.</p>';
       } else {
-        fbList.innerHTML = fbSnap.docs.map(doc => {
-          const f = doc.data();
-          return `<div style="padding:12px;background:var(--bg);border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
-            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-              <strong>${escapeHtml(f.name || 'Anonymous')}</strong>
-              <span style="font-size:0.7rem;color:var(--text-muted)">${f.timestamp ? new Date(f.timestamp).toLocaleDateString() : ''}</span>
-            </div>
-            <p style="margin-bottom:4px">${escapeHtml(f.message)}</p>
-            <span style="font-size:0.72rem;color:var(--text-muted)">${escapeHtml(f.email || '')}</span>
-          </div>`;
+        fbList.innerHTML = fbDocs.map(function(item) {
+          var f = item.data;
+          var isUnread = !f.read;
+          return '<div style="padding:12px;background:' + (isUnread ? 'rgba(34,211,238,0.06)' : 'var(--bg)') + ';border-radius:8px;margin-bottom:8px;border:1px solid ' + (isUnread ? 'var(--accent)' : 'var(--border)') + '">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">' +
+              '<strong>' + escapeHtml(f.name || 'Anonymous') + '</strong>' +
+              '<div style="display:flex;align-items:center;gap:8px">' +
+                (isUnread ? '<span style="font-size:0.68rem;background:var(--accent);color:#fff;padding:1px 6px;border-radius:4px">NEW</span>' : '') +
+                '<span style="font-size:0.7rem;color:var(--text-muted)">' + (f.timestamp ? new Date(f.timestamp).toLocaleDateString() : '') + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<p style="margin-bottom:4px">' + escapeHtml(f.message) + '</p>' +
+            '<div style="display:flex;justify-content:space-between;align-items:center">' +
+              '<span style="font-size:0.72rem;color:var(--text-muted)">' + escapeHtml(f.email || '') + (f.page ? ' · from ' + f.page : '') + '</span>' +
+              (isUnread ? '<button onclick="markFeedbackRead(\'' + item.id + '\',this)" style="font-size:0.7rem;background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;cursor:pointer;color:var(--text-muted)">Mark Read</button>' : '') +
+            '</div>' +
+          '</div>';
         }).join('');
       }
     }
@@ -847,6 +883,19 @@ async function loadTeacherData() {
   // Load library panel and setup topic auto-populate
   loadLibraryPanel();
   setupTopicAutoPopulate();
+}
+
+function markFeedbackRead(docId, btn) {
+  db.collection('bstbaba_feedback').doc(docId).update({read: true}).then(function(){
+    var card = btn.closest('div[style*="padding:12px"]');
+    if (card) {
+      card.style.background = 'var(--bg)';
+      card.style.borderColor = 'var(--border)';
+    }
+    btn.remove();
+    var badge = card ? card.querySelector('span[style*="background:var(--accent)"]') : null;
+    if (badge) badge.remove();
+  }).catch(function(){});
 }
 
 // Teacher panel password gate
