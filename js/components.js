@@ -10,11 +10,12 @@ let currentUserData = null;
 
 // ─── AUTH STATE (Firebase is the source of truth, localStorage fallback) ───
 function isLoggedIn() {
-  if (typeof auth !== 'undefined' && auth.currentUser) return true;
-  return !!localStorage.getItem('bstbaba_firebase_uid');
+  if (typeof auth !== 'undefined' && auth.currentUser && auth.currentUser.emailVerified) return true;
+  return false;
 }
 function getUser() {
-  return currentUserData || JSON.parse(localStorage.getItem('bstbaba_user') || 'null');
+  if (currentUserData) return currentUserData;
+  return JSON.parse(localStorage.getItem('bstbaba_user') || 'null');
 }
 
 // Listen for auth state changes
@@ -24,11 +25,23 @@ if (typeof auth !== 'undefined') {
     currentUser = user;
     authReady = true;
     if (user) {
+      // Must verify email before accessing content
+      if (!user.emailVerified) {
+        localStorage.removeItem('bstbaba_user');
+        localStorage.removeItem('bstbaba_firebase_uid');
+        gateContent();
+        injectUserBar();
+        return;
+      }
       localStorage.setItem('bstbaba_firebase_uid', user.uid);
       try {
         const doc = await db.collection('bstbaba_users').doc(user.uid).get();
         if (doc.exists) {
           currentUserData = doc.data();
+          if (!currentUserData.verified) {
+            await db.collection('bstbaba_users').doc(user.uid).update({verified: true});
+            currentUserData.verified = true;
+          }
           localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
         }
       } catch(e) {}
@@ -65,7 +78,8 @@ async function registerUser(name, email, password, phone, cls, city, country) {
       quizzes: 0, score: 0, verified: false
     };
     await db.collection('bstbaba_users').doc(cred.user.uid).set(userData);
-    localStorage.setItem('bstbaba_user', JSON.stringify(userData));
+    // Sign out immediately — user must verify email before accessing content
+    await auth.signOut();
     return {success: true, message: 'Registration successful! Check your email to verify your account.'};
   } catch(e) {
     return {success: false, message: e.message};
@@ -78,13 +92,15 @@ async function loginUser(email, password) {
   }
   try {
     const cred = await auth.signInWithEmailAndPassword(email, password);
+    if (!cred.user.emailVerified) {
+      await cred.user.sendEmailVerification();
+      await auth.signOut();
+      return {success: false, message: 'Please verify your email first. We just sent a new verification link to ' + email + '. Check your inbox (and spam folder), then come back and login.'};
+    }
     const doc = await db.collection('bstbaba_users').doc(cred.user.uid).get();
     if (doc.exists) {
       currentUserData = doc.data();
       localStorage.setItem('bstbaba_user', JSON.stringify(currentUserData));
-    }
-    if (cred.user.emailVerified) {
-      await db.collection('bstbaba_users').doc(cred.user.uid).update({verified: true});
     }
     return {success: true};
   } catch(e) {
