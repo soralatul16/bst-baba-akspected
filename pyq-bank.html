@@ -129,7 +129,7 @@ async function loadAllPYQs() {
   var promises = [];
 
   // Load dedicated PYQ files (actual board paper questions)
-  var pyqFiles = ['content/pyq-2025.json', 'content/pyq-2024.json'];
+  var pyqFiles = ['content/pyq-2025.json', 'content/pyq-2024.json', 'content/pyq-2023.json', 'content/pyq-2022.json'];
   pyqFiles.forEach(function(file) {
     var p = fetch(file)
       .then(function(r) { return r.json(); })
