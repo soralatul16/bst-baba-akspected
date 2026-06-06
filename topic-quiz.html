@@ -178,6 +178,12 @@ async function loadBanks(){
       var slug='ch'+(ch<10?'0'+ch:ch);
       var p=fetch('content/quizbank/'+slug+'.json').then(function(r){return r.json()}).then(function(d){allBanks[ch]=d}).catch(function(){});
       promises.push(p);
+      // Load supplementary topics if they exist
+      var p2=fetch('content/quizbank/'+slug+'-extra.json').then(function(r){return r.json()}).then(function(d){
+        if(!allBanks[ch]) allBanks[ch]={chapter:ch,topics:{}};
+        for(var t in d.topics){ allBanks[ch].topics[t]=d.topics[t]; }
+      }).catch(function(){});
+      promises.push(p2);
     })(i);
   }
   await Promise.all(promises);
