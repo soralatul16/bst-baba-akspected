@@ -184,6 +184,11 @@ async function loadBanks(){
         for(var t in d.topics){ allBanks[ch].topics[t]=d.topics[t]; }
       }).catch(function(){});
       promises.push(p2);
+      var p3=fetch('content/quizbank/'+slug+'-extra2.json').then(function(r){return r.json()}).then(function(d){
+        if(!allBanks[ch]) allBanks[ch]={chapter:ch,topics:{}};
+        for(var t in d.topics){ allBanks[ch].topics[t]=d.topics[t]; }
+      }).catch(function(){});
+      promises.push(p3);
     })(i);
   }
   await Promise.all(promises);
