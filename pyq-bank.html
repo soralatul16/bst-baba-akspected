@@ -127,6 +127,31 @@ var CH_NAMES = {
 async function loadAllPYQs() {
   allPYQs = [];
   var promises = [];
+
+  // Load dedicated PYQ files (actual board paper questions)
+  var pyqFiles = ['content/pyq-2025.json'];
+  pyqFiles.forEach(function(file) {
+    var p = fetch(file)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        data.forEach(function(q) {
+          allPYQs.push({
+            chapter: q.ch,
+            chName: CH_NAMES[q.ch],
+            year: q.year,
+            marks: q.marks,
+            text: q.text,
+            answer: q.answer,
+            type: q.type || '',
+            set: q.set || ''
+          });
+        });
+      })
+      .catch(function() {});
+    promises.push(p);
+  });
+
+  // Also load PYQs from chapter JSON files
   for (var i = 1; i <= 12; i++) {
     (function(chNum) {
       var slug = 'ch' + (chNum < 10 ? '0' + chNum : chNum);
@@ -142,19 +167,6 @@ async function loadAllPYQs() {
                 marks: q.marks,
                 text: q.text,
                 answer: q.answer
-              });
-            });
-          }
-          if (data.questions && data.questions.length > 0) {
-            data.questions.forEach(function(q) {
-              allPYQs.push({
-                chapter: chNum,
-                chName: CH_NAMES[chNum],
-                year: 'Practice',
-                marks: q.marks,
-                text: q.text,
-                answer: q.answer,
-                type: q.type
               });
             });
           }
@@ -228,10 +240,13 @@ function renderPYQs(list) {
 
   container.innerHTML = list.map(function(q) {
     var yearLabel = q.year === 'Practice' ? (q.type || 'Practice') : q.year + ' Board';
+    var setLabel = q.set ? ' (' + q.set + ')' : '';
+    var typeLabel = q.type ? '<span style="font-size:0.65rem;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--accent-gold-light);color:var(--accent-gold)">' + q.type + '</span>' : '';
     return '<div class="question-item">' +
       '<div class="q-header">' +
-        '<span class="q-type">' + yearLabel + '</span>' +
+        '<span class="q-type">' + yearLabel + setLabel + '</span>' +
         '<div style="display:flex;gap:6px;align-items:center">' +
+          typeLabel +
           '<span style="font-size:0.65rem;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--accent-light);color:var(--accent)">Ch ' + q.chapter + '</span>' +
           '<span class="q-marks">' + q.marks + ' Mark' + (q.marks > 1 ? 's' : '') + '</span>' +
         '</div>' +
