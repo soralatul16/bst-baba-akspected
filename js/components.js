@@ -113,7 +113,7 @@ async function loginUser(email, password) {
     if (!cred.user.emailVerified) {
       await cred.user.sendEmailVerification();
       await auth.signOut();
-      return {success: false, message: 'Please verify your email first. We just sent a new verification link to ' + email + '. Check your inbox (and spam folder), then come back and login.'};
+      return {success: false, message: 'Email not verified yet. We just sent a new verification link to ' + email + '. Check your Inbox, Spam, and Junk folders. Verify first, then login again.'};
     }
     const doc = await db.collection('bstbaba_users').doc(cred.user.uid).get();
     if (doc.exists) {
@@ -388,7 +388,8 @@ function injectAuthModal() {
         <div id="authVerify" style="display:none;text-align:center;padding:20px 0">
           <div style="font-size:2.5rem;margin-bottom:12px">📧</div>
           <h2>Verify Your Email</h2>
-          <p class="modal-sub">We've sent a verification link to your email. Click the link to verify, then come back and login.</p>
+          <p class="modal-sub">We've sent a verification link to your email.<br><strong>Check your Inbox, Spam, and Junk folders.</strong></p>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:12px 0">Click the link in the email to verify, then come back and login. You won't be able to access content until your email is verified.</p>
           <button class="modal-btn" onclick="showLogin()">Go to Login →</button>
         </div>
       </div>
@@ -425,6 +426,19 @@ async function handleRegister() {
 
   if (!name || !email || !password || !phone || !cls || !city) {
     err.textContent = 'Please fill all required fields.';
+    err.style.display = 'block'; return;
+  }
+  if (name.length < 2) {
+    err.textContent = 'Please enter your full name.';
+    err.style.display = 'block'; return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    err.textContent = 'Please enter a valid email address.';
+    err.style.display = 'block'; return;
+  }
+  var phoneDigits = phone.replace(/[^0-9]/g, '');
+  if (phoneDigits.length < 10 || phoneDigits.length > 12) {
+    err.textContent = 'Please enter a valid phone number (10 digits).';
     err.style.display = 'block'; return;
   }
   if (password.length < 6) {
