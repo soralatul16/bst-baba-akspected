@@ -136,9 +136,39 @@ function injectMobileNav() {
   if (floats) floats.style.bottom = '80px';
 }
 
+// ─── BACK & HOME BUTTONS ───
+function injectNavButtons() {
+  var page = location.pathname.split('/').pop() || 'index.html';
+  if (page === 'index.html') return;
+
+  var bar = document.createElement('div');
+  bar.style.cssText = 'position:fixed;top:calc(var(--nav-height, 60px) + 10px);left:12px;z-index:70;display:flex;gap:6px';
+
+  var backBtn = document.createElement('button');
+  backBtn.innerHTML = '←';
+  backBtn.title = 'Go Back';
+  backBtn.style.cssText = 'width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all .2s';
+  backBtn.onmouseover = function(){ this.style.borderColor='var(--accent)';this.style.color='var(--accent)'; };
+  backBtn.onmouseout = function(){ this.style.borderColor='var(--border)';this.style.color='var(--text)'; };
+  backBtn.onclick = function(){ window.history.back(); };
+
+  var homeBtn = document.createElement('a');
+  homeBtn.href = 'index.html';
+  homeBtn.innerHTML = '⌂';
+  homeBtn.title = 'Home';
+  homeBtn.style.cssText = 'width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);text-decoration:none;transition:all .2s';
+  homeBtn.onmouseover = function(){ this.style.borderColor='var(--accent)';this.style.color='var(--accent)'; };
+  homeBtn.onmouseout = function(){ this.style.borderColor='var(--border)';this.style.color='var(--text)'; };
+
+  bar.appendChild(backBtn);
+  bar.appendChild(homeBtn);
+  document.body.appendChild(bar);
+}
+
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', () => {
   injectWhatsAppShare();
   injectExamCountdown();
   injectMobileNav();
+  injectNavButtons();
 });
