@@ -170,6 +170,20 @@ var SETS_PER_TOPIC=3, QS_PER_SET=10, TIME_LIMIT=15*60;
 var allBanks={}, currentQs=[], answers={}, timerInterval=null, timeLeft=TIME_LIMIT, submitted=false;
 var currentCh=0, currentTopic='', currentSet=0;
 
+function getAttemptedSets(){
+  try{ return JSON.parse(localStorage.getItem('bstbaba_attempted_sets')||'{}'); }catch(e){ return {}; }
+}
+function markSetAttempted(ch,topic,set,score,total){
+  var data=getAttemptedSets();
+  var key=ch+'_'+topic+'_'+set;
+  data[key]={score:score,total:total,pct:Math.round(score/total*100),date:new Date().toISOString()};
+  localStorage.setItem('bstbaba_attempted_sets',JSON.stringify(data));
+}
+function isSetAttempted(ch,topic,set){
+  var data=getAttemptedSets();
+  return data[ch+'_'+topic+'_'+set]||null;
+}
+
 // Load all question banks
 async function loadBanks(){
   var promises=[];
@@ -203,10 +217,17 @@ function renderChapters(){
     var topics=bank?Object.keys(bank.topics):[];
     var topicCount=topics.length;
     var qCount=0;
-    if(bank) topics.forEach(function(t){qCount+=bank.topics[t].length});
+    var attemptedCount=0;
+    if(bank){
+      topics.forEach(function(t){
+        qCount+=bank.topics[t].length;
+        var setCount=Math.min(SETS_PER_TOPIC,Math.floor(bank.topics[t].length/QS_PER_SET));
+        for(var s=1;s<=setCount;s++){ if(isSetAttempted(ch,t,s)) attemptedCount++; }
+      });
+    }
     html+='<div class="tq-ch-card" onclick="selectChapter('+ch+')">';
     html+='<h3>Ch '+ch+': '+CH_NAMES[ch]+'</h3>';
-    html+='<p>'+topicCount+' topics · '+qCount+' questions</p>';
+    html+='<p>'+topicCount+' topics · '+qCount+' questions'+(attemptedCount>0?' · <span style="color:#22c55e;font-weight:700">'+attemptedCount+' sets done ✓</span>':'')+'</p>';
     if(bank){
       html+='<div class="tq-topics">';
       topics.forEach(function(t){
@@ -239,7 +260,10 @@ function selectChapter(ch){
     html+='<h3 style="font-size:.88rem;font-weight:700;margin-bottom:8px">'+topic+'</h3>';
     html+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
     for(var s=1;s<=setCount;s++){
-      html+='<button class="tq-topic-btn" style="padding:8px 18px;font-size:.8rem" onclick="startQuiz('+ch+',\''+topic.replace(/'/g,"\\'")+'\','+s+')">Set '+s+' ('+QS_PER_SET+' MCQs)</button>';
+      var attempted=isSetAttempted(ch,topic,s);
+      var btnStyle=attempted?'padding:8px 18px;font-size:.8rem;background:#22c55e;color:#fff;border-color:#22c55e':'padding:8px 18px;font-size:.8rem';
+      var label=attempted?'Set '+s+' ✓ '+attempted.pct+'%':'Set '+s+' ('+QS_PER_SET+' MCQs)';
+      html+='<button class="tq-topic-btn" style="'+btnStyle+'" onclick="startQuiz('+ch+',\''+topic.replace(/'/g,"\\'")+'\','+s+')">'+label+'</button>';
     }
     if(setCount===0) html+='<span style="font-size:.75rem;color:var(--text-muted)">Not enough questions yet</span>';
     html+='</div></div>';
@@ -426,6 +450,7 @@ function submitQuiz(){
 
   // Save to Firestore for analytics
   saveQuizResult(score,total,pct,timeTaken);
+  markSetAttempted(currentCh,currentTopic,currentSet,score,total);
 
   window.scrollTo(0,0);
 }
