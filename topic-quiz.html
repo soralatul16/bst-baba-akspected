@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HYN85DHB3B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HYN85DHB3B");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Quiz | BSt Baba - AKSpected</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.tq-select{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px;margin-bottom:24px}
+.tq-ch-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .2s}
+.tq-ch-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tq-ch-card h3{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.tq-ch-card p{font-size:.75rem;color:var(--text-muted)}
+.tq-topics{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tq-topic-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .15s}
+.tq-topic-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tq-topic-btn.done{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+
+.tq-timer-bar{position:sticky;top:var(--nav-height);z-index:50;background:var(--bg-card);border-bottom:1px solid var(--border);padding:10px clamp(16px,4vw,48px);display:flex;justify-content:space-between;align-items:center}
+.tq-timer{font-size:1.3rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+.tq-timer.warn{color:var(--accent-gold)}
+.tq-timer.danger{color:#f87171;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.tq-progress{width:160px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.tq-progress-fill{height:100%;background:var(--accent);transition:width .3s}
+
+.tq-nav{display:flex;flex-wrap:wrap;gap:4px;margin:14px 0}
+.tq-nav-box{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .15s;background:var(--bg)}
+.tq-nav-box:hover{border-color:var(--accent)}
+.tq-nav-box.current{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-light)}
+.tq-nav-box.answered{background:var(--accent);color:#0B0F19;border-color:var(--accent)}
+.tq-nav-box.unanswered{background:var(--bg);color:var(--text-muted)}
+
+.tq-q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.tq-q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.tq-q-num{font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:1px}
+.tq-q-type{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--accent-gold-light);color:var(--accent-gold)}
+.tq-q-text{font-size:.9rem;font-weight:600;line-height:1.7;margin-bottom:12px}
+.tq-opts{display:flex;flex-direction:column;gap:6px}
+.tq-opt{padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:.84rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px;background:var(--bg)}
+.tq-opt:hover{border-color:var(--accent);background:var(--accent-light)}
+.tq-opt.selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent);font-weight:600}
+.tq-opt.correct{border-color:#22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-weight:600}
+.tq-opt.wrong{border-color:#f87171;background:rgba(248,113,113,.08);color:#f87171}
+.tq-opt.missed{border-color:#22c55e;background:rgba(34,197,94,.04)}
+.tq-opt.locked{pointer-events:none}
+.tq-opt-letter{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.tq-opt.selected .tq-opt-letter{border-color:var(--accent);background:var(--accent);color:#0B0F19}
+.tq-opt.correct .tq-opt-letter{border-color:#22c55e;background:#22c55e;color:#fff}
+.tq-opt.wrong .tq-opt-letter{border-color:#f87171;background:#f87171;color:#fff}
+.tq-explain{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:.8rem;line-height:1.6;display:none}
+.tq-explain.show{display:block}
+.tq-explain.right{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);color:var(--text)}
+.tq-explain.wrong{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.15);color:var(--text)}
+
+.tq-result{max-width:600px;margin:0 auto;text-align:center}
+.tq-score-big{font-size:3.5rem;font-weight:800}
+.tq-score-big.great{color:#22c55e}
+.tq-score-big.ok{color:var(--accent-gold)}
+.tq-score-big.low{color:#f87171}
+.tq-grade{font-size:1rem;font-weight:700;margin-top:4px}
+.tq-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.tq-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.tq-stat-num{font-size:1.5rem;font-weight:800}
+.tq-stat-label{font-size:.7rem;color:var(--text-muted);font-weight:600}
+
+@media(max-width:768px){.tq-stats{grid-template-columns:1fr 1fr 1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">BSt Baba <span class="logo-sub">AKSpected</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="class11-dashboard.html">Class 11</a>
+    <a href="class12-dashboard.html">Class 12</a>
+    <a href="flashcards.html">Tools</a>
+    <a href="library.html">Library</a>
+    <a href="mock-test.html">Mock Test</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <a href="https://wa.me/919887440789" class="btn-book" target="_blank">Book a Class</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Topic Quiz</div>
+    <h1>Topic-wise Quiz</h1>
+    <div class="meta-bar">
+      <span>📝 10 MCQs per set</span>
+      <span>⏱️ 15 minutes</span>
+      <span>🎯 3 sets per topic</span>
+    </div>
+  </div>
+</div>
+
+<!-- Timer Bar (hidden until quiz starts) -->
+<div class="tq-timer-bar" id="tqTimerBar" style="display:none">
+  <div style="display:flex;align-items:center;gap:14px">
+    <span class="tq-timer" id="tqTimer">15:00</span>
+    <div class="tq-progress"><div class="tq-progress-fill" id="tqProgressFill"></div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;font-size:.78rem;color:var(--text-muted)">
+    <span id="tqAnsweredInfo">0/10</span>
+    <button onclick="submitQuiz()" style="padding:5px 14px;border-radius:6px;background:var(--accent);color:#0B0F19;border:none;font-size:.75rem;font-weight:700;cursor:pointer">Submit →</button>
+  </div>
+</div>
+
+<section class="section">
+  <!-- SCREEN 1: Chapter & Topic Selection -->
+  <div id="tqSelectScreen">
+    <div style="margin-bottom:20px">
+      <div class="section-label">Choose a Topic</div>
+      <div class="section-title">Select Chapter → Topic → Set</div>
+    </div>
+    <div class="tq-select" id="tqChapterGrid"></div>
+  </div>
+
+  <!-- SCREEN 2: Set Selection -->
+  <div id="tqSetScreen" style="display:none">
+    <div style="margin-bottom:20px">
+      <button onclick="backToChapters()" style="font-size:.78rem;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;margin-bottom:12px">← Back to Topics</button>
+      <h2 id="tqSetTitle" style="font-size:1.1rem;font-weight:800"></h2>
+      <p id="tqSetSub" style="font-size:.82rem;color:var(--text-muted);margin-top:4px"></p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap" id="tqSetBtns"></div>
+  </div>
+
+  <!-- SCREEN 3: Quiz -->
+  <div id="tqQuizScreen" style="display:none">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:20px">
+      <div id="tqQuestions"></div>
+      <div style="position:sticky;top:calc(var(--nav-height) + 60px);align-self:start">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px">
+          <h4 style="font-size:.78rem;font-weight:700;margin-bottom:10px">Navigator</h4>
+          <div class="tq-nav" id="tqNavGrid"></div>
+          <div style="font-size:.65rem;color:var(--text-muted);margin-top:8px;display:flex;gap:8px">
+            <span>🟢 Answered</span><span>⬜ Remaining</span>
+          </div>
+          <button onclick="submitQuiz()" style="width:100%;margin-top:12px;padding:8px;border-radius:8px;background:var(--accent);color:#0B0F19;border:none;font-size:.8rem;font-weight:700;cursor:pointer">Submit Quiz →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Results -->
+  <div id="tqResultScreen" style="display:none"></div>
+</section>
+
+<footer>
+  <div class="footer-brand">BSt Baba — AKSpected</div>
+  <p>© 2026 Aakassh Soral · <a href="mailto:aakasshsoral@gmail.com">aakasshsoral@gmail.com</a></p>
+  <p style="margin-top:4px">Built by <a href="https://soralatul16.github.io/atul-soral-physicism/" target="_blank">Atul Soral</a></p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script src="js/seo.js"></script>
+<script>
+var CH_NAMES={1:'Nature and Significance of Management',2:'Principles of Management',3:'Business Environment',4:'Planning',5:'Organising',6:'Staffing',7:'Directing',8:'Controlling',9:'Financial Management',10:'Financial Markets',11:'Marketing Management',12:'Consumer Protection'};
+var SETS_PER_TOPIC=3, QS_PER_SET=10, TIME_LIMIT=15*60;
+var allBanks={}, currentQs=[], answers={}, timerInterval=null, timeLeft=TIME_LIMIT, submitted=false;
+var currentCh=0, currentTopic='', currentSet=0;
+
+// Load all question banks
+async function loadBanks(){
+  var promises=[];
+  for(var i=1;i<=12;i++){
+    (function(ch){
+      var slug='ch'+(ch<10?'0'+ch:ch);
+      var p=fetch('content/quizbank/'+slug+'.json').then(function(r){return r.json()}).then(function(d){allBanks[ch]=d}).catch(function(){});
+      promises.push(p);
+    })(i);
+  }
+  await Promise.all(promises);
+  renderChapters();
+}
+
+function renderChapters(){
+  var grid=document.getElementById('tqChapterGrid');
+  var html='';
+  for(var ch=1;ch<=12;ch++){
+    var bank=allBanks[ch];
+    var topics=bank?Object.keys(bank.topics):[];
+    var topicCount=topics.length;
+    var qCount=0;
+    if(bank) topics.forEach(function(t){qCount+=bank.topics[t].length});
+    html+='<div class="tq-ch-card" onclick="selectChapter('+ch+')">';
+    html+='<h3>Ch '+ch+': '+CH_NAMES[ch]+'</h3>';
+    html+='<p>'+topicCount+' topics · '+qCount+' questions</p>';
+    if(bank){
+      html+='<div class="tq-topics">';
+      topics.forEach(function(t){
+        html+='<span class="tq-topic-btn">'+t+'</span>';
+      });
+      html+='</div>';
+    } else {
+      html+='<p style="color:var(--accent-gold);font-size:.72rem;margin-top:6px">Coming soon</p>';
+    }
+    html+='</div>';
+  }
+  grid.innerHTML=html;
+}
+
+function selectChapter(ch){
+  if(!allBanks[ch]) return;
+  currentCh=ch;
+  document.getElementById('tqSelectScreen').style.display='none';
+  document.getElementById('tqSetScreen').style.display='block';
+  document.getElementById('tqSetTitle').textContent='Ch '+ch+': '+CH_NAMES[ch];
+  document.getElementById('tqSetSub').textContent='Choose a topic and set to start the quiz.';
+
+  var bank=allBanks[ch];
+  var topics=Object.keys(bank.topics);
+  var html='';
+  topics.forEach(function(topic){
+    var qs=bank.topics[topic];
+    var setCount=Math.min(SETS_PER_TOPIC,Math.floor(qs.length/QS_PER_SET));
+    html+='<div style="width:100%;margin-bottom:16px">';
+    html+='<h3 style="font-size:.88rem;font-weight:700;margin-bottom:8px">'+topic+'</h3>';
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    for(var s=1;s<=setCount;s++){
+      html+='<button class="tq-topic-btn" style="padding:8px 18px;font-size:.8rem" onclick="startQuiz('+ch+',\''+topic.replace(/'/g,"\\'")+'\','+s+')">Set '+s+' ('+QS_PER_SET+' MCQs)</button>';
+    }
+    if(setCount===0) html+='<span style="font-size:.75rem;color:var(--text-muted)">Not enough questions yet</span>';
+    html+='</div></div>';
+  });
+  document.getElementById('tqSetBtns').innerHTML=html;
+}
+
+function backToChapters(){
+  document.getElementById('tqSetScreen').style.display='none';
+  document.getElementById('tqSelectScreen').style.display='block';
+}
+
+function shuffle(arr){
+  var a=arr.slice();
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+
+function startQuiz(ch,topic,set){
+  currentCh=ch; currentTopic=topic; currentSet=set;
+  var bank=allBanks[ch];
+  var allQs=bank.topics[topic];
+  var shuffled=shuffle(allQs);
+  var start=(set-1)*QS_PER_SET;
+  currentQs=shuffled.slice(start,start+QS_PER_SET);
+  // Shuffle options for each question
+  currentQs.forEach(function(q,idx){
+    q._idx=idx;
+    if(q.options){
+      var correctText=q.options[q.correct];
+      var shuffledOpts=shuffle(q.options.slice());
+      q._shuffledOpts=shuffledOpts;
+      q._shuffledCorrect=shuffledOpts.indexOf(correctText);
+    }
+  });
+  answers={}; submitted=false; timeLeft=TIME_LIMIT;
+
+  document.getElementById('tqSetScreen').style.display='none';
+  document.getElementById('tqQuizScreen').style.display='block';
+  document.getElementById('tqTimerBar').style.display='flex';
+  renderQuiz();
+  buildNav();
+  startTimer();
+  window.scrollTo(0,0);
+}
+
+function renderQuiz(){
+  var letters=['A','B','C','D'];
+  var html='<div style="font-size:.82rem;font-weight:700;color:var(--accent);margin-bottom:14px;padding:10px 16px;background:var(--accent-light);border-radius:8px">Ch '+currentCh+' — '+currentTopic+' — Set '+currentSet+' · '+QS_PER_SET+' MCQs · 15 Minutes</div>';
+  currentQs.forEach(function(q,idx){
+    html+='<div class="tq-q-card" id="tqQ'+idx+'">';
+    html+='<div class="tq-q-head"><span class="tq-q-num">Q'+(idx+1)+'</span>';
+    if(q.type) html+='<span class="tq-q-type">'+q.type+'</span>';
+    html+='</div>';
+    html+='<div class="tq-q-text">'+q.q+'</div>';
+    html+='<div class="tq-opts">';
+    var opts=q._shuffledOpts||q.options;
+    opts.forEach(function(opt,oi){
+      html+='<div class="tq-opt" id="tqOpt'+idx+'_'+oi+'" onclick="selectOpt('+idx+','+oi+')">';
+      html+='<span class="tq-opt-letter">'+letters[oi]+'</span>';
+      html+='<span>'+opt+'</span></div>';
+    });
+    html+='</div>';
+    html+='<div class="tq-explain" id="tqExp'+idx+'"></div>';
+    html+='</div>';
+  });
+  document.getElementById('tqQuestions').innerHTML=html;
+}
+
+function selectOpt(qIdx,optIdx){
+  if(submitted) return;
+  answers[qIdx]=optIdx;
+  var opts=currentQs[qIdx]._shuffledOpts||currentQs[qIdx].options;
+  for(var i=0;i<opts.length;i++){
+    var el=document.getElementById('tqOpt'+qIdx+'_'+i);
+    el.className=i===optIdx?'tq-opt selected':'tq-opt';
+  }
+  updateNav();
+}
+
+function buildNav(){
+  var html='';
+  for(var i=0;i<currentQs.length;i++){
+    html+='<div class="tq-nav-box unanswered" id="tqNav'+i+'" onclick="scrollToQ('+i+')">'+(i+1)+'</div>';
+  }
+  document.getElementById('tqNavGrid').innerHTML=html;
+  updateNav();
+}
+
+function updateNav(){
+  var answered=0;
+  for(var i=0;i<currentQs.length;i++){
+    var box=document.getElementById('tqNav'+i);
+    if(answers.hasOwnProperty(i)){
+      box.className='tq-nav-box answered';
+      answered++;
+    } else {
+      box.className='tq-nav-box unanswered';
+    }
+  }
+  document.getElementById('tqAnsweredInfo').textContent=answered+'/'+currentQs.length;
+}
+
+function scrollToQ(idx){
+  var el=document.getElementById('tqQ'+idx);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(function(){
+    timeLeft--;
+    var m=Math.floor(timeLeft/60);
+    var s=timeLeft%60;
+    var el=document.getElementById('tqTimer');
+    el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    el.className='tq-timer'+(timeLeft<=60?' danger':timeLeft<=180?' warn':'');
+    var pct=((TIME_LIMIT-timeLeft)/TIME_LIMIT*100);
+    document.getElementById('tqProgressFill').style.width=pct+'%';
+    if(timeLeft<=0){clearInterval(timerInterval);submitQuiz();}
+  },1000);
+}
+
+function submitQuiz(){
+  if(submitted) return;
+  submitted=true;
+  clearInterval(timerInterval);
+
+  var score=0, total=currentQs.length;
+  currentQs.forEach(function(q,idx){
+    var correctIdx=q._shuffledCorrect!=null?q._shuffledCorrect:q.correct;
+    var opts=q._shuffledOpts||q.options;
+    var userAns=answers[idx];
+    var isCorrect=userAns===correctIdx;
+    if(isCorrect) score++;
+
+    // Color code options
+    for(var i=0;i<opts.length;i++){
+      var el=document.getElementById('tqOpt'+idx+'_'+i);
+      el.classList.add('locked');
+      if(i===correctIdx) el.className='tq-opt correct locked';
+      else if(i===userAns&&!isCorrect) el.className='tq-opt wrong locked';
+      else el.className='tq-opt locked';
+    }
+    // Show explanation
+    var exp=document.getElementById('tqExp'+idx);
+    if(q.explanation){
+      exp.innerHTML=(isCorrect?'✅ Correct! ':'❌ Wrong. ')+q.explanation;
+      exp.className='tq-explain show '+(isCorrect?'right':'wrong');
+    } else {
+      exp.innerHTML=isCorrect?'✅ Correct!':'❌ Wrong. The correct answer is highlighted in green.';
+      exp.className='tq-explain show '+(isCorrect?'right':'wrong');
+    }
+    // Update nav
+    var nav=document.getElementById('tqNav'+idx);
+    nav.style.background=isCorrect?'#22c55e':'#f87171';
+    nav.style.color='#fff';
+    nav.style.borderColor=isCorrect?'#22c55e':'#f87171';
+  });
+
+  // Show results
+  var pct=Math.round(score/total*100);
+  var grade=pct>=90?'Excellent!':pct>=70?'Good Job!':pct>=50?'Keep Practicing':'Needs Improvement';
+  var scoreClass=pct>=70?'great':pct>=50?'ok':'low';
+  var timeTaken=TIME_LIMIT-timeLeft;
+  var mins=Math.floor(timeTaken/60);
+  var secs=timeTaken%60;
+
+  var resHtml='<div class="tq-result">';
+  resHtml+='<div class="tq-score-big '+scoreClass+'">'+score+'/'+total+'</div>';
+  resHtml+='<div class="tq-grade">'+grade+' — '+pct+'%</div>';
+  resHtml+='<div class="tq-stats">';
+  resHtml+='<div class="tq-stat"><div class="tq-stat-num" style="color:#22c55e">'+score+'</div><div class="tq-stat-label">Correct</div></div>';
+  resHtml+='<div class="tq-stat"><div class="tq-stat-num" style="color:#f87171">'+(total-score)+'</div><div class="tq-stat-label">Wrong</div></div>';
+  resHtml+='<div class="tq-stat"><div class="tq-stat-num">'+mins+'m '+secs+'s</div><div class="tq-stat-label">Time Taken</div></div>';
+  resHtml+='</div>';
+  resHtml+='<div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">';
+  resHtml+='<button class="modal-btn" style="max-width:200px" onclick="retryQuiz()">🔄 Retry (Shuffled)</button>';
+  resHtml+='<button class="modal-btn gold" style="max-width:200px" onclick="backToTopics()">← Pick Another Topic</button>';
+  resHtml+='</div></div>';
+
+  document.getElementById('tqResultScreen').innerHTML=resHtml;
+  document.getElementById('tqResultScreen').style.display='block';
+
+  // Save to Firestore for analytics
+  saveQuizResult(score,total,pct,timeTaken);
+
+  window.scrollTo(0,0);
+}
+
+async function saveQuizResult(score,total,pct,timeTaken){
+  if(typeof db==='undefined') return;
+  var user=typeof auth!=='undefined'&&auth.currentUser?auth.currentUser:null;
+  if(!user) return;
+  try{
+    await db.collection('bstbaba_quiz_scores').add({
+      uid:user.uid,
+      type:'topic_quiz',
+      chapter:currentCh,
+      topic:currentTopic,
+      set:currentSet,
+      score:score,
+      total:total,
+      percentage:pct,
+      timeTaken:timeTaken,
+      timestamp:new Date().toISOString()
+    });
+  }catch(e){}
+}
+
+function retryQuiz(){
+  document.getElementById('tqResultScreen').style.display='none';
+  startQuiz(currentCh,currentTopic,currentSet);
+}
+
+function backToTopics(){
+  document.getElementById('tqQuizScreen').style.display='none';
+  document.getElementById('tqResultScreen').style.display='none';
+  document.getElementById('tqTimerBar').style.display='none';
+  clearInterval(timerInterval);
+  selectChapter(currentCh);
+}
+
+document.addEventListener('DOMContentLoaded',loadBanks);
+</script>
+</body>
+</html>
