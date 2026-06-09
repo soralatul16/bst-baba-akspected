@@ -906,6 +906,9 @@ function switchTPTab(tabName, btn) {
   if (target) target.style.display = 'block';
   if (btn) btn.classList.add('active');
 
+  if (tabName === 'images') {
+    loadImagePreviews();
+  }
   if (tabName === 'students') {
     var sm = document.getElementById('tpStudentManager');
     var sa = document.getElementById('tpStudentAnalytics');
@@ -1685,6 +1688,18 @@ function uploadSiteImage(key, file, statusEl) {
     statusEl.textContent = 'Error: ' + e.message;
     statusEl.style.color = '#f87171';
   });
+}
+
+function loadImagePreviews() {
+  if (typeof db === 'undefined') return;
+  db.collection('bstbaba_config').doc('site_images').get().then(function(doc) {
+    if (!doc.exists) return;
+    var images = doc.data();
+    Object.keys(images).forEach(function(key) {
+      var preview = document.getElementById('imgPreview_' + key);
+      if (preview) { preview.src = images[key]; preview.style.display = 'block'; }
+    });
+  }).catch(function() {});
 }
 
 function loadSiteImages() {
