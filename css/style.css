@@ -683,7 +683,7 @@ nav {
   box-shadow: 0 4px 20px rgba(34,211,238,0.15);
 }
 .about-avatar img {
-  width: 180%; height: 180%; object-fit: cover; position: absolute; top: -30%; left: -40%;
+  width: 140%; height: 140%; object-fit: cover; position: absolute; top: -15%; left: -20%;
 }
 .about-avatar-lg {
   width: 150px; height: 150px; border-radius: 50%;
@@ -693,7 +693,7 @@ nav {
   background: var(--accent-light);
 }
 .about-avatar-lg img {
-  width: 180%; height: 180%; object-fit: cover; position: absolute; top: -30%; left: -40%;
+  width: 140%; height: 140%; object-fit: cover; position: absolute; top: -15%; left: -20%;
 }
 .about-info { flex: 1; min-width: 200px; }
 .about-info h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
