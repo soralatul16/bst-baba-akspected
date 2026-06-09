@@ -889,6 +889,17 @@ function injectTeacherPanel() {
               <div id="imgStatus_vartika_photo" style="font-size:0.72rem;margin-top:6px;color:var(--text-muted)"></div>
             </div>
 
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <h4 style="font-size:0.82rem;font-weight:700;margin-bottom:8px">Harshul Kothari (99/100)</h4>
+              <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px">Shown in testimonials section.</p>
+              <img id="imgPreview_harshul_photo" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:10px;display:none" alt="Harshul">
+              <div>
+                <input type="file" id="imgFile_harshul_photo" accept="image/*" style="font-size:0.75rem;margin-bottom:8px">
+                <button class="modal-btn" style="max-width:150px;font-size:0.75rem;padding:6px 14px" onclick="uploadSiteImage('harshul_photo',document.getElementById('imgFile_harshul_photo').files[0],document.getElementById('imgStatus_harshul_photo'))">Upload</button>
+              </div>
+              <div id="imgStatus_harshul_photo" style="font-size:0.72rem;margin-top:6px;color:var(--text-muted)"></div>
+            </div>
+
           </div>
         </div>
         </div><!-- /tpTab-images -->
