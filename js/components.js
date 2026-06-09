@@ -612,6 +612,7 @@ function injectTeacherPanel() {
         <button class="tp-tab" onclick="switchTPTab('feedback',this)">💬 Feedback <span id="tpFbBadge" style="display:none;background:var(--accent);color:#0B0F19;font-size:0.6rem;font-weight:800;padding:1px 5px;border-radius:8px;margin-left:4px"></span></button>
         <button class="tp-tab" onclick="switchTPTab('generator',this)">⚡ Generator</button>
         <button class="tp-tab" onclick="switchTPTab('library',this)">📚 Library</button>
+        <button class="tp-tab" onclick="switchTPTab('images',this)">🖼 Images</button>
       </div>
 
       <div class="tp-body">
@@ -846,6 +847,40 @@ function injectTeacherPanel() {
           </div>
         </div>
         </div><!-- /tpTab-library -->
+
+        <!-- ═══ IMAGES TAB ═══ -->
+        <div class="tp-tab-content" id="tpTab-images" style="display:none">
+        <div class="tp-section">
+          <h3>🖼 Site Images Manager</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">Upload images that appear across the site. Images are stored in Firebase Storage and load automatically on all pages.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px">
+
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <h4 style="font-size:0.82rem;font-weight:700;margin-bottom:8px">AKS Profile Photo</h4>
+              <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px">Shown on Home page and About page.</p>
+              <img id="imgPreview_aks_photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:10px;display:none" alt="AKS">
+              <div>
+                <input type="file" id="imgFile_aks_photo" accept="image/*" style="font-size:0.75rem;margin-bottom:8px">
+                <button class="modal-btn" style="max-width:150px;font-size:0.75rem;padding:6px 14px" onclick="uploadSiteImage('aks_photo',document.getElementById('imgFile_aks_photo').files[0],document.getElementById('imgStatus_aks_photo'))">Upload</button>
+              </div>
+              <div id="imgStatus_aks_photo" style="font-size:0.72rem;margin-top:6px;color:var(--text-muted)"></div>
+            </div>
+
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <h4 style="font-size:0.82rem;font-weight:700;margin-bottom:8px">Pranshu Agarwal (Topper)</h4>
+              <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px">Shown in testimonials section.</p>
+              <img id="imgPreview_pranshu_photo" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:10px;display:none" alt="Pranshu">
+              <div>
+                <input type="file" id="imgFile_pranshu_photo" accept="image/*" style="font-size:0.75rem;margin-bottom:8px">
+                <button class="modal-btn" style="max-width:150px;font-size:0.75rem;padding:6px 14px" onclick="uploadSiteImage('pranshu_photo',document.getElementById('imgFile_pranshu_photo').files[0],document.getElementById('imgStatus_pranshu_photo'))">Upload</button>
+              </div>
+              <div id="imgStatus_pranshu_photo" style="font-size:0.72rem;margin-top:6px;color:var(--text-muted)"></div>
+            </div>
+
+          </div>
+        </div>
+        </div><!-- /tpTab-images -->
 
       </div>
     </div>`;
@@ -1612,6 +1647,61 @@ function viewFullSet(setId) {
   '</div>';
 }
 
+// ─── SITE IMAGES (Firebase Storage) ───
+function uploadSiteImage(key, file, statusEl) {
+  if (!storage) { statusEl.textContent = 'Firebase Storage not available.'; return; }
+  if (!file) { statusEl.textContent = 'No file selected.'; return; }
+  if (file.size > 2 * 1024 * 1024) { statusEl.textContent = 'File too large (max 2MB).'; return; }
+
+  statusEl.textContent = 'Uploading...';
+  statusEl.style.color = 'var(--accent)';
+
+  var ref = storage.ref('bstbaba/images/' + key + '_' + Date.now());
+  ref.put(file).then(function(snapshot) {
+    return snapshot.ref.getDownloadURL();
+  }).then(function(url) {
+    return db.collection('bstbaba_config').doc('site_images').set(
+      (function(){ var obj = {}; obj[key] = url; return obj; })(),
+      {merge: true}
+    ).then(function() { return url; });
+  }).then(function(url) {
+    statusEl.textContent = 'Uploaded successfully!';
+    statusEl.style.color = 'var(--accent)';
+    var preview = document.getElementById('imgPreview_' + key);
+    if (preview) { preview.src = url; preview.style.display = 'block'; }
+    loadSiteImages();
+  }).catch(function(e) {
+    statusEl.textContent = 'Error: ' + e.message;
+    statusEl.style.color = '#f87171';
+  });
+}
+
+function loadSiteImages() {
+  if (typeof db === 'undefined') return;
+  db.collection('bstbaba_config').doc('site_images').get().then(function(doc) {
+    if (!doc.exists) return;
+    var images = doc.data();
+    if (images.aks_photo) {
+      document.querySelectorAll('[data-site-img="aks_photo"]').forEach(function(el) {
+        el.src = images.aks_photo;
+        el.style.display = 'block';
+      });
+    }
+    if (images.pranshu_photo) {
+      document.querySelectorAll('[data-site-img="pranshu_photo"]').forEach(function(el) {
+        el.src = images.pranshu_photo;
+        el.style.display = 'block';
+      });
+    }
+    Object.keys(images).forEach(function(key) {
+      document.querySelectorAll('[data-site-img="' + key + '"]').forEach(function(el) {
+        el.src = images[key];
+        el.style.display = 'block';
+      });
+    });
+  }).catch(function() {});
+}
+
 // ─── KEY LISTENER (B = Teacher Panel) + Hidden button for mobile/iPad ───
 document.addEventListener('keydown', (e) => {
   if (e.key === 'b' || e.key === 'B') {
@@ -1651,6 +1741,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectTeacherPanel();
   gateContent();
   injectUserBar();
+  loadSiteImages();
   // Auto-reopen teacher panel if it was open before refresh
   if (localStorage.getItem('bstbaba_tp_open') && localStorage.getItem('bstbaba_tp_unlocked')) {
     document.getElementById('teacherPanel').classList.remove('hidden');
