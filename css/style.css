@@ -883,7 +883,7 @@ footer .footer-brand {
   text-align: center; margin-top: 14px;
   font-size: 0.8rem; color: var(--text-muted);
 }
-.modal-switch a { color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 600; }
+.modal-switch a { color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 600; padding: 8px 4px; display: inline-block; }
 .modal-error {
   color: #f87171; font-size: 0.78rem;
   margin-bottom: 8px; display: none;

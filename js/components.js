@@ -373,7 +373,7 @@ function injectAuthModal() {
           </div>
           <input class="modal-input" type="text" id="regCountry" placeholder="Country" value="India">
           <button class="modal-btn" id="regBtn" onclick="handleRegister()">Register & Access Content →</button>
-          <div class="modal-switch">Already registered? <a onclick="showLogin()">Login here</a></div>
+          <div class="modal-switch">Already registered? <a href="javascript:void(0)" onclick="showLogin()">Login here</a></div>
         </div>
         <div id="authLogin" style="display:none">
           <h2>Welcome Back</h2>
@@ -382,8 +382,8 @@ function injectAuthModal() {
           <input class="modal-input" type="email" id="loginEmail" placeholder="Email Address *">
           <input class="modal-input" type="password" id="loginPassword" placeholder="Password *">
           <button class="modal-btn" id="loginBtn" onclick="handleLogin()">Login →</button>
-          <div class="modal-switch">New here? <a onclick="showRegister()">Register now</a></div>
-          <div class="modal-switch" style="margin-top:6px"><a onclick="handleForgotPassword()">Forgot password?</a></div>
+          <div class="modal-switch">New here? <a href="javascript:void(0)" onclick="showRegister()">Register now</a></div>
+          <div class="modal-switch" style="margin-top:6px"><a href="javascript:void(0)" onclick="handleForgotPassword()">Forgot password?</a></div>
         </div>
         <div id="authVerify" style="display:none;text-align:center;padding:20px 0">
           <div style="font-size:2.5rem;margin-bottom:12px">📧</div>
@@ -498,7 +498,7 @@ async function handleForgotPassword() {
   }
   try {
     await auth.sendPasswordResetEmail(email);
-    err.textContent = 'Password reset email sent! Check your inbox.';
+    err.textContent = 'Password reset email sent to ' + email + '! Check your Inbox, Spam, and Junk folders.';
     err.style.color = 'var(--accent)';
     err.style.display = 'block';
   } catch(e) {
